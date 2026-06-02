@@ -17,8 +17,8 @@ window.NAV_RAILS = [
 // Each rail expands to a list of items in the sub-nav panel
 window.NAV_TREE = {
   overview: [
-    { route: '/overview',  label: 'Site Map & Skenario' },
     { route: '/dashboard', label: 'Dashboard' },
+    { route: '/overview',  label: 'Site Map & Skenario' },
   ],
   simulasi: [
     { route: '/simulasi',                     label: 'Murabahah, Qardh dan Istishna\'' },

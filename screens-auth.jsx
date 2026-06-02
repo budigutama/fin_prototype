@@ -98,7 +98,7 @@ const BOS_MODULES = [
   { id: 'enterprise', label: 'Enterprise Module', icon: 'building', route: null },
   { id: 'cif',        label: 'CIF Module',        icon: 'user',     route: null },
   { id: 'funding',    label: 'Funding Module',    icon: 'card',     route: null },
-  { id: 'financing',  label: 'Financing Module',  icon: 'briefcase', route: '/overview', active: true },
+  { id: 'financing',  label: 'Financing Module',  icon: 'briefcase', route: '/dashboard', active: true },
   { id: 'treasury',   label: 'Treasury Module',   icon: 'shield',   route: null },
   { id: 'gl',         label: 'GL Module',         icon: 'calc',     route: null },
 ];
