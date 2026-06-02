@@ -1,0 +1,63 @@
+/* Carbon-style inline SVG icons for the Financing prototype.
+   Each function returns an SVG string at the requested size. */
+
+const Icons = {
+  _svg: (d, size=20) => `<svg width="${size}" height="${size}" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">${d}</svg>`,
+
+  // Generic
+  add:        (s=20) => Icons._svg('<path d="M17 15V8h-2v7H8v2h7v7h2v-7h7v-2z"/>', s),
+  search:     (s=20) => Icons._svg('<path d="M29 27.59l-7.55-7.56A11 11 0 1 0 20 21.46L27.59 29zM4 13a9 9 0 1 1 9 9 9 9 0 0 1-9-9z"/>', s),
+  close:      (s=20) => Icons._svg('<path d="M24 9.4L22.6 8 16 14.6 9.4 8 8 9.4l6.6 6.6L8 22.6 9.4 24l6.6-6.6 6.6 6.6 1.4-1.4-6.6-6.6z"/>', s),
+  menu:       (s=20) => Icons._svg('<path d="M4 6h24v2H4zm0 9h24v2H4zm0 9h24v2H4z"/>', s),
+  chevronR:   (s=20) => Icons._svg('<path d="M22 16L12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"/>', s),
+  chevronL:   (s=20) => Icons._svg('<path d="M10 16l10-10 1.4 1.4L12.8 16l8.6 8.6L20 26z"/>', s),
+  chevronD:   (s=20) => Icons._svg('<path d="M16 22L6 12l1.4-1.4L16 19.2l8.6-8.6L26 12z"/>', s),
+  chevronU:   (s=20) => Icons._svg('<path d="M16 10l10 10-1.4 1.4L16 12.8 7.4 21.4 6 20z"/>', s),
+  arrowL:     (s=20) => Icons._svg('<path d="M13.4 7L6 14.5l-.4.4L6 15.4 13.4 23l1.4-1.4-5.6-5.7H28v-2H9.2L14.8 8z"/>', s),
+  arrowR:     (s=20) => Icons._svg('<path d="M18.6 7l-1.4 1.4 5.6 5.7H4v2h18.8l-5.6 5.7L18.6 23l8-8z"/>', s),
+  overflow:   (s=20) => Icons._svg('<circle cx="16" cy="8" r="2"/><circle cx="16" cy="16" r="2"/><circle cx="16" cy="24" r="2"/>', s),
+  notification:(s=20) => Icons._svg('<path d="M28.7 20.3L26 17.6V13a10 10 0 0 0-20 0v4.6l-2.7 2.7A1 1 0 0 0 4 22h7a5 5 0 0 0 10 0h7a1 1 0 0 0 .7-1.7zM16 26a3 3 0 0 1-3-3h6a3 3 0 0 1-3 3zm-8-6l1.3-1.3A1 1 0 0 0 10 18v-5a6 6 0 0 1 12 0v5a1 1 0 0 0 .3.7L23.6 20z"/>', s),
+  user:       (s=20) => Icons._svg('<path d="M16 4a5 5 0 1 0 5 5 5 5 0 0 0-5-5zm0 8a3 3 0 1 1 3-3 3 3 0 0 1-3 3zm10 12v-2A5 5 0 0 0 21 17H11a5 5 0 0 0-5 5v2h2v-2a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v2z"/>', s),
+  switcher:   (s=20) => Icons._svg('<path d="M14 4h4v4h-4zm0 10h4v4h-4zm0 10h4v4h-4zm10-20h4v4h-4zm0 10h4v4h-4zm0 10h4v4h-4zM4 4h4v4H4zm0 10h4v4H4zm0 10h4v4H4z"/>', s),
+  checkmark:  (s=20) => Icons._svg('<path d="M13 24l-9-9 1.4-1.4L13 21.2 26.6 7.6 28 9z"/>', s),
+  star:       (s=20) => Icons._svg('<path d="M16 6.1l2.8 5.7.6 1.2 1.3.2 6.3 1-4.6 4.4-.9.9.2 1.3 1.1 6.2-5.6-3-1.2-.6-1.2.6-5.6 3 1.1-6.2.2-1.3-.9-.9-4.6-4.4 6.3-1 1.3-.2.6-1.2z"/>', s),
+  starFilled: (s=20) => Icons._svg('<path d="M16 2l4.55 9.22L30.5 12.8l-7.25 7.07L25.1 30 16 25.22 6.9 30l1.85-10.13L1.5 12.8l9.95-1.58z"/>', s),
+  edit:       (s=20) => Icons._svg('<path d="M2 26h28v2H2zm25.4-18L24 4.6a2 2 0 0 0-2.8 0L8 17.8V24h6.2L27.4 10.8a2 2 0 0 0 0-2.8zM12.8 22H10v-2.8l10-10 2.8 2.8zm11.4-11.4l-2.8-2.8L23 6.2l2.8 2.8z"/>', s),
+  trash:      (s=20) => Icons._svg('<path d="M12 12h2v12h-2zm6 0h2v12h-2z"/><path d="M4 6v2h2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8h2V6zm4 22V8h16v20zm4-26h8v2h-8z"/>', s),
+  download:   (s=20) => Icons._svg('<path d="M26 24v4H6v-4H4v4a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2v-4z"/><path d="M26 14l-1.4-1.4L17 20.2V2h-2v18.2l-7.6-7.6L6 14l10 10z"/>', s),
+  upload:     (s=20) => Icons._svg('<path d="M6 18h2V8l-3 3-1.4-1.4L9 4l5.4 5.6L13 11l-3-3v10h2v-2h2zm22-8h-2v10h-2V8l-3 3-1.4-1.4L25 4l5.4 5.6L29 11l-3-3z" transform="translate(-3 0)"/><path d="M26 24v4H6v-4H4v4a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2v-4z"/><path d="M6 18l1.4 1.4L15 11.8V30h2V11.8l7.6 7.6L26 18 16 8z"/>', s),
+  filter:     (s=20) => Icons._svg('<path d="M18 28h-4v-8L4 8V4h24v4L18 20z"/>', s),
+  settings:   (s=20) => Icons._svg('<path d="M27 16.76v-1.53l1.92-1.68A2 2 0 0 0 29.3 11l-2.36-4a2 2 0 0 0-2.42-.93l-2.4.82a11 11 0 0 0-1.31-.75l-.51-2.52a2 2 0 0 0-2-1.61h-4.68a2 2 0 0 0-2 1.61l-.51 2.52a11.5 11.5 0 0 0-1.32.75l-2.38-.86A2 2 0 0 0 5.06 7l-2.37 4a2 2 0 0 0 .41 2.51L5 15.24v1.53l-1.89 1.68A2 2 0 0 0 2.7 21l2.36 4a2 2 0 0 0 2.42.93l2.4-.82a11 11 0 0 0 1.31.75l.51 2.52a2 2 0 0 0 2 1.61h4.72a2 2 0 0 0 2-1.61l.51-2.52a11.5 11.5 0 0 0 1.32-.75l2.38.86A2 2 0 0 0 26.94 25l2.37-4a2 2 0 0 0-.41-2.51zM16 22a6 6 0 1 1 6-6 6 6 0 0 1-6 6z"/>', s),
+  info:       (s=20) => Icons._svg('<path d="M16 2a14 14 0 1 0 14 14A14 14 0 0 0 16 2zm0 26a12 12 0 1 1 12-12 12 12 0 0 1-12 12z"/><path d="M15 8h2v2h-2zm1 4a1 1 0 0 0-1 1v9h2v-9a1 1 0 0 0-1-1z"/>', s),
+  warning:    (s=20) => Icons._svg('<path d="M16 2a14 14 0 1 0 14 14A14 14 0 0 0 16 2zm0 26a12 12 0 1 1 12-12 12 12 0 0 1-12 12z"/><path d="M15 8h2v11h-2zm1 14a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 16 22z"/>', s),
+  success:    (s=20) => Icons._svg('<path d="M16 2a14 14 0 1 0 14 14A14 14 0 0 0 16 2zm0 26a12 12 0 1 1 12-12 12 12 0 0 1-12 12z"/><path d="m14 21.5-5-5L10.59 15 14 18.41 21.41 11 23 12.59z"/>', s),
+  view:       (s=20) => Icons._svg('<path d="M30.94 15.66A16.69 16.69 0 0 0 16 6 16.69 16.69 0 0 0 1.06 15.66a1 1 0 0 0 0 .68A16.69 16.69 0 0 0 16 26a16.69 16.69 0 0 0 14.94-9.66 1 1 0 0 0 0-.68zM16 24c-5.3 0-10.9-3.93-12.93-8C5.1 11.93 10.7 8 16 8s10.9 3.93 12.93 8C26.9 20.07 21.3 24 16 24z"/><path d="M16 10a6 6 0 1 0 6 6 6 6 0 0 0-6-6zm0 10a4 4 0 1 1 4-4 4 4 0 0 1-4 4z"/>', s),
+
+  // Navigation (rail)
+  home:       (s=20) => Icons._svg('<path d="M16.61 2.21a1 1 0 0 0-1.23 0L1 13.42 2.24 15 4 13.62V26a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V13.63L29.76 15 31 13.42zM18 26h-4v-8h4zm2 0v-8a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v8H6V12.06l10-7.88 10 7.88V26z"/>', s),
+  calc:       (s=20) => Icons._svg('<path d="M26 4H6a2 2 0 0 0-2 2v20a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM6 6h20v6H6zm0 8h6v6H6zm0 14v-6h6v6zm8 0v-6h12v6zm12-8H14v-6h12z"/>', s),
+  card:       (s=20) => Icons._svg('<path d="M28 6H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h24a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM4 8h24v3H4zm0 16V13h24v11z"/>', s),
+  folder:     (s=20) => Icons._svg('<path d="M28 8H16l-3.4-3.4A2 2 0 0 0 11.2 4H4a2 2 0 0 0-2 2v20a2 2 0 0 0 2 2h24a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zM4 6h7.2l2 2H4zm0 20V10h24v16z"/>', s),
+  sliders:    (s=20) => Icons._svg('<circle cx="22" cy="10" r="2"/><circle cx="10" cy="22" r="2"/><path d="M30 9h-4.1a4 4 0 0 0-7.8 0H2v2h16.1a4 4 0 0 0 7.8 0H30zM4 23h6.1a4 4 0 0 0 7.8 0H30v-2H17.9a4 4 0 0 0-7.8 0H4z"/>', s),
+  doc:        (s=20) => Icons._svg('<path d="M25.7 9.3l-7-7A1 1 0 0 0 18 2H8a2 2 0 0 0-2 2v24a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V10a1 1 0 0 0-.3-.7zM18 4.4l5.6 5.6H18zM24 28H8V4h8v6a2 2 0 0 0 2 2h6z"/>', s),
+  swap:       (s=20) => Icons._svg('<path d="M21 23h-2v-9a2 2 0 0 0-2-2H4v-2h13a4 4 0 0 1 4 4z"/><path d="M25 19l-4 4 4 4 1.4-1.4L23.8 23l2.6-2.6zM11 13l4-4-4-4-1.4 1.4L12.2 9l-2.6 2.6z"/>', s),
+  briefcase:  (s=20) => Icons._svg('<path d="M28 8h-6V4a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v4H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h24a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zM12 4h8v4h-8zM4 10h24v6H4zm0 16V18h24v8z"/>', s),
+  shield:     (s=20) => Icons._svg('<path d="M26.6 5.85L16.83 2.13a2 2 0 0 0-1.66 0L5.4 5.85A2 2 0 0 0 4 7.75v8.74a13 13 0 0 0 6.43 11.21L16 30l5.57-2.3A13 13 0 0 0 28 16.49V7.75a2 2 0 0 0-1.4-1.9zM26 16.49a11 11 0 0 1-5.43 9.46L16 28l-4.57-2.05A11 11 0 0 1 6 16.49V7.75L16 4l10 3.75z"/>', s),
+  clipboard:  (s=20) => Icons._svg('<path d="M20 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2H8a2 2 0 0 0-2 2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM14 4h4v4h-4zm10 24H8V8h4v2h8V8h4z"/>', s),
+  finance:    (s=20) => Icons._svg('<path d="M2 28h28v2H2z"/><path d="M28 10V8l-12-6L4 8v2h2v14H4v2h24v-2h-2V10zM8 24V10h4v14zm6 0V10h4v14zm10 0h-4V10h4z"/>', s),
+  apps:       (s=20) => Icons._svg('<circle cx="9" cy="9" r="2"/><circle cx="16" cy="9" r="2"/><circle cx="23" cy="9" r="2"/><circle cx="9" cy="16" r="2"/><circle cx="16" cy="16" r="2"/><circle cx="23" cy="16" r="2"/><circle cx="9" cy="23" r="2"/><circle cx="16" cy="23" r="2"/><circle cx="23" cy="23" r="2"/>', s),
+  list:       (s=20) => Icons._svg('<path d="M10 6h22v2H10zm0 9h22v2H10zm0 9h22v2H10zM4 6h4v2H4zm0 9h4v2H4zm0 9h4v2H4z"/>', s),
+  copy:       (s=20) => Icons._svg('<path d="M28 10v18H10V10h18m0-2H10a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2z"/><path d="M4 18H2V4a2 2 0 0 1 2-2h14v2H4z"/>', s),
+  refresh:    (s=20) => Icons._svg('<path d="M12 10H6.78A11 11 0 0 1 27 16h2A13 13 0 0 0 6 7.74V4H4v8h8zm8 12h5.22A11 11 0 0 1 5 16H3a13 13 0 0 0 23 8.26V28h2v-8h-8z"/>', s),
+  send:       (s=20) => Icons._svg('<path d="M27.45 15.11l-22-11a1 1 0 0 0-1.36 1.32L8.43 16l-4.34 10.57A1 1 0 0 0 5 28a1 1 0 0 0 .45-.11l22-11a1 1 0 0 0 0-1.78zM6.69 25l3.65-8.89L10.4 16l-.06-.11L6.69 7l18.07 9z"/>', s),
+  lock:       (s=20) => Icons._svg('<path d="M24 14V8A8 8 0 0 0 8 8v6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V16a2 2 0 0 0-2-2zM10 8a6 6 0 0 1 12 0v6H10zm14 20H8V16h16z"/>', s),
+  building:   (s=20) => Icons._svg('<path d="M28 2H16v6h-6v6H4v16h10V20h4v10h10V2zm-2 26h-6V18H12v10H6v-12h6v-6h6V4h8z"/>', s),
+  scale:      (s=20) => Icons._svg('<path d="M22 4H10a2 2 0 0 0-2 2v22a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM10 28V6h12v22zm9-18v8h-2v-8h-3v-2h8v2z"/>', s),
+  print:      (s=20) => Icons._svg('<path d="M26 12h-1V4H7v8H6a2 2 0 0 0-2 2v9h4v5h16v-5h4v-9a2 2 0 0 0-2-2zM9 6h14v6H9zm14 20H9v-6h14zm3-7h-2v-2H8v2H6v-7h20zM24 16h-2v-2h2z"/>', s),
+  flag:       (s=20) => Icons._svg('<path d="M6 2h2v28H6z"/><path d="M28 5H10v14h14l4-7z"/>', s),
+  history:    (s=20) => Icons._svg('<path d="M16 4a12 12 0 1 0 0 24 12 12 0 0 0 0-24zm0 22a10 10 0 1 1 10-10 10 10 0 0 1-10 10z"/><path d="M16 8h-2v9h7v-2h-5z"/>', s),
+  money:      (s=20) => Icons._svg('<path d="M2 22h28v2H2zm0-6h28v2H2zm28-8H2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h28a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zm0 18H2V10h28zm-14-4a5 5 0 1 1 5-5 5 5 0 0 1-5 5zm0-8a3 3 0 1 0 3 3 3 3 0 0 0-3-3z"/>', s),
+  document:   (s=20) => Icons._svg('<path d="M25.7 9.3l-7-7A1 1 0 0 0 18 2H8a2 2 0 0 0-2 2v24a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V10a1 1 0 0 0-.3-.7zM18 4.4l5.6 5.6H18zM24 28H8V4h8v6a2 2 0 0 0 2 2h6z"/>', s),
+};
+
+window.Icons = Icons;

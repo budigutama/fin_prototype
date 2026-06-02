@@ -1,0 +1,1556 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<title>BOS7 Financing — Prototype Walkthrough</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="deck-stage.js"></script>
+<style>
+  :root {
+    --c-primary:        #0F62FE;
+    --c-primary-hover:  #0043CE;
+    --c-primary-active: #002D9C;
+    --c-accent:         #4589FF;
+    --c-ink:            #161616;
+    --c-ink-2:          #262626;
+    --c-text:           #393939;
+    --c-text-2:         #525252;
+    --c-muted:          #6F6F6F;
+    --c-line:           #E0E0E0;
+    --c-line-soft:      #F4F4F4;
+    --c-bg:             #FFFFFF;
+    --c-bg-soft:        #F9FAFB;
+    --c-bg-ink:         #161616;
+    --c-success:        #24A148;
+    --c-warning:        #F1C21B;
+    --c-error:          #DA1E28;
+    --c-info:           #0043CE;
+    --c-info-bg:        #EDF5FF;
+
+    --fs-eyebrow: 14px;
+    --fs-h1:      72px;
+    --fs-h2:      40px;
+    --fs-h3:      28px;
+    --fs-body:    24px;
+    --fs-sm:      20px;
+    --fs-xs:      16px;
+
+    --tracking-eyebrow: 0.18em;
+    --radius: 4px;
+  }
+  html, body { margin: 0; padding: 0; background: #1a1a1a; color: var(--c-ink);
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+  }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+
+  /* ── slide shell ─────────────────────────────────────────────── */
+  deck-stage > section {
+    width: 1920px; height: 1080px;
+    background: var(--c-bg);
+    color: var(--c-text);
+    font-size: var(--fs-body);
+    line-height: 1.45;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+  .slide-pad {
+    padding: 96px 120px;
+    height: 100%; box-sizing: border-box;
+    display: flex; flex-direction: column;
+    gap: 32px;
+  }
+  /* ── header ──────────────────────────────────────────────────── */
+  .head { display: flex; justify-content: space-between; align-items: flex-start; }
+  .head__eyebrow {
+    font-size: 24px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+    color: var(--c-primary);
+  }
+  .head__page {
+    font-size: 24px; font-weight: 500; color: var(--c-muted);
+    font-family: "IBM Plex Mono", monospace;
+  }
+  h1.title { font-size: var(--fs-h2); font-weight: 600; margin: 0; color: var(--c-ink); letter-spacing: -0.01em; line-height: 1.1; }
+  h1.title + .sub { font-size: var(--fs-body); color: var(--c-text-2); margin: 0; max-width: 1400px; }
+
+  /* ── footer / progress ───────────────────────────────────────── */
+  .foot {
+    margin-top: auto; display: flex; align-items: center; gap: 24px;
+    font-size: 24px; color: var(--c-muted);
+  }
+  .foot__brand { font-weight: 600; color: var(--c-ink); letter-spacing: 0.04em; }
+  .foot__divider { flex: 1; height: 1px; background: var(--c-line); }
+
+  /* ── components ──────────────────────────────────────────────── */
+  .tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 24px; font-weight: 500;
+    background: var(--c-info-bg); color: var(--c-info);
+  }
+  .tag--success { background: #DEFBE6; color: #0E6027; }
+  .tag--warn    { background: #FCF4D6; color: #6F4E03; }
+  .tag--ink     { background: #161616; color: #fff; }
+  .tag--ghost   { background: transparent; color: var(--c-muted); border: 1px solid var(--c-line); }
+
+  ul.bullets, ol.bullets { margin: 0; padding: 0 0 0 0; list-style: none; }
+  ul.bullets li {
+    position: relative; padding: 6px 0 6px 32px;
+    border-bottom: 1px solid var(--c-line-soft);
+  }
+  ul.bullets li:last-child { border-bottom: 0; }
+  ul.bullets li::before {
+    content: ""; position: absolute; left: 0; top: 18px;
+    width: 14px; height: 2px; background: var(--c-primary);
+  }
+  ul.bullets li b { color: var(--c-ink); font-weight: 600; }
+  ul.bullets li small { color: var(--c-muted); font-size: 24px; display: block; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+
+  .tile {
+    border: 1px solid var(--c-line);
+    background: var(--c-bg);
+    padding: 28px;
+    border-radius: var(--radius);
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .tile__num { font-size: 24px; font-weight: 600; color: var(--c-primary); letter-spacing: 0.08em; font-family: "IBM Plex Mono", monospace; }
+  .tile__title { font-size: 28px; font-weight: 600; color: var(--c-ink); margin: 0; }
+  .tile__body { font-size: 24px; color: var(--c-text-2); line-height: 1.5; }
+  .tile__list { font-size: 24px; color: var(--c-text-2); margin: 8px 0 0; padding: 0; list-style: none; }
+  .tile__list li { padding: 4px 0; }
+  .tile__list li::before { content: "›"; margin-right: 8px; color: var(--c-primary); }
+
+  .stat {
+    border-left: 3px solid var(--c-primary);
+    padding: 8px 0 8px 20px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .stat__label { font-size: 24px; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
+  .stat__value { font-size: 48px; font-weight: 600; color: var(--c-ink); font-family: "IBM Plex Mono", monospace; }
+  .stat__hint  { font-size: 24px; color: var(--c-text-2); }
+
+  table.tbl { width: 100%; border-collapse: collapse; font-size: 24px; }
+  table.tbl thead th {
+    text-align: left; padding: 14px 18px; font-weight: 600;
+    background: var(--c-line-soft); color: var(--c-ink);
+    border-bottom: 1px solid var(--c-line);
+    font-size: 24px; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  table.tbl tbody td {
+    padding: 16px 18px; border-bottom: 1px solid var(--c-line-soft);
+    color: var(--c-text); vertical-align: top;
+  }
+  table.tbl tbody tr:last-child td { border-bottom: 0; }
+
+  /* code / route style */
+  .route {
+    font-family: "IBM Plex Mono", monospace; font-size: 24px;
+    color: var(--c-primary); background: #EDF5FF;
+    padding: 2px 8px; border-radius: 3px;
+  }
+
+  /* hero (cover) layout */
+  .cover {
+    background: #0B1733;
+    color: #fff;
+    padding: 96px 120px;
+    height: 100%; box-sizing: border-box;
+    display: flex; flex-direction: column; justify-content: space-between;
+    position: relative; overflow: hidden;
+  }
+  .cover::before, .cover::after {
+    content: ""; position: absolute; pointer-events: none;
+  }
+  .cover::before {
+    width: 880px; height: 880px; border-radius: 50%;
+    right: -260px; top: -260px;
+    background: radial-gradient(circle at 30% 30%, rgba(15,98,254,0.55), rgba(15,98,254,0) 70%);
+  }
+  .cover::after {
+    width: 600px; height: 600px;
+    right: -120px; bottom: -180px;
+    background:
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 14px);
+    transform: rotate(-12deg);
+  }
+  .cover__rule { width: 96px; height: 4px; background: var(--c-primary); }
+  .cover h1 {
+    font-size: 96px; font-weight: 600; margin: 0;
+    letter-spacing: -0.02em; line-height: 0.98; color: #fff;
+  }
+  .cover .lede {
+    font-size: 28px; max-width: 1100px; color: rgba(255,255,255,0.78);
+    line-height: 1.4; margin: 24px 0 0;
+  }
+  .cover__meta {
+    display: flex; gap: 64px; font-size: 24px; color: rgba(255,255,255,0.65);
+    text-transform: uppercase; letter-spacing: 0.18em;
+  }
+  .cover__meta b { display: block; color: #fff; font-weight: 600; font-size: 26px; margin-top: 8px; letter-spacing: 0.04em; text-transform: none; }
+  .cover__eyebrow {
+    font-size: 24px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.32em;
+    color: var(--c-accent);
+  }
+
+  /* section divider slide */
+  .section-cover {
+    background: var(--c-bg-ink);
+    color: #fff;
+    padding: 96px 120px;
+    height: 100%; box-sizing: border-box;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .section-cover .lbl { font-size: 24px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--c-accent); font-weight: 600; }
+  .section-cover .lbl b { color: #fff; font-weight: 600; margin-right: 18px; }
+  .section-cover h2 { font-size: 96px; margin: 0; color: #fff; line-height: 1; font-weight: 600; letter-spacing: -0.02em; }
+  .section-cover p { color: rgba(255,255,255,0.7); font-size: 24px; max-width: 1200px; margin: 0; line-height: 1.4; }
+
+  /* device frame embed for screenshots */
+  .browser {
+    border: 1px solid var(--c-line); border-radius: 6px;
+    overflow: hidden; background: #fff;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+    display: flex; flex-direction: column;
+  }
+  .browser__bar {
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px 14px; border-bottom: 1px solid var(--c-line);
+    background: #FAFAFA;
+  }
+  .browser__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c-line); }
+  .browser__url {
+    flex: 1; padding: 6px 12px; margin-left: 8px;
+    background: #fff; border: 1px solid var(--c-line); border-radius: 3px;
+    font-family: "IBM Plex Mono", monospace; font-size: 13px; color: var(--c-muted);
+  }
+  .browser__body { padding: 20px; min-height: 400px; }
+
+  /* highlight ribbon */
+  .ribbon {
+    display: inline-flex; gap: 8px; align-items: center;
+    background: linear-gradient(90deg, var(--c-primary), var(--c-primary-hover));
+    color: #fff; padding: 8px 16px; border-radius: 3px;
+    font-size: 24px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+
+  .lede-large { font-size: 28px; color: var(--c-text-2); line-height: 1.4; max-width: 1500px; }
+
+  /* nav rail visualization */
+  .rail-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .rail-item {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px 20px; border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+  }
+  .rail-item__num {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: #EDF5FF; color: var(--c-primary);
+    display: flex; align-items: center; justify-content: center;
+    font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 24px;
+    flex-shrink: 0;
+  }
+  .rail-item__body { display: flex; flex-direction: column; min-width: 0; }
+  .rail-item__name { font-size: 26px; font-weight: 600; color: var(--c-ink); }
+  .rail-item__sub  { font-size: 24px; color: var(--c-muted); }
+
+  /* flow step horizontal */
+  .flow { display: flex; align-items: stretch; gap: 0; margin-top: 8px; }
+  .flow__step {
+    flex: 1; padding: 24px;
+    background: var(--c-bg-soft); border: 1px solid var(--c-line);
+    border-right: 0;
+    display: flex; flex-direction: column; gap: 8px;
+    position: relative;
+  }
+  .flow__step:last-child { border-right: 1px solid var(--c-line); }
+  .flow__step:not(:last-child)::after {
+    content: ""; position: absolute; right: -1px; top: 50%;
+    transform: translate(50%, -50%) rotate(45deg);
+    width: 24px; height: 24px;
+    background: var(--c-bg-soft); border-top: 1px solid var(--c-line); border-right: 1px solid var(--c-line);
+    z-index: 1;
+  }
+  .flow__step__num { font-family: "IBM Plex Mono", monospace; font-size: 24px; color: var(--c-primary); font-weight: 600; letter-spacing: 0.08em; }
+  .flow__step__title { font-size: 26px; font-weight: 600; color: var(--c-ink); }
+  .flow__step__hint { font-size: 24px; color: var(--c-text-2); line-height: 1.4; }
+  .flow__step--active { background: #EDF5FF; border-color: var(--c-primary); }
+  .flow__step--active::after { background: #EDF5FF; border-color: var(--c-primary); }
+
+  /* callout */
+  .callout {
+    background: var(--c-info-bg);
+    border-left: 4px solid var(--c-primary);
+    padding: 24px 28px;
+    font-size: 24px; color: var(--c-ink);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .callout b { color: var(--c-primary); }
+
+  /* swatch grid */
+  .swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .sw { display: flex; flex-direction: column; gap: 8px; }
+  .sw__chip { height: 120px; border-radius: var(--radius); }
+  .sw__name { font-size: 24px; font-weight: 600; color: var(--c-ink); }
+  .sw__hex  { font-family: "IBM Plex Mono", monospace; font-size: 24px; color: var(--c-muted); }
+
+  /* Q&A slide */
+  .qa-wrap { display: flex; align-items: center; justify-content: center; flex: 1; }
+  .qa-wrap h2 { font-size: 200px; margin: 0; color: var(--c-primary); font-weight: 700; letter-spacing: -0.05em; }
+  .qa-wrap p { font-size: 32px; color: var(--c-muted); }
+
+  /* roadmap timeline */
+  .timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+  .tl { border-top: 3px solid var(--c-primary); padding-top: 20px; position: relative; }
+  .tl::before { content: ""; width: 14px; height: 14px; border-radius: 50%; background: var(--c-primary); position: absolute; top: -8px; left: 0; }
+  .tl__lbl { font-size: 24px; font-family: "IBM Plex Mono", monospace; color: var(--c-primary); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+  .tl__title { font-size: 28px; font-weight: 600; color: var(--c-ink); margin: 4px 0 12px; }
+  .tl__list  { font-size: 24px; color: var(--c-text-2); list-style: none; padding: 0; margin: 0; }
+  .tl__list li { padding: 4px 0; }
+  .tl__list li::before { content: "·"; margin-right: 8px; color: var(--c-muted); }
+</style>
+</head>
+<body>
+
+<script type="application/json" id="speaker-notes">
+[
+  "Selamat datang. Hari ini saya akan membawa kita berjalan melalui prototype Modul Financing dari BOS7 — sistem back-office banking yang sedang kita bangun. Sesi ini sekitar 60–90 menit dan saya akan tunjukkan setiap modul utama, ditambah dua penambahan terbaru yang baru saja kita selesaikan: GL Interface pada Produk Pembiayaan dan halaman Data Jaminan yang sesuai dengan figma.",
+  "Ada tiga tujuan utama dari sesi ini. Pertama, menyamakan persepsi tentang apa saja modul dan flow yang sudah tercakup dalam prototype. Kedua, mendapatkan feedback konkret tentang struktur informasi, terminologi, dan UX-nya — terutama hal-hal yang spesifik untuk core banking syariah. Ketiga, menyepakati prioritas untuk iterasi berikutnya.",
+  "BOS7 adalah keluarga aplikasi back-office yang dibangun di atas core banking Core7. Modul Financing fokus pada pembiayaan — Murabahah, Mudharabah, Musyarakah, Ijarah, Istishna, Qardh, MMQ — beserta seluruh siklus hidupnya dari registrasi sampai hapus buku. Prototype ini menampilkan UI tingkat tinggi (hi-fi) dari semua flow utama untuk kita validasi sebelum masuk ke implementasi.",
+  "Cakupan modul Financing dalam prototype ini mencakup 9 area utama yang Anda lihat di sini. Setiap area mewakili rail navigasi terpisah di sidebar aplikasi. Untuk presentasi 60–90 menit, kita akan habiskan rata-rata 5–8 menit di setiap area, dengan penekanan lebih pada area yang baru kita kerjakan.",
+  "Secara teknis, frontend ini dibangun di atas IBM Carbon Design System v11 melalui paket internal @isi-ui7. Density-nya disesuaikan untuk operator back-office: font dasar 14 px, tinggi input 32 px, tabel 32 px per baris. Theming per-tenant — BCA Syariah, BJB Syariah, Mega Syariah, Pos Indonesia — di-handle lewat satu komponen GlobalCorporateTheme tanpa mengubah kode komponen.",
+  "Aplikasi memiliki 9 rail navigasi. Rail = group ikon vertikal di sidebar kiri. Setiap rail membuka panel sub-menu drilldown. Saya akan jalan satu per satu — silakan minta saya berhenti di rail yang Anda ingin perdalam.",
+  "Beranda berisi Site Map dan Dashboard. Site Map memberi peta lengkap semua flow yang sudah dibuat — ini juga akan berguna setelah sesi sebagai pintu masuk eksplorasi mandiri. Dashboard menampilkan KPI pembiayaan: outstanding, NPF, kolektibilitas, dan distribusi akad.",
+  "Modul Simulasi membantu officer menghitung skema angsuran sebelum nasabah mengajukan. Kita support seluruh akad: Murabahah, Mudharabah, Musyarakah, Ijarah, Istishna, Qardh, MMQ, PRKS, Gadai, plus simulasi Denda Ta'zir dan Ta'wid. Hasil simulasi bisa langsung dibawa ke flow Registrasi Pembiayaan.",
+  "Data Master menampung referensi master yang dipakai di seluruh modul: Instansi (cabang/lembaga), Pejabat, Vendor, Developer, Mitra Join Finance, Kode Bisnis, Jenis Aktiva, dan Biaya-Biaya. Semua master ini muncul sebagai lookup pada form-form transaksi.",
+  "Produk Parameter adalah salah satu jantung sistem. Di sinilah produk pembiayaan didefinisikan — bukan hanya nama dan akad, tapi juga seluruh perilaku akuntansi dan operasionalnya. Mari kita masuk ke detail Produk Pembiayaan.",
+  "Form New Produk Pembiayaan terdiri dari 4 section. Section 1 Data Produk — identitas dan parameter pembiayaan dasar. Section 2 Parameter Biaya — daftar biaya default yang akan dipakai saat registrasi fasilitas. Section 3 Parameter Denda — Ta'zir dan Ta'wid plus simulasi perhitungan. Section 4 — yang baru kita tambahkan — adalah GL Interface.",
+  "GL Interface adalah mapping antara kode_tx_class (jenis mutasi pada detil transaksi) dengan kode GL pada Chart of Account. Setiap produk punya mapping sendiri. Saat transaksi berjalan — pencairan, angsuran, denda — sistem konsultasi mapping ini untuk menentukan ke rekening GL mana setiap leg jurnal akan diposting. Mapping default disediakan per akad sehingga officer tidak perlu mulai dari nol. Lookup GL difilter berdasarkan account type untuk mencegah salah pilih.",
+  "Selain Produk Pembiayaan, ada Produk Fasilitas, Parameter Global, Parameter CKPN, Parameter Denda, dan Parameter Gadai. Masing-masing fokus pada satu aspek konfigurasi sistem.",
+  "Rekening & Fasilitas adalah modul operasional inti. Di sini officer mendaftarkan fasilitas pembiayaan baru, mengelola list, dan men-drill-down ke detail rekening. Mari lihat flow Registrasi Fasilitas.",
+  "Registrasi Pembiayaan adalah form multi-step yang panjang. Officer mengisi data nasabah, data fasilitas, parameter akad, biaya-biaya, jaminan, dropping. Setelah submit, transaksi masuk ke antrian otorisasi. Setelah disetujui, fasilitas resmi aktif di sistem.",
+  "List Fasilitas dan List Account Pembiayaan adalah halaman daftar dengan filter, search, dan aksi per-baris. Dari sini officer bisa lihat detail, edit data, koreksi limit, reposisi cabang, atau tutup fasilitas.",
+  "Halaman Detail Rekening menampilkan ringkasan saldo, jadwal angsuran, riwayat transaksi, jaminan terikat, dan dokumen pendukung. Semua dalam satu tampilan yang bisa di-scroll. Tombol aksi cepat untuk pembayaran, restruktur, dan addendum tersedia di sini.",
+  "Edit Rekening adalah modul perubahan terhadap rekening yang sudah aktif. Termasuk Ubah Data Rekening, Kelengkapan Data, Addendum, Restruktur, Ubah Jadwal Angsuran, dan Pengikatan dengan Agunan. Setiap perubahan masuk ke otorisasi.",
+  "Modul Transaksi mencakup seluruh transaksi pasca-pencairan: pembayaran manual, pelunasan dipercepat, koreksi pembayaran, input biaya-biaya, biaya amortisasi, PPID asuransi, hingga reposisi cabang. Setiap transaksi menghasilkan jurnal sesuai mapping GL Interface produk.",
+  "Pembayaran Manual adalah flow paling sering dipakai. Officer pilih rekening, sistem hitung obligasi (pokok + margin + denda jika ada), officer konfirmasi sumber pembayaran. Posting jurnal otomatis berdasarkan GL Interface.",
+  "Pelunasan Dipercepat menyajikan kalkulator yang menghitung sisa pokok, margin akrual yang sudah masuk, dan saving yang didapat nasabah. Koreksi Pembayaran memungkinkan officer membatalkan atau merevisi transaksi yang sudah diposting hari ini.",
+  "Hapus Buku adalah flow 3-tahap untuk pembiayaan yang sudah masuk kategori macet. Registrasi Hapus Buku — keluarkan dari neraca. Recovery — catat penerimaan dari debitor yang terhapus. Hapus Tagih — keluarkan dari catatan extracomptable. Setiap tahap punya formulir dan otorisasi sendiri.",
+  "Mari kita masuk ke modul Data Jaminan — area lain yang baru kita tambahkan halaman-halaman barunya. Modul ini mengelola seluruh master agunan, dari entri awal sampai release setelah pelunasan.",
+  "Daftar Jaminan adalah list utama dengan statistik di atas: total jaminan, total nilai, status diikat versus pending atau release. Setiap baris punya popup menu untuk lihat detail, edit, koreksi nilai appraisal, kelola dokumen, release, atau hapus.",
+  "Entri Jaminan Individual — sesuai figma 6.3.1 — adalah form 2-section untuk mendaftarkan agunan baru. Hero card di atas berisi Nama Nasabah, Jenis Jaminan, dan Kode Jaminan. Perhatikan: di figma asli jenis jaminan adalah 16 radio button tile. Kami menggantinya dengan dropdown — lebih compact, sesuai density BOS7, dan hero card jadi muat dalam 2 kolom saja.",
+  "Section 1 Informasi Umum mencakup Data Umum (nasabah, alamat, cabang, bukti kepemilikan, asuransi), Data Penilaian Terakhir (appraisal date, agent, nilai legal/pasar/taksasi/likuidasi), dan Dokumen. Section 2 Data Properti — atau Data Kendaraan / Data Emas dst sesuai jenis — berisi atribut spesifik jenis agunan: luas tanah, luas bangunan, NJOP, lokasi, IMB.",
+  "Entri Jaminan Kolektif — sesuai figma 6.4.1 — untuk batch entri beberapa properti di bawah satu nasabah atau korporat. Form ini lebih ringkas: identitas batch di atas, form per-properti di tengah, dan tabel ringkasan properti yang sudah ditambahkan di bawah. Tombol Tambahkan ke Daftar menambah item ke tabel, lalu Simpan mengkomit batch.",
+  "Detail Agunan — sesuai figma 6.1.1 — diakses dari popup menu Lihat Detail Agunan pada Daftar Jaminan. Sebelumnya ini adalah modal sederhana; sekarang menjadi halaman penuh sesuai figma. Punya 2 tab utama: Data Jaminan dan Pengikatan dan Asuransi. Tab Data Jaminan menampilkan seluruh data agunan dalam mode read-only, dengan inner section tabs yang sama seperti form entri. Tab Pengikatan menampilkan detail hak tanggungan, polis asuransi, dan dokumen pendukung.",
+  "Otorisasi mengimplementasikan pola Maker-Checker. Setiap transaksi yang membutuhkan persetujuan masuk ke antrian ini. Approver review detail, pemeriksaan otomatis (dokumen lengkap, limit tersedia, BI checking, SOP), tambahkan catatan, lalu setujui, tolak, atau eskalasi. Ini berlaku untuk registrasi, edit, dan transaksi yang melewati batas limit maker.",
+  "Recap design system. BOS7 = thin wrapper di atas IBM Carbon v11. Density retuned untuk banking: 14 px base, 32 px input. Border radius 0 atau 2 px saja. Tidak ada gradient, shadow hanya untuk floating layer (modal, dropdown). Type IBM Plex Sans/Mono. Multi-tenant theming via satu wrapper component.",
+  "Yang baru kita selesaikan dalam sprint ini: GL Interface section di Produk Pembiayaan dengan 14 kode_tx_class dan ~23 entri COA, plus tiga halaman Data Jaminan yang match figma 6.3.1, 6.4.1, dan 6.1.1. Plus pertimbangan UX: jenis jaminan dropdown vs 16 radio button tile.",
+  "Untuk demo live setelah sesi ini, saya sarankan urutan berikut sebagai skenario terpadu. Mulai dari Produk Pembiayaan — buat satu produk baru lengkap dengan mapping GL. Lanjut ke Data Jaminan — daftarkan satu agunan. Kemudian Registrasi Pembiayaan — buat rekening menggunakan produk dan agunan yang baru dibuat. Otorisasi. Lalu coba Pembayaran Manual untuk melihat posting jurnal sesuai mapping.",
+  "Roadmap berikutnya. Q3: lengkapi halaman placeholder yang masih kosong (Master Pejabat, Mitra Join Finance, Kode Bisnis), tambah Detail Agunan untuk jenis non-properti (Kendaraan, Emas, dst), wiring data nyata via API. Q4: laporan dan exports, audit trail per transaksi, dan multi-tenant theming live preview.",
+  "Sampai di sini bagian presentasi terstruktur. Saya tutup dengan beberapa pertanyaan yang ingin saya dapatkan jawabannya — silakan pikirkan sambil saya buka sesi Q&A."
+]
+</script>
+
+<deck-stage>
+
+  <!-- ── 01 Cover ─────────────────────────────────────────── -->
+  <section data-screen-label="01 Cover">
+    <div class="cover">
+      <div>
+        <div class="cover__eyebrow">Prototype Walkthrough · Mei 2026</div>
+      </div>
+
+      <div>
+        <div class="cover__rule"></div>
+        <h1>BOS7 Financing<br/>Module — Prototype</h1>
+        <p class="lede">
+          Hi-fi walkthrough alur back-office pembiayaan syariah pada platform Core7 —
+          dari Produk Parameter, Registrasi, Transaksi, hingga Data Jaminan.
+        </p>
+      </div>
+
+      <div class="cover__meta">
+        <span>Modul<b>Financing (BOS7)</b></span>
+        <span>Audiens<b>Product · Engineering · Ops</b></span>
+        <span>Durasi<b>60–90 menit</b></span>
+        <span>Status<b>Sprint review</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 02 Tujuan Sesi ───────────────────────────────────── -->
+  <section data-screen-label="02 Tujuan Sesi">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Konteks · Mengapa kita di sini</div>
+      </div>
+      <h1 class="title">Tiga hal yang ingin kita capai hari ini</h1>
+
+      <div class="grid-3" style="margin-top: 8px;">
+        <div class="tile">
+          <div class="tile__num">01 · ALIGNMENT</div>
+          <div class="tile__title">Samakan persepsi</div>
+          <div class="tile__body">Tunjukkan modul, flow, dan terminologi yang sudah tercakup dalam prototype agar semua pihak punya peta yang sama.</div>
+        </div>
+        <div class="tile">
+          <div class="tile__num">02 · FEEDBACK</div>
+          <div class="tile__title">Validasi UX & domain</div>
+          <div class="tile__body">Kumpulkan feedback konkret tentang struktur informasi, copy, dan kepatuhan terhadap praktik core banking syariah.</div>
+        </div>
+        <div class="tile">
+          <div class="tile__num">03 · PRIORITAS</div>
+          <div class="tile__title">Sepakati next step</div>
+          <div class="tile__body">Tentukan modul mana yang masuk sprint berikutnya, mana yang ditunda, mana yang perlu diperdalam.</div>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top: 16px;">
+        <b>Format sesi:</b> walkthrough terstruktur 45–60 menit + live demo &amp; Q&amp;A 15–30 menit.
+        Silakan interupsi kapan saja — diskusi lebih berharga daripada selesai cepat.
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>02 / 34</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 03 Apa itu BOS7 ──────────────────────────────────── -->
+  <section data-screen-label="03 Apa itu BOS7">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Konteks</div>
+        <div class="head__page">03 / 34</div>
+      </div>
+      <h1 class="title">BOS7 — Back-Office System di atas Core7</h1>
+      <p class="lede-large">
+        Keluarga aplikasi back-office banking syariah yang dibangun di atas core banking
+        <b>Core7</b> dari Ihsan Solusi Informatika. Modul-modulnya beroperasi sebagai webapp
+        terpisah namun berbagi shell, theme, dan komponen yang sama.
+      </p>
+
+      <div class="grid-4" style="margin-top: 16px;">
+        <div class="tile">
+          <div class="tile__num">bos7-financing</div>
+          <div class="tile__title">Pembiayaan</div>
+          <div class="tile__body">Akad, fasilitas, angsuran, jaminan — fokus presentasi hari ini.</div>
+        </div>
+        <div class="tile">
+          <div class="tile__num">bos7-cif</div>
+          <div class="tile__title">Customer Info</div>
+          <div class="tile__body">Data nasabah, alamat, identitas, profil risiko.</div>
+        </div>
+        <div class="tile">
+          <div class="tile__num">bos7-funding</div>
+          <div class="tile__title">Funding</div>
+          <div class="tile__body">Tabungan, deposito, giro syariah.</div>
+        </div>
+        <div class="tile">
+          <div class="tile__num">bos7-accounting</div>
+          <div class="tile__title">Accounting</div>
+          <div class="tile__body">General Ledger, journal, end-of-day batch.</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <b>Multi-tenant:</b> satu codebase, banyak brand. BCA Syariah, BJB Syariah, Bank Mega Syariah,
+        Pos Indonesia — token color &amp; logo dirotasi via <span class="mono">&lt;GlobalCorporateTheme&gt;</span>.
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Konteks platform</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 04 Cakupan Modul ─────────────────────────────────── -->
+  <section data-screen-label="04 Cakupan Modul">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Cakupan</div>
+        <div class="head__page">04 / 34</div>
+      </div>
+      <h1 class="title">9 area fungsional dalam prototype ini</h1>
+
+      <div class="rail-list" style="margin-top: 8px;">
+        <div class="rail-item"><div class="rail-item__num">01</div><div class="rail-item__body"><div class="rail-item__name">Beranda</div><div class="rail-item__sub">Site Map · Dashboard</div></div></div>
+        <div class="rail-item"><div class="rail-item__num">02</div><div class="rail-item__body"><div class="rail-item__name">Simulasi</div><div class="rail-item__sub">Murabahah · Mudharabah · MMQ · Gadai · …</div></div></div>
+        <div class="rail-item"><div class="rail-item__num">03</div><div class="rail-item__body"><div class="rail-item__name">Data Master</div><div class="rail-item__sub">Instansi · Vendor · Developer · Biaya</div></div></div>
+        <div class="rail-item"><div class="rail-item__num">04</div><div class="rail-item__body"><div class="rail-item__name">Produk Parameter</div><div class="rail-item__sub">Produk Pembiayaan · CKPN · Denda · Gadai</div></div></div>
+        <div class="rail-item"><div class="rail-item__num">05</div><div class="rail-item__body"><div class="rail-item__name">Rekening &amp; Fasilitas</div><div class="rail-item__sub">Registrasi · List · Detail Rekening</div></div></div>
+        <div class="rail-item"><div class="rail-item__num">06</div><div class="rail-item__body"><div class="rail-item__name">Edit Rekening</div><div class="rail-item__sub">Addendum · Restruktur · Ulang Jadwal</div></div></div>
+        <div class="rail-item"><div class="rail-item__num">07</div><div class="rail-item__body"><div class="rail-item__name">Transaksi</div><div class="rail-item__sub">Pembayaran · Pelunasan · Hapus Buku</div></div></div>
+        <div class="rail-item"><div class="rail-item__num">08</div><div class="rail-item__body"><div class="rail-item__name">Data Jaminan</div><div class="rail-item__sub">Daftar · Entri Individual / Kolektif · Detail</div></div></div>
+        <div class="rail-item"><div class="rail-item__num">09</div><div class="rail-item__body"><div class="rail-item__name">Otorisasi</div><div class="rail-item__sub">Antrian Maker-Checker</div></div></div>
+      </div>
+
+      <div class="callout">
+        Setiap area ≈ <b>5–8 menit</b> walkthrough, dengan penekanan lebih pada Produk Pembiayaan dan Data Jaminan
+        — dua area yang baru ditambahkan dalam sprint ini.
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>9 rail navigasi</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 05 Stack & Design System ─────────────────────────── -->
+  <section data-screen-label="05 Stack & Design System">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Foundation</div>
+        <div class="head__page">05 / 34</div>
+      </div>
+      <h1 class="title">Stack &amp; Design System</h1>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size: 28px; font-weight: 600; margin: 0 0 12px;">Tech &amp; Foundations</h3>
+          <ul class="bullets">
+            <li><b>Next.js</b> per-app · masing-masing modul ter-deploy independen<small>bos7-financing, bos7-cif, bos7-funding, …</small></li>
+            <li><b>React + IBM Carbon v11</b> sebagai dasar komponen<small>@carbon/react ^1.97 dengan override density</small></li>
+            <li><b>@isi-ui7/*</b> package shared antar modul BOS7<small>ui-shell, data-table, lookup-input, page-data, forms</small></li>
+            <li><b>Server-state via SSE &amp; NATS</b><small>real-time notifikasi, otorisasi, dashboard</small></li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="font-size: 28px; font-weight: 600; margin: 0 0 12px;">Density &amp; Visual Tone</h3>
+          <ul class="bullets">
+            <li><b>14 px base, 32 px input</b><small>retuned dari Carbon default 16/40 — agar muat 1366×768</small></li>
+            <li><b>Flat white + 1 layer abu</b><small>tidak ada gradient, shadow hanya untuk floating layer</small></li>
+            <li><b>Radius 0 / 2 px saja</b><small>kecuali avatar circle</small></li>
+            <li><b>Indonesian-first copy</b><small>Title Case · UPPERCASE eyebrow · sentence helper</small></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Foundation</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 06 SECTION COVER: Navigasi ───────────────────────── -->
+  <section data-screen-label="06 Section · Navigasi">
+    <div class="section-cover">
+      <div class="lbl"><b>BAGIAN I</b>Struktur Navigasi</div>
+      <h2>Bagaimana<br/>aplikasi ini dijelajahi</h2>
+      <p>Sidebar 2-tingkat: ikon rail kiri + panel drilldown. Header tetap di atas. Konten utama scroll mandiri. Pola yang sama dipakai di semua modul BOS7.</p>
+    </div>
+  </section>
+
+  <!-- ── 07 Beranda ──────────────────────────────────────── -->
+  <section data-screen-label="07 Beranda">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Rail 01 · Beranda</div>
+        <div class="head__page">07 / 34</div>
+      </div>
+      <h1 class="title">Site Map &amp; Dashboard</h1>
+      <p class="lede-large">Titik awal eksplorasi. Site Map memberi peta lengkap seluruh flow yang sudah dibuat — pintu masuk untuk demo terpandu maupun eksplorasi mandiri pasca-sesi.</p>
+
+      <div class="grid-2">
+        <div class="tile">
+          <span class="ribbon">Site Map</span>
+          <div class="tile__title" style="margin-top: 8px;">Peta lengkap semua flow</div>
+          <ul class="tile__list">
+            <li>Setup Awal — Data Master &amp; Produk Parameter</li>
+            <li>Lifecycle Rekening — Registrasi · Pencairan · Pembayaran · Pelunasan</li>
+            <li>Pengelolaan Jaminan — Entri · Pengikatan · Release</li>
+            <li>Otorisasi Maker-Checker</li>
+          </ul>
+        </div>
+        <div class="tile">
+          <span class="ribbon">Dashboard</span>
+          <div class="tile__title" style="margin-top: 8px;">KPI ringkas</div>
+          <ul class="tile__list">
+            <li>Outstanding pembiayaan per akad &amp; cabang</li>
+            <li>NPF ratio + kolektibilitas distribution</li>
+            <li>Pencairan vs Pelunasan harian</li>
+            <li>Antrian otorisasi yang menunggu</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Rail 01 · Beranda</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 08 Simulasi Coverage ─────────────────────────────── -->
+  <section data-screen-label="08 Simulasi Coverage">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Rail 02 · Simulasi</div>
+        <div class="head__page">08 / 34</div>
+      </div>
+      <h1 class="title">Simulator Angsuran — semua akad utama</h1>
+      <p class="lede-large">Officer dapat menghitung skema pembayaran sebelum nasabah mengajukan. Hasil simulasi dapat langsung dibawa ke flow Registrasi Pembiayaan.</p>
+
+      <div class="grid-4" style="gap: 16px;">
+        <div class="tile" style="padding: 20px;"><div class="tile__num">M / I</div><div class="tile__title">Murabahah · Istishna</div><div class="tile__body">Margin tetap, jadwal flat</div></div>
+        <div class="tile" style="padding: 20px;"><div class="tile__num">C</div><div class="tile__title">Mudharabah · Musyarakah</div><div class="tile__body">Bagi hasil, proyeksi nisbah</div></div>
+        <div class="tile" style="padding: 20px;"><div class="tile__num">I</div><div class="tile__title">Ijarah</div><div class="tile__body">Ujroh sewa, IMBT opsional</div></div>
+        <div class="tile" style="padding: 20px;"><div class="tile__num">MMQ</div><div class="tile__title">Musyarakah Mutanaqisah</div><div class="tile__body">Pengurangan porsi bank</div></div>
+        <div class="tile" style="padding: 20px;"><div class="tile__num">Q</div><div class="tile__title">Qardh · PRKS</div><div class="tile__body">Pinjaman kebajikan, qardh hasan</div></div>
+        <div class="tile" style="padding: 20px;"><div class="tile__num">G</div><div class="tile__title">Gadai</div><div class="tile__body">Rahn, ujroh penyimpanan</div></div>
+        <div class="tile" style="padding: 20px;"><div class="tile__num">D</div><div class="tile__title">Denda</div><div class="tile__body">Ta'zir + Ta'wid, simulasi harian</div></div>
+        <div class="tile" style="padding: 20px;"><div class="tile__num">⇒</div><div class="tile__title">Lanjut ke Registrasi</div><div class="tile__body">Carry-over parameter ke form</div></div>
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Rail 02 · Simulasi</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 09 Master Data ───────────────────────────────────── -->
+  <section data-screen-label="09 Master Data">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Rail 03 · Data Master</div>
+        <div class="head__page">09 / 34</div>
+      </div>
+      <h1 class="title">Master data — sumber lookup di seluruh modul</h1>
+
+      <table class="tbl">
+        <thead><tr><th style="width: 280px;">Menu</th><th>Isi</th><th>Dipakai sebagai lookup di</th></tr></thead>
+        <tbody>
+          <tr><td><b>Data Instansi</b></td><td>Cabang, lembaga, sub-cabang dengan PIC + alamat</td><td>Hampir semua form (field "Cabang")</td></tr>
+          <tr><td><b>Data Pejabat</b></td><td>Account Officer, Reviewer, Approver, Notaris/PPAT</td><td>Form Registrasi, Edit Rekening, Pengikatan Agunan</td></tr>
+          <tr><td><b>Data Vendor</b></td><td>Vendor pemasok untuk akad Istishna/Murabahah</td><td>Form Pencairan, Bayar Vendor</td></tr>
+          <tr><td><b>Data Developer</b></td><td>Developer perumahan untuk KPR/iB</td><td>Form Registrasi Pembiayaan KPR</td></tr>
+          <tr><td><b>Mitra Join Finance</b></td><td>Bank/lembaga rekanan untuk sindikasi</td><td>Form Fasilitas Sindikasi</td></tr>
+          <tr><td><b>Kode Bisnis · Jenis Aktiva · Biaya-Biaya</b></td><td>Klasifikasi standar internal/regulator</td><td>Form Produk, Registrasi, Pelaporan</td></tr>
+        </tbody>
+      </table>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Rail 03 · Data Master</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 10 SECTION COVER: Produk Parameter ──────────────── -->
+  <section data-screen-label="10 Section · Produk Parameter">
+    <div class="section-cover">
+      <div class="lbl"><b>BAGIAN II</b>Produk Parameter</div>
+      <h2>Mendefinisikan<br/>produk pembiayaan</h2>
+      <p>Bukan hanya nama dan akad. Di sini officer mendefinisikan perilaku akuntansi, biaya default, denda, dan — yang terbaru — mapping GL untuk setiap jenis mutasi.</p>
+    </div>
+  </section>
+
+  <!-- ── 11 Produk Pembiayaan ─────────────────────────────── -->
+  <section data-screen-label="11 Produk Pembiayaan">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Rail 04 · Produk Parameter</div>
+        <div class="head__page">11 / 34</div>
+      </div>
+      <h1 class="title">Produk Pembiayaan — form 4 section</h1>
+
+      <div class="flow">
+        <div class="flow__step">
+          <div class="flow__step__num">SECTION 1</div>
+          <div class="flow__step__title">Data Produk</div>
+          <div class="flow__step__hint">Kode, nama, akad, Pool of Fund, dropping model, valuta, limit, tenor, eqv rate, kelengkapan data, jaminan, auto payment.</div>
+        </div>
+        <div class="flow__step">
+          <div class="flow__step__num">SECTION 2</div>
+          <div class="flow__step__title">Parameter Biaya</div>
+          <div class="flow__step__hint">Biaya default (admin, provisi, materai, notaris…) — metode fixed/persentase, flag debet/kredit, rekening pembebanan.</div>
+        </div>
+        <div class="flow__step">
+          <div class="flow__step__num">SECTION 3</div>
+          <div class="flow__step__title">Parameter Denda</div>
+          <div class="flow__step__hint">Aktivasi, metode perhitungan, tarif Ta'zir &amp; Ta'wid, grace day, rekening pendapatan/kewajiban, simulasi perhitungan 7/30/90 hari.</div>
+        </div>
+        <div class="flow__step flow__step--active">
+          <div class="flow__step__num">SECTION 4 · BARU</div>
+          <div class="flow__step__title">GL Interface</div>
+          <div class="flow__step__hint">Mapping kode_tx_class → kode GL. Default per akad, dapat di-override per produk.</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        Sebelum sprint ini, Section 4 belum ada — mapping GL ter-hardcode per akad. Sekarang officer punya kontrol per-produk
+        dan dapat menyesuaikan untuk produk variant (cabang, segmen, dst).
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Rail 04 · Produk Parameter</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 12 GL Interface deep-dive ────────────────────────── -->
+  <section data-screen-label="12 GL Interface">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Penambahan baru · Section 4</div>
+        <div class="head__page">12 / 34</div>
+      </div>
+      <h1 class="title">GL Interface — mapping kode_tx_class → kode GL</h1>
+      <p class="lede-large"><span class="mono">kode_tx_class</span> adalah jenis mutasi pada detil transaksi.
+      Setiap produk meng-map kode ini ke rekening GL yang akan diposting saat transaksi berjalan.</p>
+
+      <div class="grid-2" style="gap: 64px;">
+        <div>
+          <h3 style="font-size: 24px; font-weight: 600; margin: 0 0 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--c-muted);">14 kode_tx_class</h3>
+          <table class="tbl">
+            <thead><tr><th>Kode</th><th>Account Type</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">PIUTANG</td><td><span class="tag tag--success">Asset</span></td></tr>
+              <tr><td class="mono">MMD · AKRU · PYAD</td><td><span class="tag tag--success">Asset</span></td></tr>
+              <tr><td class="mono">PENDAPATAN · ADM · PROVISI</td><td><span class="tag">Income</span></td></tr>
+              <tr><td class="mono">DENDA_TAZIR</td><td><span class="tag">Income</span></td></tr>
+              <tr><td class="mono">DENDA_TAWID · TITIPAN · PAJAK</td><td><span class="tag tag--ghost">Liability</span></td></tr>
+              <tr><td class="mono">CKPN · BEBAN_CKPN · HAPUS_BUKU</td><td><span class="tag tag--warn">Asset / Expense</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h3 style="font-size: 24px; font-weight: 600; margin: 0 0 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--c-muted);">UX yang diberikan</h3>
+          <ul class="bullets">
+            <li><b>Default mapping per akad</b><small>Murabahah, Istishna, Mudharabah — officer tidak mulai dari nol</small></li>
+            <li><b>Lookup COA terfilter</b><small>hanya tampil GL dengan account type yang sesuai</small></li>
+            <li><b>Tanda <code class="mono" style="color: var(--c-error);">*</code> = wajib</b><small>tx_class wajib di-mapping sebelum produk aktif</small></li>
+            <li><b>Reset ke Default</b><small>kembali ke template akad bila ragu</small></li>
+            <li><b>Konsisten di Detail &amp; Edit</b><small>tab read-only di Detail Produk Pembiayaan</small></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Penambahan sprint terkini</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 13 Parameter lainnya ─────────────────────────────── -->
+  <section data-screen-label="13 Parameter lainnya">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Rail 04 · Produk Parameter</div>
+        <div class="head__page">13 / 34</div>
+      </div>
+      <h1 class="title">Konfigurasi sistem &amp; produk pendukung</h1>
+
+      <div class="grid-3">
+        <div class="tile">
+          <div class="tile__num">PARAMETER GLOBAL</div>
+          <div class="tile__title">Settings level institusi</div>
+          <div class="tile__body">Identitas institusi, periode buku, valuta utama, metode akuntansi, limit teller/supervisor, auto-otorisasi, holding days, NPM threshold.</div>
+        </div>
+        <div class="tile">
+          <div class="tile__num">PARAMETER CKPN</div>
+          <div class="tile__title">Cadangan Kerugian</div>
+          <div class="tile__body">Formula CKPN per kolektibilitas, threshold, recovery factor, jurnal otomatis akhir hari.</div>
+        </div>
+        <div class="tile">
+          <div class="tile__num">PARAMETER DENDA · GADAI</div>
+          <div class="tile__title">Tarif &amp; rumus</div>
+          <div class="tile__body">Tarif Ta'zir / Ta'wid global, ujroh penyimpanan gadai per nilai taksasi, grace period default.</div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Konfigurasi pendukung</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 14 SECTION COVER: Rekening & Fasilitas ──────────── -->
+  <section data-screen-label="14 Section · Rekening & Fasilitas">
+    <div class="section-cover">
+      <div class="lbl"><b>BAGIAN III</b>Rekening &amp; Fasilitas</div>
+      <h2>Lifecycle rekening<br/>pembiayaan</h2>
+      <p>Registrasi, daftar, detail rekening — modul operasional inti yang paling sering dipakai officer pembiayaan setiap harinya.</p>
+    </div>
+  </section>
+
+  <!-- ── 15 Registrasi Fasilitas ──────────────────────────── -->
+  <section data-screen-label="15 Registrasi Fasilitas">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Rail 05 · Rekening &amp; Fasilitas</div>
+        <div class="head__page">15 / 34</div>
+      </div>
+      <h1 class="title">Registrasi Fasilitas — 4 langkah</h1>
+
+      <div class="flow">
+        <div class="flow__step flow__step--active">
+          <div class="flow__step__num">STEP 1</div>
+          <div class="flow__step__title">Nasabah &amp; Produk</div>
+          <div class="flow__step__hint">Pilih nasabah (lookup CIF), pilih produk (carry parameter default), tentukan plafond &amp; tenor.</div>
+        </div>
+        <div class="flow__step">
+          <div class="flow__step__num">STEP 2</div>
+          <div class="flow__step__title">Biaya &amp; Akad</div>
+          <div class="flow__step__hint">Sesuaikan biaya default produk, isi parameter akad spesifik (margin, nisbah, ujroh, dst).</div>
+        </div>
+        <div class="flow__step">
+          <div class="flow__step__num">STEP 3</div>
+          <div class="flow__step__title">Jaminan &amp; Dokumen</div>
+          <div class="flow__step__hint">Pilih agunan dari Daftar Jaminan, atau daftarkan agunan baru. Upload dokumen pendukung.</div>
+        </div>
+        <div class="flow__step">
+          <div class="flow__step__num">STEP 4</div>
+          <div class="flow__step__title">Review &amp; Submit</div>
+          <div class="flow__step__hint">Officer review summary, submit ke antrian Otorisasi. Setelah disetujui, fasilitas aktif.</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        Variasi flow tersedia untuk: <b>Rekening Pembiayaan</b>, <b>Rekening Gadai</b>, <b>Qardh</b>, <b>Qardh bil Ujroh</b>, <b>Bank Garansi</b>.
+        Setiap variant mengaktifkan field-set yang relevan.
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Registrasi multi-step</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 16 List & Detail Rekening ────────────────────────── -->
+  <section data-screen-label="16 List & Detail Rekening">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Rail 05 · Rekening &amp; Fasilitas</div>
+        <div class="head__page">16 / 34</div>
+      </div>
+      <h1 class="title">List &amp; Detail Rekening — operasional harian</h1>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size: 28px; font-weight: 600; margin: 0 0 12px;">List Fasilitas / Pembiayaan</h3>
+          <ul class="bullets">
+            <li><b>Filter &amp; search</b> kombinasi cabang, status, akad, range plafond, nasabah<small>plus quick filters di toolbar</small></li>
+            <li><b>Popup menu per-baris</b><small>Detail · Edit · Koreksi Limit · Reposisi Cabang · Tutup</small></li>
+            <li><b>Toolbar action</b> Export · Add &amp; Send to Workflow</li>
+            <li><b>Drilldown</b> klik baris → halaman Detail Rekening</li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="font-size: 28px; font-weight: 600; margin: 0 0 12px;">Detail Rekening</h3>
+          <ul class="bullets">
+            <li><b>Ringkasan saldo</b> outstanding · sisa · status · kolektibilitas</li>
+            <li><b>Jadwal angsuran</b> tabel lengkap + indikator paid/due</li>
+            <li><b>Riwayat transaksi</b> mutasi GL per leg</li>
+            <li><b>Jaminan terikat</b> + dokumen pendukung</li>
+            <li><b>Aksi cepat</b> Bayar · Restruktur · Addendum · Tutup</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>List · Detail</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 17 Edit Rekening ─────────────────────────────────── -->
+  <section data-screen-label="17 Edit Rekening">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Rail 06 · Edit Rekening</div>
+        <div class="head__page">17 / 34</div>
+      </div>
+      <h1 class="title">Perubahan terhadap rekening aktif</h1>
+
+      <div class="grid-3">
+        <div class="tile">
+          <div class="tile__num">DATA</div>
+          <div class="tile__title">Ubah Data Rekening</div>
+          <div class="tile__body">Kelengkapan data nasabah, AO pengelola, AO maintenance, instansi/developer, notaris, rekening sumber pembayaran.</div>
+        </div>
+        <div class="tile">
+          <div class="tile__num">ADDENDUM</div>
+          <div class="tile__title">Addendum Pembiayaan</div>
+          <div class="tile__body">Penambahan plafond, perubahan margin / nisbah, perpanjangan tenor — semuanya menghasilkan akad addendum baru.</div>
+        </div>
+        <div class="tile">
+          <div class="tile__num">RESTRUKTUR</div>
+          <div class="tile__title">Restruktur Pembiayaan</div>
+          <div class="tile__body">Restrukturisasi dengan skema baru: reschedule, reconditioning, atau restructuring penuh termasuk konversi akad.</div>
+        </div>
+        <div class="tile">
+          <div class="tile__num">JADWAL</div>
+          <div class="tile__title">Ubah Jadwal Angsuran</div>
+          <div class="tile__body">Geser tanggal jatuh tempo, perubahan frequency angsuran, grace period tambahan.</div>
+        </div>
+        <div class="tile">
+          <div class="tile__num">AGUNAN</div>
+          <div class="tile__title">Pengikatan dengan Agunan</div>
+          <div class="tile__body">Ikat agunan tambahan, ganti agunan, ubah jenis pengikatan (HT, Fidusia, Gadai, SKMHT).</div>
+        </div>
+        <div class="tile">
+          <div class="tile__num">FLOW</div>
+          <div class="tile__title">Semua via Otorisasi</div>
+          <div class="tile__body">Tidak ada perubahan yang langsung effective — semua melalui antrian Maker-Checker terlebih dahulu.</div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Rail 06 · Edit Rekening</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 18 SECTION COVER: Transaksi ──────────────────────── -->
+  <section data-screen-label="18 Section · Transaksi">
+    <div class="section-cover">
+      <div class="lbl"><b>BAGIAN IV</b>Transaksi</div>
+      <h2>Transaksi<br/>pasca-pencairan</h2>
+      <p>Pembayaran, pelunasan, koreksi, biaya, hapus buku — setiap transaksi menghasilkan jurnal sesuai mapping GL Interface produk.</p>
+    </div>
+  </section>
+
+  <!-- ── 19 Pembayaran Manual ─────────────────────────────── -->
+  <section data-screen-label="19 Pembayaran Manual">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Rail 07 · Transaksi</div>
+        <div class="head__page">19 / 34</div>
+      </div>
+      <h1 class="title">Pembayaran Manual — alur paling sering</h1>
+
+      <div class="grid-2">
+        <div>
+          <ul class="bullets">
+            <li><b>Pilih rekening</b> via lookup (kode / nasabah / NIK)<small>sistem fetch jadwal &amp; obligasi terkini</small></li>
+            <li><b>Sistem hitung obligasi</b><small>pokok jatuh tempo + margin akrual + denda jika ada</small></li>
+            <li><b>Officer pilih sumber</b><small>auto-debit tabungan, cash counter, transfer masuk</small></li>
+            <li><b>Konfirmasi &amp; posting</b><small>jurnal multi-leg sesuai GL Interface produk</small></li>
+            <li><b>Cetak slip &amp; update jadwal</b></li>
+          </ul>
+        </div>
+        <div>
+          <div class="tile">
+            <div class="tile__num">CONTOH JURNAL</div>
+            <div class="tile__title">Pembayaran Murabahah Rp 5.000.000</div>
+            <table class="tbl" style="margin-top: 8px;">
+              <thead><tr><th>Leg</th><th style="text-align: right;">Debet</th><th style="text-align: right;">Kredit</th></tr></thead>
+              <tbody>
+                <tr><td>Cash / Tabungan (sumber)</td><td class="mono" style="text-align: right;">5.000.000</td><td></td></tr>
+                <tr><td>Piutang Murabahah</td><td></td><td class="mono" style="text-align: right;">3.500.000</td></tr>
+                <tr><td>MMD → Pendapatan Margin</td><td class="mono" style="text-align: right;">1.500.000</td><td class="mono" style="text-align: right;">1.500.000</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Pembayaran</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 20 Pelunasan & Koreksi ───────────────────────────── -->
+  <section data-screen-label="20 Pelunasan & Koreksi">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Rail 07 · Transaksi</div>
+        <div class="head__page">20 / 34</div>
+      </div>
+      <h1 class="title">Pelunasan Dipercepat &amp; Koreksi</h1>
+
+      <div class="grid-2">
+        <div class="tile">
+          <span class="ribbon">Pelunasan Dipercepat</span>
+          <div class="tile__title" style="margin-top: 12px;">Kalkulator + posting</div>
+          <ul class="tile__list">
+            <li>Hitung sisa pokok, margin akrual yang sudah masuk</li>
+            <li>Saving margin (margin yang dibebaskan)</li>
+            <li>Denda bila ada — opsi waive penuh / sebagian</li>
+            <li>Konfirmasi tanggal efektif pelunasan</li>
+            <li>Jurnal final + status rekening → Lunas</li>
+          </ul>
+        </div>
+        <div class="tile">
+          <span class="ribbon">Koreksi Pembayaran</span>
+          <div class="tile__title" style="margin-top: 12px;">Reversal transaksi hari berjalan</div>
+          <ul class="tile__list">
+            <li>Cari transaksi (no. transaksi / tgl / nasabah)</li>
+            <li>Review detail leg per leg</li>
+            <li>Alasan koreksi (input salah, double posting, dst)</li>
+            <li>Jurnal balik otomatis dengan tag "REV"</li>
+            <li>Wajib otorisasi level supervisor ke atas</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Transaksi · Korektif</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 21 Hapus Buku flow ──────────────────────────────── -->
+  <section data-screen-label="21 Hapus Buku flow">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Rail 07 · Transaksi</div>
+        <div class="head__page">21 / 34</div>
+      </div>
+      <h1 class="title">Hapus Buku — flow 3 tahap</h1>
+
+      <div class="flow">
+        <div class="flow__step">
+          <div class="flow__step__num">TAHAP 1</div>
+          <div class="flow__step__title">Registrasi Hapus Buku</div>
+          <div class="flow__step__hint">Pembiayaan kategori macet (kolektibilitas 5) dikeluarkan dari neraca. Saldo dipindahkan ke catatan extracomptable. Beban CKPN di-realisasi.</div>
+        </div>
+        <div class="flow__step">
+          <div class="flow__step__num">TAHAP 2</div>
+          <div class="flow__step__title">Recovery</div>
+          <div class="flow__step__hint">Saat debitor menyetor (sebagian/penuh), catat penerimaan recovery. Masuk ke Pendapatan Recovery, bukan kembali ke piutang.</div>
+        </div>
+        <div class="flow__step">
+          <div class="flow__step__num">TAHAP 3</div>
+          <div class="flow__step__title">Hapus Tagih</div>
+          <div class="flow__step__hint">Setelah upaya tagih maksimal dan tidak ada prospek, keluarkan dari catatan extracomptable. Final write-off.</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        Ketiga tahap punya formulir, otorisasi, dan jurnal posting sendiri.
+        Pemisahan tahap ini penting untuk audit trail &amp; pelaporan ke OJK.
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Hapus Buku</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 22 SECTION COVER: Data Jaminan ──────────────────── -->
+  <section data-screen-label="22 Section · Data Jaminan">
+    <div class="section-cover">
+      <div class="lbl"><b>BAGIAN V</b>Data Jaminan</div>
+      <h2>Penambahan baru<br/>sesuai Figma</h2>
+      <p>Tiga halaman baru: Entri Individual (6.3.1), Entri Kolektif (6.4.1), Detail Agunan (6.1.1) — plus satu pertimbangan UX yang penting kami highlight.</p>
+    </div>
+  </section>
+
+  <!-- ── 23 Daftar Jaminan ────────────────────────────────── -->
+  <section data-screen-label="23 Daftar Jaminan">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Rail 08 · Data Jaminan</div>
+        <div class="head__page">23 / 34</div>
+      </div>
+      <h1 class="title">Daftar Jaminan — list utama</h1>
+
+      <div class="grid-4" style="gap: 16px; margin-bottom: 12px;">
+        <div class="stat"><div class="stat__label">Total Jaminan</div><div class="stat__value">9</div><div class="stat__hint">Aktif di seluruh cabang</div></div>
+        <div class="stat"><div class="stat__label">Total Nilai</div><div class="stat__value">Rp 8.7 M</div><div class="stat__hint">Jumlah nilai appraisal</div></div>
+        <div class="stat"><div class="stat__label">Status Diikat</div><div class="stat__value" style="color: var(--c-success);">6</div><div class="stat__hint">Hak Tanggungan aktif</div></div>
+        <div class="stat"><div class="stat__label">Pending / Release</div><div class="stat__value">3</div><div class="stat__hint">Belum diikat / sudah dilepas</div></div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size: 26px; font-weight: 600; margin: 0 0 12px;">Kolom &amp; aksi</h3>
+          <ul class="bullets">
+            <li><b>No. Jaminan · No. Nasabah · Nama</b><small>identifier dasar</small></li>
+            <li><b>Jenis · Nilai · Lembaga Penilai · Tgl. Appraisal · Status</b></li>
+            <li><b>Popup per-baris</b><small>Lihat Detail · Edit · Koreksi Nilai · Dokumen · Release · Hapus</small></li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="font-size: 26px; font-weight: 600; margin: 0 0 12px;">Toolbar actions</h3>
+          <ul class="bullets">
+            <li><b>Entri Kolektif</b> → <span class="route">/jaminan/entri-kolektif</span></li>
+            <li><b>Tambah Jaminan</b> → <span class="route">/jaminan/entri-individual</span></li>
+            <li><b>Lihat Detail</b> → <span class="route">/jaminan/detail?kode=…</span><small>baru — sebelumnya modal, sekarang full page</small></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Rail 08 · Data Jaminan</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 24 Entri Individual 6.3.1 ────────────────────────── -->
+  <section data-screen-label="24 Entri Individual 6.3.1">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Figma 6.3.1 · Properti Individu</div>
+        <div class="head__page">24 / 34</div>
+      </div>
+      <h1 class="title">Entri Jaminan Individual — form 2 section</h1>
+
+      <div class="flow">
+        <div class="flow__step flow__step--active" style="flex: 0.6;">
+          <div class="flow__step__num">HERO CARD</div>
+          <div class="flow__step__title">Nasabah · Jenis · Kode</div>
+          <div class="flow__step__hint">Lookup nasabah, dropdown Jenis Jaminan (16 opsi), kode auto-generated.</div>
+        </div>
+        <div class="flow__step">
+          <div class="flow__step__num">SECTION 1</div>
+          <div class="flow__step__title">Informasi Umum</div>
+          <div class="flow__step__hint">Data Umum (alamat, cabang, bukti kepemilikan, asuransi) · Data Penilaian Terakhir · Dokumen.</div>
+        </div>
+        <div class="flow__step">
+          <div class="flow__step__num">SECTION 2</div>
+          <div class="flow__step__title">Data Properti / Kendaraan / dst</div>
+          <div class="flow__step__hint">Atribut spesifik jenis agunan — properti: luas, NJOP, lokasi, IMB.</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <b>Pertimbangan UX:</b> di figma asli, "Jenis Jaminan" adalah 16 radio button tile yang memakan ruang signifikan di hero card.
+        Kami menggantinya dengan <b>dropdown compact</b> — sesuai density BOS7, hero card jadi muat dalam 2 kolom, dan pemilihan tetap one-click.
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Figma 6.3.1</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 25 Entri Kolektif 6.4.1 ──────────────────────────── -->
+  <section data-screen-label="25 Entri Kolektif 6.4.1">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Figma 6.4.1 · Properti Kolektif</div>
+        <div class="head__page">25 / 34</div>
+      </div>
+      <h1 class="title">Entri Jaminan Kolektif — batch entri</h1>
+      <p class="lede-large">Untuk korporat / developer yang menjaminkan banyak properti sekaligus. Form per-properti + tabel ringkasan.</p>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size: 28px; font-weight: 600; margin: 0 0 12px;">Layout</h3>
+          <ul class="bullets">
+            <li><b>Identitas batch</b><small>Nasabah / Korporat + Kode Kolektif (di hero card)</small></li>
+            <li><b>Form Dokumen + Data Properti</b><small>per-item — Tipe, Status, Luas, NJOP, Lokasi, IMB</small></li>
+            <li><b>Tombol "Tambahkan ke Daftar"</b><small>commit ke tabel, reset form per-item</small></li>
+            <li><b>Tabel ringkasan</b><small>review properti yang sudah ditambahkan, hapus per baris</small></li>
+            <li><b>Simpan</b><small>commit batch + create N rekord agunan</small></li>
+          </ul>
+        </div>
+        <div>
+          <div class="tile">
+            <div class="tile__num">CONTOH RINGKASAN</div>
+            <table class="tbl">
+              <thead><tr><th>No. Objek</th><th>Tipe</th><th>Luas</th><th style="text-align: right;">NJOP</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">…3261-A</td><td>Rumah Tinggal</td><td class="mono">120 / 95 m²</td><td class="mono" style="text-align: right;">1.85 M</td></tr>
+                <tr><td class="mono">…3261-B</td><td>Rumah Tinggal</td><td class="mono">110 / 90 m²</td><td class="mono" style="text-align: right;">1.72 M</td></tr>
+                <tr><td class="mono">…3261-C</td><td>Ruko</td><td class="mono">90 / 180 m²</td><td class="mono" style="text-align: right;">2.40 M</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Figma 6.4.1</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 26 Detail Agunan 6.1.1 ───────────────────────────── -->
+  <section data-screen-label="26 Detail Agunan 6.1.1">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Figma 6.1.1 · Detail Agunan</div>
+        <div class="head__page">26 / 34</div>
+      </div>
+      <h1 class="title">Detail Agunan — full page (sebelumnya modal)</h1>
+
+      <div class="grid-2" style="gap: 64px;">
+        <div>
+          <h3 style="font-size: 28px; font-weight: 600; margin: 0 0 12px;">Tab "Data Jaminan"</h3>
+          <ul class="bullets">
+            <li><b>Hero read-only</b><small>Nama, jenis (tag), kode jaminan</small></li>
+            <li><b>Section tabs</b> Informasi Umum / Data Properti<small>Disp fields, struktur identik dengan form entri</small></li>
+            <li><b>Konsistensi visual</b><small>komponen sama, hanya mode read-only</small></li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="font-size: 28px; font-weight: 600; margin: 0 0 12px;">Tab "Pengikatan dan Asuransi"</h3>
+          <ul class="bullets">
+            <li><b>Pengikatan Agunan</b><small>Hak Tanggungan, akta APHT, sertifikat HT, notaris</small></li>
+            <li><b>Polis Asuransi</b><small>perusahaan, nomor polis, banker's clause, periode</small></li>
+            <li><b>Dokumen Pendukung</b><small>list PDF/ZIP dengan tombol download</small></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout">
+        <b>Diakses dari:</b> popup menu "Lihat Detail Agunan" pada Daftar Jaminan.
+        Navigasi ke <span class="route">/jaminan/detail?kode=…</span> — tidak lagi membuka modal.
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Figma 6.1.1</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 27 Otorisasi ─────────────────────────────────────── -->
+  <section data-screen-label="27 Otorisasi">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Rail 09 · Otorisasi</div>
+        <div class="head__page">27 / 34</div>
+      </div>
+      <h1 class="title">Antrian Otorisasi — Maker-Checker</h1>
+
+      <div class="grid-2">
+        <div>
+          <ul class="bullets">
+            <li><b>Antrian terurut</b><small>by tipe transaksi, nasabah, nominal, maker, waktu input</small></li>
+            <li><b>Klik baris</b> → panel review samping<small>tidak meninggalkan halaman</small></li>
+            <li><b>Pemeriksaan otomatis</b><small>dokumen lengkap · limit tersedia · BI check · SOP</small></li>
+            <li><b>Catatan approver</b><small>opsional, masuk ke audit trail</small></li>
+            <li><b>3 aksi</b><small>Setujui · Tolak (kembali ke maker) · Eskalasi (ke level di atas)</small></li>
+          </ul>
+        </div>
+        <div>
+          <div class="tile">
+            <div class="tile__num">TRANSAKSI YANG MELEWATI OTORISASI</div>
+            <ul class="tile__list">
+              <li>Registrasi Pembiayaan (semua)</li>
+              <li>Addendum / Restruktur (semua)</li>
+              <li>Pembayaran di atas limit teller</li>
+              <li>Koreksi Pembayaran (semua)</li>
+              <li>Pelunasan Dipercepat dengan waive denda</li>
+              <li>Release Agunan</li>
+              <li>Setiap tahap Hapus Buku</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Rail 09 · Otorisasi</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 28 Design System Recap ───────────────────────────── -->
+  <section data-screen-label="28 Design System Recap">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Visual Foundations</div>
+        <div class="head__page">28 / 34</div>
+      </div>
+      <h1 class="title">Design System Recap — apa yang membuatnya konsisten</h1>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size: 28px; font-weight: 600; margin: 0 0 12px;">Density &amp; Layout</h3>
+          <ul class="bullets">
+            <li><b>14 px base · 32 px controls</b><small>retuned dari Carbon stock 16/40</small></li>
+            <li><b>Flat white</b><small>1 layer abu untuk sidebar, toolbar, stat tile</small></li>
+            <li><b>Tidak ada gradient / texture / illustration</b><small>spreadsheet aesthetic — bukan consumer app</small></li>
+            <li><b>Radius 0 / 2 px</b><small>avatar circle satu-satunya pengecualian</small></li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="font-size: 28px; font-weight: 600; margin: 0 0 12px;">Multi-tenant Color</h3>
+          <div class="swatches">
+            <div class="sw"><div class="sw__chip" style="background: #0F62FE;"></div><div class="sw__name">Ihsan / Carbon</div><div class="sw__hex">#0F62FE</div></div>
+            <div class="sw"><div class="sw__chip" style="background: #0868B8;"></div><div class="sw__name">BCA Syariah</div><div class="sw__hex">#0868B8</div></div>
+            <div class="sw"><div class="sw__chip" style="background: #C8102E;"></div><div class="sw__name">BJB Syariah</div><div class="sw__hex">#C8102E</div></div>
+            <div class="sw"><div class="sw__chip" style="background: #182858;"></div><div class="sw__name">Pos Indonesia</div><div class="sw__hex">#182858</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>BOS7 atop IBM Carbon v11</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 29 Recent Enhancements summary ───────────────────── -->
+  <section data-screen-label="29 Recent Enhancements">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Sprint Output · Mei 2026</div>
+        <div class="head__page">29 / 34</div>
+      </div>
+      <h1 class="title">Yang baru kita selesaikan</h1>
+
+      <div class="grid-2">
+        <div class="tile">
+          <span class="ribbon">Produk Pembiayaan</span>
+          <div class="tile__title" style="margin-top: 12px;">Section 4 · GL Interface</div>
+          <ul class="tile__list">
+            <li>14 kode_tx_class baru (PIUTANG, MMD, PENDAPATAN, AKRU, PYAD, ADM, PROVISI, DENDA_TAZIR, DENDA_TAWID, CKPN, BEBAN_CKPN, TITIPAN, PAJAK, HAPUS_BUKU)</li>
+            <li>~23 entri COA dengan struktur kode 11 digit</li>
+            <li>Default mapping per akad (Murabahah · Istishna · Mudharabah)</li>
+            <li>Lookup GL terfilter by Account Type</li>
+            <li>Konsisten di Detail (read-only) &amp; Edit</li>
+          </ul>
+        </div>
+        <div class="tile">
+          <span class="ribbon">Data Jaminan</span>
+          <div class="tile__title" style="margin-top: 12px;">3 halaman baru match figma</div>
+          <ul class="tile__list">
+            <li><b>6.3.1</b> Entri Jaminan Individual — form 2-section dengan hero</li>
+            <li><b>6.4.1</b> Entri Jaminan Kolektif — batch entri + tabel ringkasan</li>
+            <li><b>6.1.1</b> Detail Agunan — full page, 2 tab</li>
+            <li>UX call: 16 radio tile → dropdown compact</li>
+            <li>Komponen reusable (read &amp; write mode)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Sprint output</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 30 Demo Script ──────────────────────────────────── -->
+  <section data-screen-label="30 Demo Script">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Live Demo · Skenario terpadu</div>
+        <div class="head__page">30 / 34</div>
+      </div>
+      <h1 class="title">Skenario demo — alur end-to-end</h1>
+
+      <div class="flow">
+        <div class="flow__step">
+          <div class="flow__step__num">STEP 1</div>
+          <div class="flow__step__title">Setup Produk</div>
+          <div class="flow__step__hint">Buat Produk Pembiayaan baru lengkap dengan Section 4 GL Interface.</div>
+        </div>
+        <div class="flow__step">
+          <div class="flow__step__num">STEP 2</div>
+          <div class="flow__step__title">Daftarkan Agunan</div>
+          <div class="flow__step__hint">Entri Jaminan Individual sebuah properti dengan dropdown jenis baru.</div>
+        </div>
+        <div class="flow__step">
+          <div class="flow__step__num">STEP 3</div>
+          <div class="flow__step__title">Registrasi Pembiayaan</div>
+          <div class="flow__step__hint">Pakai produk + agunan yang baru dibuat. Submit ke otorisasi.</div>
+        </div>
+        <div class="flow__step">
+          <div class="flow__step__num">STEP 4</div>
+          <div class="flow__step__title">Otorisasi</div>
+          <div class="flow__step__hint">Approver review &amp; setujui. Fasilitas aktif.</div>
+        </div>
+        <div class="flow__step">
+          <div class="flow__step__num">STEP 5</div>
+          <div class="flow__step__title">Pembayaran</div>
+          <div class="flow__step__hint">Lihat posting jurnal sesuai mapping GL Interface produk.</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        Estimasi durasi demo: <b>20–25 menit</b> untuk alur lengkap di atas, plus 10 menit eksplorasi bebas.
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Skenario live demo</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 31 Roadmap ──────────────────────────────────────── -->
+  <section data-screen-label="31 Roadmap">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Next 6 bulan</div>
+        <div class="head__page">31 / 34</div>
+      </div>
+      <h1 class="title">Roadmap pengembangan</h1>
+
+      <div class="timeline">
+        <div class="tl">
+          <div class="tl__lbl">Q2 2026 · sekarang</div>
+          <div class="tl__title">Sprint Review</div>
+          <ul class="tl__list">
+            <li>GL Interface Produk Pembiayaan</li>
+            <li>Data Jaminan: 3 halaman (6.1.1, 6.3.1, 6.4.1)</li>
+            <li>Konsistensi multi-section form</li>
+          </ul>
+        </div>
+        <div class="tl">
+          <div class="tl__lbl">Q3 2026</div>
+          <div class="tl__title">Lengkapi Modul</div>
+          <ul class="tl__list">
+            <li>Placeholder Master (Pejabat, Mitra, Kode Bisnis)</li>
+            <li>Detail Agunan non-properti (Kendaraan, Emas, Mesin)</li>
+            <li>Wiring API live (per modul)</li>
+            <li>Form Koreksi Nilai Appraisal</li>
+          </ul>
+        </div>
+        <div class="tl">
+          <div class="tl__lbl">Q4 2026</div>
+          <div class="tl__title">Laporan &amp; Audit</div>
+          <ul class="tl__list">
+            <li>Laporan internal &amp; OJK</li>
+            <li>Export PDF / Excel per modul</li>
+            <li>Audit trail per transaksi</li>
+            <li>Tenant theme live preview</li>
+          </ul>
+        </div>
+        <div class="tl">
+          <div class="tl__lbl">Q1 2027</div>
+          <div class="tl__title">Skala &amp; Integrasi</div>
+          <ul class="tl__list">
+            <li>Integrasi modul BOS7 lainnya (Treasury, Settlement)</li>
+            <li>SSE real-time monitoring</li>
+            <li>Workflow builder no-code</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Rencana 6 bulan</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 32 Discussion seeds ─────────────────────────────── -->
+  <section data-screen-label="32 Discussion seeds">
+    <div class="slide-pad">
+      <div class="head">
+        <div class="head__eyebrow">Sebelum Q&amp;A</div>
+        <div class="head__page">32 / 34</div>
+      </div>
+      <h1 class="title">Pertanyaan terbuka — bantu kami memutuskan</h1>
+
+      <div class="grid-2">
+        <div>
+          <ul class="bullets">
+            <li><b>UX Jenis Jaminan</b><small>Dropdown OK, atau perlu tile dengan ikon? Berapa frekuensi pilihan ini bagi officer?</small></li>
+            <li><b>GL Interface default</b><small>Mapping default per akad cukup, atau perlu per cabang / per segmen?</small></li>
+            <li><b>Pengikatan dan Asuransi</b><small>Apakah polis asuransi perlu di-tab terpisah dari pengikatan?</small></li>
+            <li><b>Master CIF integration</b><small>Lookup nasabah lewat bos7-cif live, atau replikasi master?</small></li>
+          </ul>
+        </div>
+        <div>
+          <ul class="bullets">
+            <li><b>Notifikasi otorisasi</b><small>SSE real-time atau polling cukup? Toleransi delay?</small></li>
+            <li><b>Multi-language</b><small>Indonesian-only saat ini. Perlu Inggris untuk multi-tenant tertentu?</small></li>
+            <li><b>Hapus Buku threshold</b><small>Otomatis trigger di kolektibilitas 5, atau tetap manual review?</small></li>
+            <li><b>Performance pada list besar</b><small>Lazy load vs pagination — preferensi end-user?</small></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>Diskusi seed</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 33 Q&A ───────────────────────────────────────────── -->
+  <section data-screen-label="33 Q&A">
+    <div class="slide-pad" style="justify-content: center; align-items: center;">
+      <div style="text-align: center;">
+        <div class="head__eyebrow" style="margin-bottom: 24px;">Diskusi terbuka</div>
+        <h1 style="font-size: 240px; margin: 0; color: var(--c-primary); font-weight: 700; letter-spacing: -0.05em; line-height: 1;">Q&amp;A</h1>
+        <p style="font-size: 32px; color: var(--c-muted); margin: 32px 0 0;">Apapun, dari level pixel sampai level strategi.</p>
+      </div>
+      <div class="foot">
+        <span class="foot__brand">BOS7 · Financing</span>
+        <span class="foot__divider"></span>
+        <span>33 / 34</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 34 Terima kasih + Resources ──────────────────────── -->
+  <section data-screen-label="34 Terima kasih">
+    <div class="cover" style="background: #0B1733;">
+      <div>
+        <div class="cover__eyebrow">Penutup</div>
+      </div>
+      <div>
+        <div class="cover__rule"></div>
+        <h1 style="font-size: 96px;">Terima kasih.</h1>
+        <p class="lede">
+          Deck &amp; link prototype akan dikirim setelah sesi. Silakan eksplorasi mandiri —
+          Site Map di halaman utama adalah peta lengkapnya.
+        </p>
+      </div>
+      <div class="cover__meta">
+        <span>Repo<b>bos7-financing</b></span>
+        <span>Design System<b>@isi-ui7 + Carbon v11</b></span>
+        <span>Demo<b>Module Financing - Demo.html</b></span>
+        <span>Kontak<b>Tim Product · Engineering</b></span>
+      </div>
+    </div>
+  </section>
+
+</deck-stage>
+
+</body>
+</html>
