@@ -138,7 +138,6 @@ function DetailJaminanModal({ jaminan, onClose }) {
 function MasterDataScreen({ onNavigate, popupStyle, showToast, type='instansi' }) {
   const datasets = {
     instansi: { title: 'Data Instansi',  data: window.MOCK_INSTANSI, addLabel: 'Tambah Instansi', cols: ['kode', 'nama', 'alamat', 'pic', 'telp', 'status'] },
-    vendor:   { title: 'Data Vendor',    data: window.MOCK_VENDOR,   addLabel: 'Tambah Vendor',   cols: ['kode', 'nama', 'kategori', 'npwp', 'telp', 'status'] },
   };
   const cfg = datasets[type] || datasets.instansi;
   const labels = {
@@ -174,6 +173,382 @@ function MasterDataScreen({ onNavigate, popupStyle, showToast, type='instansi' }
           </button>
         }
       />
+    </div>
+  );
+}
+
+/* ─────────── Data Vendor (Master) — filter jenis + keyword, CRUD ─────────── */
+function VendorFormModal({ mode, initial, onClose, onSave }) {
+  const [d, setD] = React.useState(initial);
+  const set = (k, v) => setD(p => ({ ...p, [k]: v }));
+  const valid = d.jenis && d.kode.trim() && d.nama.trim();
+  return (
+    <Modal
+      title={mode === 'edit' ? 'Ubah Vendor' : 'Tambah Vendor'}
+      subtitle="Master data vendor pembiayaan (Notaris / Asuransi / Appraisal)"
+      onClose={onClose}
+      footer={
+        <>
+          <button className="btn btn--neutral" onClick={onClose}>Keluar</button>
+          <button className="btn btn--primary" disabled={!valid} onClick={() => onSave(d)}>
+            <span dangerouslySetInnerHTML={{ __html: Icons.checkmark(16) }} />
+            Simpan
+          </button>
+        </>
+      }
+    >
+      <FormGrid>
+        <Field label="Jenis Vendor" required span="full">
+          <Select value={d.jenis} onChange={v => set('jenis', v)} options={window.VENDOR_JENIS_OPTIONS} placeholder="-- Pilih Jenis Vendor --" />
+        </Field>
+
+        <Field label="Kode Vendor" required>
+          <TextInput value={d.kode} onChange={v => set('kode', v)} readOnly={mode === 'edit'} placeholder="00210" />
+        </Field>
+        <Field label="Status" required>
+          <Select value={d.status} onChange={v => set('status', v)} options={['Aktif', 'Tidak Aktif']} />
+        </Field>
+
+        <Field label="Nama Vendor" required span="full">
+          <TextInput value={d.nama} onChange={v => set('nama', v)} placeholder="NOTARIS/PPAT ..." />
+        </Field>
+        <Field label="Alamat Vendor" span="full">
+          <TextInput value={d.alamat} onChange={v => set('alamat', v)} placeholder="Alamat lengkap" />
+        </Field>
+
+        <Field label="Nomor Rekening">
+          <TextInput value={d.noRekening} onChange={v => set('noRekening', v)} placeholder="0080201529717" />
+        </Field>
+        <Field label="Nama Pemilik Rekening">
+          <TextInput value={d.namaRekening} onChange={v => set('namaRekening', v)} placeholder="Nama sesuai rekening" />
+        </Field>
+
+        <Field label="BDD Account">
+          <TextInput value={d.bddAccount} onChange={v => set('bddAccount', v)} placeholder="1321413001" />
+        </Field>
+        <Field label="Beban Premi Account">
+          <TextInput value={d.bebanPremi} onChange={v => set('bebanPremi', v)} placeholder="5070006001" />
+        </Field>
+
+        <Field label="Contact Person (PIC)">
+          <TextInput value={d.pic} onChange={v => set('pic', v)} placeholder="Nama PIC" />
+        </Field>
+        <Field label="No. Telp / HP">
+          <TextInput value={d.telp} onChange={v => set('telp', v)} placeholder="022-0000000" />
+        </Field>
+
+        <Field label="Kota">
+          <TextInput value={d.kota} onChange={v => set('kota', v)} placeholder="Bandung" />
+        </Field>
+        <div></div>
+      </FormGrid>
+    </Modal>
+  );
+}
+
+/* ─────────── Data Agency (instansi / developer / supplier) — CRUD ─────────── */
+function AgencyFormModal({ mode, initial, onClose, onSave }) {
+  const [d, setD] = React.useState(initial);
+  const set = (k, v) => setD(p => ({ ...p, [k]: v }));
+  const isView = mode === 'view';
+  const showDipakai = mode === 'edit' || mode === 'view'; // Plafond Sudah Dipakai: edit & view only
+  const valid = d.jenis && d.kode.trim() && d.nama.trim();
+
+  return (
+    <Modal
+      title={mode === 'add' ? 'Tambah Data Agency' : mode === 'view' ? 'Detail Data Agency' : 'Edit Data Agency'}
+      subtitle="Agency: Instansi / Developer / Supplier"
+      size="lg"
+      onClose={onClose}
+      footer={
+        isView ? (
+          <button className="btn btn--neutral" onClick={onClose}>Keluar</button>
+        ) : (
+          <>
+            <button className="btn btn--neutral" onClick={onClose}>Keluar</button>
+            <button className="btn btn--primary" disabled={!valid} onClick={() => onSave(d)}>
+              <span dangerouslySetInnerHTML={{ __html: Icons.checkmark(16) }} />
+              Simpan
+            </button>
+          </>
+        )
+      }
+    >
+      <FormGrid cols={2}>
+        <Field label="Jenis Agensi" required>
+          <Select value={d.jenis} onChange={v => set('jenis', v)} options={window.AGENCY_JENIS_OPTIONS} disabled={isView} placeholder="-- Pilih Jenis --" />
+        </Field>
+        <Field label="Kode Instansi" required>
+          <TextInput value={d.kode} onChange={v => set('kode', v)} readOnly={mode !== 'add'} placeholder="53900003" />
+        </Field>
+        <Field label="Nama Instansi" required span="full">
+          <TextInput value={d.nama} onChange={v => set('nama', v)} readOnly={isView} placeholder="MI NURUL HIDAYAH" />
+        </Field>
+        <Field label="Alamat Instansi" span="full">
+          <TextInput value={d.alamat} onChange={v => set('alamat', v)} readOnly={isView} placeholder="Alamat lengkap" />
+        </Field>
+        <Field label="No. Rek Escrow">
+          <TextInput value={d.noRekEscrow} onChange={v => set('noRekEscrow', v)} readOnly={isView} placeholder="0080201556090" />
+        </Field>
+        <Field label="Nama Pemilik Escrow">
+          <TextInput value={d.namaEscrow} onChange={v => set('namaEscrow', v)} readOnly={isView} placeholder="Sesuai rekening escrow" />
+        </Field>
+        <Field label="Plafond">
+          <CurrencyInput value={String(d.plafond ?? '')} onChange={v => set('plafond', v)} readOnly={isView} />
+        </Field>
+        {showDipakai ? (
+          <Field label="Plafond Sudah Dipakai">
+            <CurrencyInput value={String(d.plafondDipakai ?? '')} onChange={() => {}} readOnly />
+          </Field>
+        ) : <div></div>}
+        <Field label="Nomor PKS">
+          <TextInput value={d.nomorPks} onChange={v => set('nomorPks', v)} readOnly={isView} placeholder="PKS-001/2024" />
+        </Field>
+        <Field label="Jatuh Tempo PKS">
+          <DateInput value={d.jatuhTempoPks} onChange={v => set('jatuhTempoPks', v)} readOnly={isView} />
+        </Field>
+        <Field label="Nomor PKS Adendum" span="full">
+          <TextInput value={d.nomorPksAdendum} onChange={v => set('nomorPksAdendum', v)} readOnly={isView} placeholder="ADD-001/2025 (opsional)" />
+        </Field>
+      </FormGrid>
+    </Modal>
+  );
+}
+
+function DataAgencyScreen({ showToast }) {
+  const [rows, setRows] = React.useState(() => window.MOCK_AGENCY.slice());
+  const [jenis, setJenis] = React.useState('Semua');
+  const [q, setQ] = React.useState('');
+  const [modal, setModal] = React.useState(null);          // { mode, index } | null
+  const [confirmDel, setConfirmDel] = React.useState(null);
+
+  const persist = (next) => {
+    setRows(next);
+    window.MOCK_AGENCY.length = 0;
+    next.forEach(x => window.MOCK_AGENCY.push(x));
+  };
+
+  const filtered = rows.filter(r => {
+    if (jenis !== 'Semua' && r.jenis !== jenis) return false;
+    if (q.trim()) {
+      const s = q.toLowerCase();
+      return [r.kode, r.nama, r.alamat, r.nomorPks].some(v => String(v || '').toLowerCase().includes(s));
+    }
+    return true;
+  });
+
+  const emptyDraft = {
+    kode: '', jenis: '', nama: '', alamat: '', noRekEscrow: '', namaEscrow: '',
+    plafond: '', plafondDipakai: 0, nomorPks: '', jatuhTempoPks: '', nomorPksAdendum: '', status: 'Aktif',
+  };
+
+  return (
+    <div className="card">
+      <h2 className="page__title">
+        Data Agency
+        <span className="subtitle">Instansi, developer &amp; supplier rekanan pembiayaan</span>
+      </h2>
+
+      <div style={{ display: 'flex', gap: 16, alignItems: 'flex-end', flexWrap: 'wrap', margin: '4px 0 16px' }}>
+        <div style={{ width: 220 }}>
+          <Field label="Jenis Agensi">
+            <Select value={jenis} onChange={setJenis} options={['Semua', ...window.AGENCY_JENIS_OPTIONS]} />
+          </Field>
+        </div>
+        <div style={{ flex: 1, minWidth: 240, maxWidth: 420 }}>
+          <Field label="Cari">
+            <TextInput value={q} onChange={setQ} placeholder="Cari kode / nama / alamat / nomor PKS..." />
+          </Field>
+        </div>
+        <button className="btn btn--primary" style={{ marginLeft: 'auto' }} onClick={() => setModal({ mode: 'add' })}>
+          <span dangerouslySetInnerHTML={{ __html: Icons.add(14) }} />
+          Tambah Agency
+        </button>
+      </div>
+
+      <div className="table-meta">{filtered.length} agency ditemukan</div>
+
+      <DataTable
+        showSearch={false}
+        data={filtered}
+        columns={[
+          { key: 'kode',          label: 'Kode',  width: 110, sort: true, render: r => <span className="mono">{r.kode}</span> },
+          { key: 'jenis',         label: 'Jenis Agensi', width: 130, render: r => <span className="tag tag--info">{r.jenis}</span> },
+          { key: 'nama',          label: 'Nama', sort: true },
+          { key: 'alamat',        label: 'Alamat' },
+          { key: 'plafond',       label: 'Plafond', width: 160, align: 'right', render: r => <span className="mono">{window.fmtRp(r.plafond)}</span> },
+          { key: 'plafondDipakai', label: 'Plafond Dipakai', width: 160, align: 'right', render: r => <span className="mono">{window.fmtRp(r.plafondDipakai)}</span> },
+          { key: 'nomorPks',      label: 'Nomor PKS', width: 150, render: r => <span className="mono">{r.nomorPks}</span> },
+          { key: 'status',        label: 'Status', width: 110, render: r => <StatusTag status={r.status} /> },
+        ]}
+        popupItems={[
+          { id: 'view',  label: 'Lihat Detail', icon: 'view' },
+          { id: 'edit',  label: 'Edit Data', icon: 'edit' },
+          { sep: true },
+          { id: 'hapus', label: 'Hapus', icon: 'trash', danger: true },
+        ]}
+        onPopupClick={(row, id) => {
+          const index = rows.findIndex(r => r.kode === row.kode);
+          if (id === 'view')  { setModal({ mode: 'view', index }); return; }
+          if (id === 'edit')  { setModal({ mode: 'edit', index }); return; }
+          if (id === 'hapus') { setConfirmDel(index); return; }
+        }}
+      />
+
+      {modal && (
+        <AgencyFormModal
+          mode={modal.mode}
+          initial={modal.mode === 'add' ? emptyDraft : rows[modal.index]}
+          onClose={() => setModal(null)}
+          onSave={(draft) => {
+            const norm = { ...draft, plafond: Number(draft.plafond) || 0 };
+            if (modal.mode === 'edit') {
+              persist(rows.map((r, i) => i === modal.index ? { ...r, ...norm } : r));
+              showToast({ type: 'success', title: 'Data agency diperbarui', message: `${norm.kode} — ${norm.nama}` });
+            } else {
+              if (rows.some(r => r.kode === draft.kode.trim())) {
+                showToast({ type: 'warn', title: 'Kode sudah dipakai', message: `Agency ${draft.kode} sudah ada.` });
+                return;
+              }
+              persist([{ ...norm, plafondDipakai: 0 }, ...rows]);
+              showToast({ type: 'success', title: 'Agency ditambahkan', message: `${norm.kode} — ${norm.nama}` });
+            }
+            setModal(null);
+          }}
+        />
+      )}
+
+      {confirmDel !== null && (
+        <ConfirmDialog
+          title="Hapus Data Agency"
+          message={`Hapus agency "${rows[confirmDel]?.kode} — ${rows[confirmDel]?.nama}"? Tindakan ini tidak dapat dibatalkan.`}
+          confirmLabel="Ya, Hapus"
+          danger
+          onClose={() => setConfirmDel(null)}
+          onConfirm={() => {
+            const removed = rows[confirmDel];
+            persist(rows.filter((_, i) => i !== confirmDel));
+            showToast({ type: 'success', title: 'Agency dihapus', message: `${removed?.kode} — ${removed?.nama}` });
+            setConfirmDel(null);
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+function DataVendorScreen({ showToast }) {
+  const [rows, setRows] = React.useState(() => window.MOCK_VENDOR.slice());
+  const [jenis, setJenis] = React.useState('Semua');
+  const [q, setQ] = React.useState('');
+  const [modal, setModal] = React.useState(null);     // { mode, index } | null
+  const [confirmDel, setConfirmDel] = React.useState(null); // index | null
+
+  const persist = (next) => {
+    setRows(next);
+    window.MOCK_VENDOR.length = 0;
+    next.forEach(x => window.MOCK_VENDOR.push(x));
+  };
+
+  const filtered = rows.filter(r => {
+    if (jenis !== 'Semua' && r.jenis !== jenis) return false;
+    if (q.trim()) {
+      const s = q.toLowerCase();
+      return [r.kode, r.nama, r.alamat, r.pic, r.noRekening].some(v => String(v || '').toLowerCase().includes(s));
+    }
+    return true;
+  });
+
+  const emptyDraft = { kode: '', jenis: '', nama: '', alamat: '', pic: '', noRekening: '', namaRekening: '', bddAccount: '', bebanPremi: '', telp: '', kota: '', status: 'Aktif' };
+
+  return (
+    <div className="card">
+      <h2 className="page__title">
+        Data Vendor
+        <span className="subtitle">Master vendor pembiayaan — Notaris, Asuransi &amp; Appraisal</span>
+      </h2>
+
+      {/* Filter bar */}
+      <div style={{ display: 'flex', gap: 16, alignItems: 'flex-end', flexWrap: 'wrap', margin: '4px 0 16px' }}>
+        <div style={{ width: 220 }}>
+          <Field label="Jenis Vendor">
+            <Select value={jenis} onChange={setJenis} options={['Semua', ...window.VENDOR_JENIS_OPTIONS]} />
+          </Field>
+        </div>
+        <div style={{ flex: 1, minWidth: 240, maxWidth: 420 }}>
+          <Field label="Cari">
+            <TextInput value={q} onChange={setQ} placeholder="Cari kode / nama / PIC / nomor rekening..." />
+          </Field>
+        </div>
+        <button className="btn btn--primary" style={{ marginLeft: 'auto' }} onClick={() => setModal({ mode: 'add' })}>
+          <span dangerouslySetInnerHTML={{ __html: Icons.add(14) }} />
+          Tambah Vendor
+        </button>
+      </div>
+
+      <DataTable
+        showSearch={false}
+        data={filtered}
+        columns={[
+          { key: 'kode',       label: 'Kode Vendor',  width: 120, sort: true, render: r => <span className="mono">{r.kode}</span> },
+          { key: 'jenis',      label: 'Jenis Vendor', width: 120, render: r => <span className="tag tag--info">{r.jenis}</span> },
+          { key: 'nama',       label: 'Nama Vendor',  sort: true },
+          { key: 'alamat',     label: 'Alamat Vendor' },
+          { key: 'pic',        label: 'Nama PIC' },
+          { key: 'noRekening', label: 'Nomor Rekening', render: r => <span className="mono">{r.noRekening}</span> },
+          { key: 'bddAccount', label: 'BDD Account', render: r => r.bddAccount ? <span className="mono">{r.bddAccount}</span> : <span className="text-muted">—</span> },
+          { key: 'bebanPremi', label: 'Beban Premi Account', render: r => r.bebanPremi ? <span className="mono">{r.bebanPremi}</span> : <span className="text-muted">—</span> },
+          { key: 'status',     label: 'Status', width: 110, render: r => <StatusTag status={r.status} /> },
+        ]}
+        popupItems={[
+          { id: 'edit',  label: 'Edit Data', icon: 'edit' },
+          { sep: true },
+          { id: 'hapus', label: 'Hapus', icon: 'trash', danger: true },
+        ]}
+        onPopupClick={(row, id) => {
+          const index = rows.findIndex(r => r.kode === row.kode);
+          if (id === 'edit')  { setModal({ mode: 'edit', index }); return; }
+          if (id === 'hapus') { setConfirmDel(index); return; }
+        }}
+      />
+
+      {modal && (
+        <VendorFormModal
+          mode={modal.mode}
+          initial={modal.mode === 'edit' ? rows[modal.index] : emptyDraft}
+          onClose={() => setModal(null)}
+          onSave={(draft) => {
+            if (modal.mode === 'edit') {
+              const next = rows.map((r, i) => i === modal.index ? draft : r);
+              persist(next);
+              showToast({ type: 'success', title: 'Perubahan tersimpan', message: `${draft.kode} — ${draft.nama}` });
+            } else {
+              if (rows.some(r => r.kode === draft.kode.trim())) {
+                showToast({ type: 'warn', title: 'Kode sudah dipakai', message: `Vendor ${draft.kode} sudah ada.` });
+                return;
+              }
+              persist([draft, ...rows]);
+              showToast({ type: 'success', title: 'Vendor ditambahkan', message: `${draft.kode} — ${draft.nama}` });
+            }
+            setModal(null);
+          }}
+        />
+      )}
+
+      {confirmDel !== null && (
+        <ConfirmDialog
+          title="Hapus Vendor"
+          message={`Hapus vendor "${rows[confirmDel]?.kode} — ${rows[confirmDel]?.nama}"? Tindakan ini tidak dapat dibatalkan.`}
+          confirmLabel="Ya, Hapus"
+          danger
+          onClose={() => setConfirmDel(null)}
+          onConfirm={() => {
+            const removed = rows[confirmDel];
+            persist(rows.filter((_, i) => i !== confirmDel));
+            showToast({ type: 'success', title: 'Vendor dihapus', message: `${removed?.kode} — ${removed?.nama}` });
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -454,6 +829,109 @@ function DetailProdukPembiayaanScreen({ onNavigate, showToast, kode }) {
   );
 }
 
+/* ─────────── Tambah / Ubah Biaya modal (Section 2 Parameter Biaya) ─────────── */
+function BiayaFormModal({ mode, initial, onSave, onClose }) {
+  const [d, setD] = React.useState(initial);
+  const [coa, setCoa] = React.useState(null); // { target: 'gl' | 'pajak' } | null
+  const set = (k, v) => setD(p => ({ ...p, [k]: v }));
+  const valid = d.element && d.glKode;
+
+  // Element Biaya -> Jenis Element Biaya (auto-fill on selection)
+  const ELEMENT_JENIS = {
+    'Biaya Administrasi': 'Pendapatan',
+    'Biaya Provisi':      'Pendapatan',
+    'Biaya Notaris':      'Titipan / Kewajiban',
+    'Biaya Asuransi':     'Titipan / Kewajiban',
+    'Biaya Appraisal':    'Biaya',
+    'Biaya Taksasi':      'Biaya',
+    'Biaya Bea Materai':  'Titipan / Kewajiban',
+    'Biaya Penalti':      'Pendapatan',
+  };
+  const pickElement = (v) => setD(p => ({ ...p, element: v, jenisElement: ELEMENT_JENIS[v] || '' }));
+
+  return (
+    <>
+      <Modal
+        title={mode === 'edit' ? 'Ubah Biaya' : 'Tambah Biaya'}
+        subtitle="Elemen biaya & mapping GL untuk produk pembiayaan"
+        onClose={onClose}
+        footer={
+          <>
+            <button className="btn btn--neutral" onClick={onClose}>Batal</button>
+            <button className="btn btn--primary" disabled={!valid} onClick={() => onSave(d)}>
+              <span dangerouslySetInnerHTML={{ __html: Icons.checkmark(16) }} />
+              {mode === 'edit' ? 'Simpan' : 'Tambah Biaya'}
+            </button>
+          </>
+        }
+      >
+        <FormGrid>
+          <Field label="Element Biaya" required span="full">
+            <Select
+              value={d.element}
+              onChange={pickElement}
+              options={['Biaya Administrasi', 'Biaya Provisi', 'Biaya Notaris', 'Biaya Asuransi', 'Biaya Appraisal', 'Biaya Taksasi', 'Biaya Bea Materai', 'Biaya Penalti']}
+              placeholder="-- Pilih Element Biaya --"
+            />
+          </Field>
+
+          <Field label="GL Account" required span="full">
+            <div className="lookup-pair">
+              <LookupInput
+                value={d.glKode}
+                placeholder="-- Pilih GL --"
+                onChange={v => { const c = window.getCoaByKode?.(v); set('glKode', v); set('glNama', c?.nama || d.glNama); }}
+                onOpen={() => setCoa({ target: 'gl' })}
+              />
+              <input className="input input--readonly" readOnly value={d.glNama} placeholder="Nama GL Account" />
+            </div>
+          </Field>
+
+          <Field label="Jenis Element Biaya" hint="Terisi otomatis dari Element Biaya">
+            <input
+              className="input input--readonly"
+              readOnly
+              value={d.jenisElement}
+              placeholder="Pilih Element Biaya dahulu"
+            />
+          </Field>
+          <Field label="Batas Amortisasi" hint="0 = tidak diamortisasi">
+            <CurrencyInput value={d.batasAmortisasi} onChange={v => set('batasAmortisasi', v)} placeholder="0" />
+          </Field>
+
+          <Field label="GL Account Pajak" span="full">
+            <div className="lookup-pair">
+              <LookupInput
+                value={d.glPajakKode}
+                placeholder="-- Pilih GL Pajak --"
+                onChange={v => { const c = window.getCoaByKode?.(v); set('glPajakKode', v); set('glPajakNama', c?.nama || d.glPajakNama); }}
+                onOpen={() => setCoa({ target: 'pajak' })}
+              />
+              <input className="input input--readonly" readOnly value={d.glPajakNama} placeholder="Nama GL Pajak" />
+            </div>
+          </Field>
+
+          <Field label="Tarif Pajak (%)">
+            <NumberInput value={d.tarifPajak} onChange={v => set('tarifPajak', v)} placeholder="0" suffix="%" />
+          </Field>
+          <div></div>
+        </FormGrid>
+      </Modal>
+
+      {coa && (
+        <CoaLookup
+          open={true}
+          onClose={() => setCoa(null)}
+          onSelect={(c) => {
+            if (coa.target === 'gl') { set('glKode', c.kode); set('glNama', c.nama); }
+            else { set('glPajakKode', c.kode); set('glPajakNama', c.nama); }
+          }}
+        />
+      )}
+    </>
+  );
+}
+
 /* ─────────── New / Edit Produk Pembiayaan (form 3-section) ─────────── */
 function NewProdukPembiayaanScreen({ onNavigate, showToast, mode = 'new', kode }) {
   const isEdit = mode === 'edit';
@@ -490,6 +968,8 @@ function NewProdukPembiayaanScreen({ onNavigate, showToast, mode = 'new', kode }
     kodeKonfidential: '',
     produkMikro: true,
     restriksiProduk: true,
+    skemaPencadangan: 'CKPN',
+    menggunakanFasilitas: 'Tidak',
     status: 'Aktif',
     tipeAkru: '',
     targetEqvRate: '',
@@ -505,9 +985,9 @@ function NewProdukPembiayaanScreen({ onNavigate, showToast, mode = 'new', kode }
 
     // Parameter Biaya
     biaya: [
-      { jenis: 'Biaya Administrasi', metode: 'Fixed',     nominal: '500000',  persen: '0',   flag: 'Debet', rekening: 'Sumber Biaya' },
-      { jenis: 'Biaya Provisi',      metode: 'Persentase', nominal: '0',       persen: '1',   flag: 'Debet', rekening: 'Sumber Biaya' },
-      { jenis: 'Biaya Materai',      metode: 'Fixed',     nominal: '10000',   persen: '0',   flag: 'Debet', rekening: 'Cash' },
+      { element: 'Biaya Administrasi', glKode: '41010', glNama: 'Pendapatan Administrasi', jenisElement: 'Pendapatan',          batasAmortisasi: '0',       glPajakKode: '',      glPajakNama: '',                tarifPajak: '0' },
+      { element: 'Biaya Provisi',      glKode: '41020', glNama: 'Pendapatan Provisi',      jenisElement: 'Pendapatan',          batasAmortisasi: '2500000', glPajakKode: '',      glPajakNama: '',                tarifPajak: '0' },
+      { element: 'Biaya Materai',      glKode: '21050', glNama: 'Titipan Bea Materai',     jenisElement: 'Titipan / Kewajiban', batasAmortisasi: '0',       glPajakKode: '',      glPajakNama: '',                tarifPajak: '0' },
     ],
 
     // Parameter Denda
@@ -544,6 +1024,9 @@ function NewProdukPembiayaanScreen({ onNavigate, showToast, mode = 'new', kode }
   // Lookup state for the GL Interface section
   const [glLookup, setGlLookup] = React.useState(null); // { rowIndex, accountType } | null
 
+  // Add/Edit Biaya modal state (Section 2)
+  const [biayaModal, setBiayaModal] = React.useState(null); // { mode:'add'|'edit', index } | null
+
   const sectionOrder = ['s1', 's2', 's3', 's4'];
   const goNext = () => {
     const i = sectionOrder.indexOf(section);
@@ -557,7 +1040,7 @@ function NewProdukPembiayaanScreen({ onNavigate, showToast, mode = 'new', kode }
 
   return (
     <div className="card">
-      <h2 style={{ fontSize: 22, fontWeight: 600, margin: 0, paddingBottom: 16, borderBottom: '1px solid var(--c-border-soft)' }}>
+      <h2 style={{ fontSize: 20, fontWeight: 600, margin: 0, paddingBottom: 16, borderBottom: '1px solid var(--c-border-soft)' }}>
         {isEdit ? 'Edit Produk Pembiayaan' : 'New Produk Pembiayaan'}
       </h2>
 
@@ -575,17 +1058,20 @@ function NewProdukPembiayaanScreen({ onNavigate, showToast, mode = 'new', kode }
       {/* ─────────── Section 1: Data Produk ─────────── */}
       {section === 's1' && (
         <>
-          <Field label="Kode Produk" required>
-            <TextInput value={form.kodeProduk} onChange={v => setField('kodeProduk', v)} />
-          </Field>
-          <div style={{ marginTop: 16 }}>
-            <Field label="Nama Produk" required>
-              <TextInput value={form.namaProduk} onChange={v => setField('namaProduk', v)} />
-            </Field>
-          </div>
+          <div className="form-section">
+            <div className="form-section__head">
+              <span className="form-section__eyebrow">Data Produk</span>
+              <span className="form-section__rule"></span>
+            </div>
 
-          <div style={{ marginTop: 16 }}>
             <FormGrid>
+              <Field label="Kode Produk" required>
+                <TextInput value={form.kodeProduk} onChange={v => setField('kodeProduk', v)} />
+              </Field>
+              <Field label="Nama Produk" required>
+                <TextInput value={form.namaProduk} onChange={v => setField('namaProduk', v)} />
+              </Field>
+
               <Field label="Akad Pembiayaan" required>
                 <Select
                   value={form.akad}
@@ -601,73 +1087,59 @@ function NewProdukPembiayaanScreen({ onNavigate, showToast, mode = 'new', kode }
                 />
               </Field>
 
-              <Field label="Dropping Model" required>
-                <Select
-                  value={form.droppingModel}
-                  onChange={v => setField('droppingModel', v)}
-                  options={['All at once', 'Bertahap (Tranche)', 'Sesuai Permintaan']}
-                />
-              </Field>
               <Field label="Kode Valuta" required>
                 <Select value={form.kodeValuta} onChange={v => setField('kodeValuta', v)} options={['IDR', 'USD', 'SGD', 'EUR']} />
               </Field>
-
-              <Field label="Kelonggaran Hari Kolek">
-                <NumberInput
-                  value={form.kelonggaranHariKolek}
-                  onChange={v => setField('kelonggaranHariKolek', v)}
-                  placeholder="0"
-                  suffix="Hari"
-                />
-              </Field>
-              <div></div>
-
               <Field label="Kode Konfidential">
-                <TextInput
+                <LookupInput
                   value={form.kodeKonfidential}
                   onChange={v => setField('kodeKonfidential', v)}
-                  placeholder="Masukan kode konfidential"
+                  placeholder="Cari kode konfidential"
+                  onOpen={() => showToast({ type: 'info', title: 'Kode Konfidential', message: 'Pencarian kode konfidential.' })}
                 />
               </Field>
             </FormGrid>
-          </div>
 
-          <div style={{ display: 'flex', gap: 64, marginTop: 24 }}>
-            <label className="cbx">
+            <label className="cbx" style={{ marginTop: 16 }}>
               <input type="checkbox" checked={form.produkMikro} onChange={e => setField('produkMikro', e.target.checked)} />
-              Produk Mikro
+              Produk Mitra
             </label>
-            <label className="cbx">
-              <input type="checkbox" checked={form.restriksiProduk} onChange={e => setField('restriksiProduk', e.target.checked)} />
-              Restriksi Produk
-            </label>
-          </div>
 
-          <div style={{ marginTop: 24 }}>
-            <Field label="Status" required>
-              <div style={{ maxWidth: 'calc(50% - 12px)' }}>
+            <div style={{ marginTop: 16, maxWidth: 'calc(50% - 12px)' }}>
+              <Field label="Status" required>
                 <Select
                   value={form.status}
                   onChange={v => setField('status', v)}
                   options={['Aktif', 'Tidak Aktif', 'Draft']}
                 />
-              </div>
-            </Field>
+              </Field>
+            </div>
           </div>
 
-          <hr className="section-divider" />
+          <div className="form-section">
+            <div className="form-section__head">
+              <span className="form-section__eyebrow">Parameter Pembiayaan</span>
+              <span className="form-section__rule"></span>
+            </div>
 
-          <Field label="Tipe Akru">
-            <Select
-              value={form.tipeAkru}
-              onChange={v => setField('tipeAkru', v)}
-              options={['Akrual Harian', 'Akrual Bulanan', 'Tidak Diakru']}
-              placeholder="-- Pilih --"
-            />
-          </Field>
-
-          <div style={{ marginTop: 16 }}>
             <FormGrid>
+              <Field label="Tipe Akru">
+                <Select
+                  value={form.tipeAkru}
+                  onChange={v => setField('tipeAkru', v)}
+                  options={['Akrual Harian', 'Akrual Bulanan', 'Tidak Diakru']}
+                  placeholder="-- Pilih --"
+                />
+              </Field>
+              <Field label="Skema Pencadangan">
+                <Select
+                  value={form.skemaPencadangan}
+                  onChange={v => setField('skemaPencadangan', v)}
+                  options={['CKPN', 'PPAP']}
+                  placeholder="-- Pilih --"
+                />
+              </Field>
+
               <Field label="Target Eqv Rate">
                 <NumberInput
                   value={form.targetEqvRate}
@@ -685,17 +1157,17 @@ function NewProdukPembiayaanScreen({ onNavigate, showToast, mode = 'new', kode }
                 />
               </Field>
 
-              <Field label="Default Periode">
-                <NumberInput value={form.defaultPeriode} onChange={v => setField('defaultPeriode', v)} placeholder="0" />
+              <Field label="Min. Tenor">
+                <NumberInput value={form.defaultPeriode} onChange={v => setField('defaultPeriode', v)} placeholder="0" suffix="Bulan" />
               </Field>
-              <Field label="Minimal Periode Count">
-                <NumberInput value={form.minPeriodeCount} onChange={v => setField('minPeriodeCount', v)} placeholder="0" />
+              <Field label="Max. Tenor">
+                <NumberInput value={form.minPeriodeCount} onChange={v => setField('minPeriodeCount', v)} placeholder="0" suffix="Bulan" />
               </Field>
 
-              <Field label="Nilai Limit Min">
+              <Field label="Min. Plafond Pembiayaan">
                 <CurrencyInput value={form.limitMin} onChange={v => setField('limitMin', v)} placeholder="0" />
               </Field>
-              <Field label="Nilai Limit Max">
+              <Field label="Max. Plafond Pembiayaan">
                 <CurrencyInput value={form.limitMax} onChange={v => setField('limitMax', v)} placeholder="0" />
               </Field>
 
@@ -724,13 +1196,20 @@ function NewProdukPembiayaanScreen({ onNavigate, showToast, mode = 'new', kode }
                   placeholder="-- Pilih --"
                 />
               </Field>
-              <div style={{ display: 'flex', alignItems: 'flex-end', paddingBottom: 10 }}>
-                <label className="cbx">
-                  <input type="checkbox" checked={form.autoDebitDenda} onChange={e => setField('autoDebitDenda', e.target.checked)} />
-                  Auto Debit Denda
-                </label>
-              </div>
+              <Field label="Menggunakan Fasilitas">
+                <Select
+                  value={form.menggunakanFasilitas}
+                  onChange={v => setField('menggunakanFasilitas', v)}
+                  options={['Ya', 'Tidak']}
+                  placeholder="-- Pilih --"
+                />
+              </Field>
             </FormGrid>
+
+            <label className="cbx" style={{ marginTop: 16 }}>
+              <input type="checkbox" checked={form.autoDebitDenda} onChange={e => setField('autoDebitDenda', e.target.checked)} />
+              Auto Debit Denda
+            </label>
           </div>
 
           <div className="btn-bar btn-bar--between">
@@ -752,7 +1231,7 @@ function NewProdukPembiayaanScreen({ onNavigate, showToast, mode = 'new', kode }
           <div className="row row--between mb-16">
             <h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>Daftar Biaya Default Produk</h3>
             <button className="btn btn--secondary btn--sm"
-              onClick={() => setForm(f => ({ ...f, biaya: [...f.biaya, { jenis: '', metode: 'Fixed', nominal: '0', persen: '0', flag: 'Debet', rekening: 'Sumber Biaya' }] }))}>
+              onClick={() => setBiayaModal({ mode: 'add' })}>
               <span dangerouslySetInnerHTML={{ __html: Icons.add(14) }} />
               Tambah Biaya
             </button>
@@ -761,70 +1240,69 @@ function NewProdukPembiayaanScreen({ onNavigate, showToast, mode = 'new', kode }
           <table className="tbl">
             <thead>
               <tr>
-                <th style={{ width: 50 }}>No</th>
-                <th>Jenis Biaya</th>
-                <th>Metode</th>
-                <th>Nominal</th>
-                <th>Persen (%)</th>
-                <th>Flag</th>
-                <th>Rekening Pembebanan</th>
-                <th style={{ width: 60 }}></th>
+                <th style={{ width: 44 }}>No</th>
+                <th>Element Biaya</th>
+                <th>GL Account</th>
+                <th>Jenis Element Biaya</th>
+                <th style={{ width: 120 }}>Batas Amortisasi</th>
+                <th>GL Account Pajak</th>
+                <th style={{ width: 100 }}>Tarif Pajak</th>
+                <th style={{ width: 84 }}>Aksi</th>
               </tr>
             </thead>
             <tbody>
-              {form.biaya.map((b, i) => (
+              {form.biaya.length === 0 ? (
+                <tr><td colSpan={8} className="tbl-empty">Belum ada biaya. Klik "Tambah Biaya".</td></tr>
+              ) : form.biaya.map((b, i) => (
                 <tr key={i}>
                   <td className="mono">{i + 1}</td>
+                  <td>{b.element}</td>
                   <td>
-                    <Select
-                      value={b.jenis}
-                      onChange={v => setForm(f => { const a = [...f.biaya]; a[i] = { ...a[i], jenis: v }; return { ...f, biaya: a }; })}
-                      options={['Biaya Administrasi', 'Biaya Provisi', 'Biaya Notaris', 'Biaya Asuransi', 'Biaya Materai', 'Biaya Appraisal']}
-                    />
+                    {b.glKode
+                      ? <span><span className="mono">{b.glKode}</span> — {b.glNama}</span>
+                      : <span className="text-muted">—</span>}
                   </td>
+                  <td>{b.jenisElement || <span className="text-muted">—</span>}</td>
+                  <td className="mono">{b.batasAmortisasi && b.batasAmortisasi !== '0' ? window.fmtRp(b.batasAmortisasi) : '—'}</td>
                   <td>
-                    <Select
-                      value={b.metode}
-                      onChange={v => setForm(f => { const a = [...f.biaya]; a[i] = { ...a[i], metode: v }; return { ...f, biaya: a }; })}
-                      options={['Fixed', 'Persentase']}
-                    />
+                    {b.glPajakKode
+                      ? <span><span className="mono">{b.glPajakKode}</span> — {b.glPajakNama}</span>
+                      : <span className="text-muted">—</span>}
                   </td>
+                  <td className="mono">{b.tarifPajak && b.tarifPajak !== '0' ? `${b.tarifPajak} %` : '—'}</td>
                   <td>
-                    <CurrencyInput
-                      value={b.nominal}
-                      onChange={v => setForm(f => { const a = [...f.biaya]; a[i] = { ...a[i], nominal: v }; return { ...f, biaya: a }; })}
-                    />
-                  </td>
-                  <td>
-                    <NumberInput
-                      value={b.persen}
-                      onChange={v => setForm(f => { const a = [...f.biaya]; a[i] = { ...a[i], persen: v }; return { ...f, biaya: a }; })}
-                      suffix="%"
-                    />
-                  </td>
-                  <td>
-                    <Select
-                      value={b.flag}
-                      onChange={v => setForm(f => { const a = [...f.biaya]; a[i] = { ...a[i], flag: v }; return { ...f, biaya: a }; })}
-                      options={['Debet', 'Kredit']}
-                    />
-                  </td>
-                  <td>
-                    <Select
-                      value={b.rekening}
-                      onChange={v => setForm(f => { const a = [...f.biaya]; a[i] = { ...a[i], rekening: v }; return { ...f, biaya: a }; })}
-                      options={['Sumber Biaya', 'Cash', 'Tabungan Nasabah', 'GL Biaya Provisi', 'GL Biaya Admin']}
-                    />
-                  </td>
-                  <td>
-                    <button className="icon-btn"
-                      onClick={() => setForm(f => ({ ...f, biaya: f.biaya.filter((_, idx) => idx !== i) }))}
-                      dangerouslySetInnerHTML={{ __html: Icons.trash(16) }} />
+                    <div className="row gap-4">
+                      <button className="icon-btn" title="Ubah"
+                        onClick={() => setBiayaModal({ mode: 'edit', index: i })}
+                        dangerouslySetInnerHTML={{ __html: Icons.edit(16) }} />
+                      <button className="icon-btn" title="Hapus"
+                        onClick={() => setForm(f => ({ ...f, biaya: f.biaya.filter((_, idx) => idx !== i) }))}
+                        dangerouslySetInnerHTML={{ __html: Icons.trash(16) }} />
+                    </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+
+          {biayaModal && (
+            <BiayaFormModal
+              mode={biayaModal.mode}
+              initial={biayaModal.mode === 'edit'
+                ? form.biaya[biayaModal.index]
+                : { element: '', glKode: '', glNama: '', jenisElement: '', batasAmortisasi: '0', glPajakKode: '', glPajakNama: '', tarifPajak: '0' }}
+              onClose={() => setBiayaModal(null)}
+              onSave={(draft) => {
+                setForm(f => {
+                  const a = [...f.biaya];
+                  if (biayaModal.mode === 'edit') a[biayaModal.index] = draft;
+                  else a.push(draft);
+                  return { ...f, biaya: a };
+                });
+                setBiayaModal(null);
+              }}
+            />
+          )}
 
           <div className="approval-banner" style={{ marginTop: 16, background: 'var(--c-info-bg)', borderLeftColor: 'var(--c-info)' }}>
             <span style={{ color: 'var(--c-info)', flexShrink: 0 }} dangerouslySetInnerHTML={{ __html: Icons.info(20) }} />
@@ -1312,6 +1790,6 @@ function PlaceholderScreen({ route, onNavigate }) {
 }
 
 Object.assign(window, {
-  DaftarJaminanScreen, MasterDataScreen, ProdukPembiayaanScreen, NewProdukPembiayaanScreen,
+  DaftarJaminanScreen, MasterDataScreen, DataAgencyScreen, DataVendorScreen, ProdukPembiayaanScreen, NewProdukPembiayaanScreen,
   ParameterGlobalScreen, OtorisasiScreen, PlaceholderScreen,
 });

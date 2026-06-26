@@ -2,7 +2,7 @@
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "tenant": "ihsan",
-  "density": "comfort",
+  "density": "compact",
   "popupStyle": "menu",
   "role": "Maker"
 }/*EDITMODE-END*/;
@@ -116,6 +116,8 @@ function RouteSwitch({ route, onNavigate, popupStyle, showToast }) {
     case '/edit/ulang-jadwal/form':     return <UbahJadwalAngsuranFormScreen {...props} />;
     case '/edit/agunan':                return <EditRekeningLandingScreen {...props} mode="agunan" />;
     case '/edit/agunan/form':           return <PengikatanAgunanScreen {...props} />;
+    case '/edit/objek':                 return <EditRekeningLandingScreen {...props} mode="objek" />;
+    case '/edit/objek/form':            return <ObjekPembiayaanScreen {...props} />;
 
     // Transaksi — each menu: landing (cari rekening) → form
     case '/transaksi/pembayaran-manual':         return <TransaksiLandingScreen {...props} mode="pembayaran-manual" />;
@@ -128,6 +130,8 @@ function RouteSwitch({ route, onNavigate, popupStyle, showToast }) {
     case '/transaksi/input-biaya/form':          return <InputBiayaScreen {...props} rek={query.rek} />;
     case '/transaksi/reposisi-cabang':           return <TransaksiLandingScreen {...props} mode="reposisi-cabang" />;
     case '/transaksi/reposisi-cabang/form':      return <ReposisiCabangTransaksiScreen {...props} rek={query.rek} />;
+    case '/transaksi/ganti-produk':              return <TransaksiLandingScreen {...props} mode="ganti-produk" />;
+    case '/transaksi/ganti-produk/form':         return <GantiProdukScreen {...props} rek={query.rek} />;
     case '/transaksi/hapus-buku/registrasi':     return <TransaksiLandingScreen {...props} mode="hapus-buku-registrasi" />;
     case '/transaksi/hapus-buku/registrasi/form':return <RegistrasiHapusBukuScreen {...props} rek={query.rek} />;
     case '/transaksi/hapus-buku/recovery':       return <TransaksiLandingScreen {...props} mode="hapus-buku-recovery" />;
@@ -142,8 +146,19 @@ function RouteSwitch({ route, onNavigate, popupStyle, showToast }) {
     case '/jaminan/entri-kolektif':     return <EntriJaminanKolektifScreen {...props} />;
 
     // Master data
-    case '/master/instansi':            return <MasterDataScreen {...props} type="instansi" />;
-    case '/master/vendor':              return <MasterDataScreen {...props} type="vendor" />;
+    case '/master/agency':              return <DataAgencyScreen {...props} />;
+    case '/master/pejabat':             return <DataPejabatScreen {...props} />;
+    case '/master/group-nasabah':       return <GroupNasabahScreen {...props} />;
+    case '/master/vendor':              return <DataVendorScreen {...props} />;
+    case '/master/mitra':               return <DataMitraJFScreen {...props} />;
+    case '/master/biaya':               return <DataBiayaBiayaScreen {...props} />;
+    case '/master/jenis-aktiva':        return <DataJenisAktivaScreen {...props} />;
+    case '/master/kode-bisnis':         return <DataKodeBisnisScreen {...props} />;
+
+    // Data Pihak Ke Tiga
+    case '/pihak3/asuransi':            return <DataAsuransiScreen {...props} />;
+    case '/pihak3/penjamin':            return <DataPenjaminScreen {...props} />;
+    case '/pihak3/notaris':             return <ListPekerjaanNotarisScreen {...props} />;
 
     // Produk
     case '/produk/pembiayaan':          return <ProdukPembiayaanScreen {...props} />;
@@ -155,9 +170,20 @@ function RouteSwitch({ route, onNavigate, popupStyle, showToast }) {
     case '/produk/fasilitas/detail':    return <DetailProdukFasilitasScreen {...props} kode={query.kode} />;
     case '/produk/fasilitas/edit':      return <NewProdukFasilitasScreen {...props} mode="edit" kode={query.kode} />;
     case '/produk/parameter-global':    return <ParameterGlobalScreen {...props} />;
+    case '/produk/parameter-ckpn':      return <ParameterCkpnScreen {...props} />;
+    case '/produk/parameter-gadai':     return <ParameterGadaiScreen {...props} />;
+    case '/produk/parameter-denda':     return <ParameterDendaScreen {...props} />;
 
     // Otorisasi
     case '/otorisasi':                  return <OtorisasiScreen {...props} />;
+
+    // Transaksi Massal
+    case '/massal/input':               return <InputTransaksiMassalScreen {...props} />;
+    case '/massal/history':             return <RiwayatTransaksiScreen {...props} />;
+
+    // Tutup Operational APBL
+    case '/apbl/monitoring':            return <MonitoringApblScreen {...props} />;
+    case '/apbl/riwayat':               return <RiwayatApblScreen {...props} />;
 
     // Laporan (8.x)
     case '/financing/laporan/nominatif_pembiayaan': return <LaporanScreen {...props} report="nominatif_pembiayaan" />;

@@ -1,0 +1,318 @@
+/* =============================================================
+   BOS7 Design System — Foundations
+   Built on IBM Carbon Design System v11 (@carbon/react ^1.97)
+   Dense / enterprise banking density (14 px base, 32 px controls)
+   =============================================================
+
+   Source of truth:
+     ihsansolusi/ui7  —  themes/corporate-themes/src/corporates/*
+     ihsansolusi/ui7  —  themes/corporate-themes/src/base/carbon-base.scss
+     ihsansolusi/ui7  —  playground/app/globals.scss
+
+   In production, these tokens are emitted as Carbon CSS custom
+   properties (--cds-*) by `<GlobalCorporateTheme corporateId="…">`.
+   For mocks/prototypes we redeclare them flat so any HTML page can
+   pull this file and reach token parity.
+   ============================================================= */
+
+/* -----  Webfonts (IBM Plex Sans / Mono) ---------------------- */
+/* Imported from IBM/plex (github.com/IBM/plex) — OFL-licensed.
+   Complete WOFF2 files in fonts/.  Only the weights used by
+   BOS7 are included: Sans 300-700, Mono 400-600.              */
+
+@font-face { font-family: "IBM Plex Sans"; font-weight: 300; font-style: normal; font-display: swap; src: url("fonts/IBMPlexSans-Light.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-weight: 400; font-style: normal; font-display: swap; src: url("fonts/IBMPlexSans-Regular.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-weight: 500; font-style: normal; font-display: swap; src: url("fonts/IBMPlexSans-Medium.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-weight: 600; font-style: normal; font-display: swap; src: url("fonts/IBMPlexSans-SemiBold.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-weight: 700; font-style: normal; font-display: swap; src: url("fonts/IBMPlexSans-Bold.woff2") format("woff2"); }
+
+@font-face { font-family: "IBM Plex Mono"; font-weight: 400; font-style: normal; font-display: swap; src: url("fonts/IBMPlexMono-Regular.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: swap; src: url("fonts/IBMPlexMono-Medium.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-style: normal; font-display: swap; src: url("fonts/IBMPlexMono-SemiBold.woff2") format("woff2"); }
+
+:root {
+  /* ===========================================================
+     1.  TYPE
+     -----------------------------------------------------------
+     IBM Plex Sans is the brand face; IBM Plex Mono is for code,
+     account numbers, IDs, currencies in tabular contexts.
+     Base 14 px, NOT 16 px — banking density.
+     =========================================================== */
+  --bos7-font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --bos7-font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+
+  /* Base */
+  --bos7-fs-base: 0.875rem;            /* 14 px — body */
+  --bos7-lh-base: 1.25rem;             /* 20 px */
+
+  /* Type scale — flat values used across the system */
+  --bos7-fs-12: 0.75rem;               /* helper / caption */
+  --bos7-fs-13: 0.8125rem;             /* heading-compact-01 */
+  --bos7-fs-14: 0.875rem;              /* body, label, input */
+  --bos7-fs-16: 1rem;                  /* heading-compact-02 */
+  --bos7-fs-18: 1.125rem;              /* heading-03 small */
+  --bos7-fs-20: 1.25rem;               /* page__title, modal heading */
+  --bos7-fs-24: 1.5rem;                /* productive-heading-04 */
+  --bos7-fs-32: 2rem;                  /* big stat number on Tile */
+  --bos7-fs-42: 2.625rem;              /* hero numeric */
+
+  --bos7-fw-regular: 400;
+  --bos7-fw-medium: 500;
+  --bos7-fw-semibold: 600;             /* heading default */
+  --bos7-fw-bold: 700;
+
+  /* Semantic type roles */
+  --bos7-page-title: 600 1.25rem/1.5 var(--bos7-font-sans);
+  --bos7-modal-title: 600 1.25rem/1.5 var(--bos7-font-sans);
+  --bos7-section-title: 600 0.875rem/1.25 var(--bos7-font-sans);
+  --bos7-section-eyebrow: 600 0.75rem/1 var(--bos7-font-sans);  /* UPPERCASE letter-spacing 0.32px */
+  --bos7-body: 400 0.875rem/1.43 var(--bos7-font-sans);
+  --bos7-helper: 400 0.75rem/1.33 var(--bos7-font-sans);
+  --bos7-label: 600 0.875rem/1.25 var(--bos7-font-sans);
+  --bos7-stat-value: 600 2rem/1 var(--bos7-font-sans);
+
+  --bos7-tracking-eyebrow: 0.32px;
+
+  /* ===========================================================
+     2.  CORPORATE BRANDS  (interactive-01 / link / focus per tenant)
+     -----------------------------------------------------------
+     Each brand has primary / hover / active triplet that maps to
+     Carbon's interactive-01 token in the carbon-base mixin.
+     =========================================================== */
+
+  /* — Ihsan Solusi (default Carbon Blue) — */
+  --bos7-ihsan-primary:        #0F62FE;
+  --bos7-ihsan-primary-hover:  #0043CE;
+  --bos7-ihsan-primary-active: #002D9C;
+  --bos7-ihsan-secondary:      #1192E8;
+  --bos7-ihsan-accent:         #08BDBA;
+
+  /* — BCA Syariah (BCA Blue + Teal "syariah") — */
+  --bos7-bca-primary:          #0868B8;
+  --bos7-bca-primary-hover:    #0552A3;
+  --bos7-bca-primary-active:   #003D7A;
+  --bos7-bca-secondary:        #18A8B8;   /* teal of "syariah" wordmark */
+  --bos7-bca-accent:           #00A651;   /* Islamic green */
+
+  /* — BJB Syariah (BJB Red, repo tokens.ts) — */
+  --bos7-bjb-primary:          #C8102E;
+  --bos7-bjb-primary-hover:    #A00D25;
+  --bos7-bjb-primary-active:   #7A0A1C;
+  --bos7-bjb-secondary:        #184878;   /* navy of logo wordmark */
+  --bos7-bjb-accent:           #E31837;
+
+  /* — Bank Mega Syariah (Magenta + Gold + Orange) — */
+  --bos7-mega-primary:         #B8388F;
+  --bos7-mega-primary-hover:   #9C2274;
+  --bos7-mega-primary-active:  #801A60;
+  --bos7-mega-secondary:       #F8C808;   /* gold "M" */
+  --bos7-mega-accent:          #F86828;   /* orange */
+
+  /* — Pos Indonesia / POS IND (rebrand: navy + red) — */
+  --bos7-pos-primary:          #182858;   /* deep navy, dominant logo color */
+  --bos7-pos-primary-hover:    #0F1D45;
+  --bos7-pos-primary-active:   #0A1535;
+  --bos7-pos-secondary:        #E84828;   /* red accent diamond */
+  --bos7-pos-accent:           #F84828;   /* lighter red highlight */
+
+  /* Active brand defaults to Ihsan / Carbon Default — overridden
+     per-page by setting these vars on the `[data-brand]` wrapper. */
+  --bos7-primary:        var(--bos7-ihsan-primary);
+  --bos7-primary-hover:  var(--bos7-ihsan-primary-hover);
+  --bos7-primary-active: var(--bos7-ihsan-primary-active);
+  --bos7-secondary:      var(--bos7-ihsan-secondary);
+  --bos7-accent:         var(--bos7-ihsan-accent);
+
+  /* ===========================================================
+     3.  NEUTRALS — Carbon Gray ramp
+     =========================================================== */
+  --bos7-gray-10:  #F4F4F4;
+  --bos7-gray-20:  #E0E0E0;
+  --bos7-gray-30:  #C6C6C6;
+  --bos7-gray-40:  #A8A8A8;
+  --bos7-gray-50:  #8D8D8D;
+  --bos7-gray-60:  #6F6F6F;
+  --bos7-gray-70:  #525252;
+  --bos7-gray-80:  #393939;
+  --bos7-gray-90:  #262626;
+  --bos7-gray-100: #161616;
+
+  /* ===========================================================
+     4.  SURFACES & TEXT  (Carbon "white" variant — our default)
+     -----------------------------------------------------------
+     The system also ships g10 / g90 / g100 variants; consumers
+     swap them via data-variant.  These are the "white" defaults.
+     =========================================================== */
+  --bos7-bg:             #FFFFFF;
+  --bos7-bg-hover:       #E8E8E8;
+  --bos7-bg-active:      #C6C6C6;
+  --bos7-bg-selected:    #E0E0E0;
+  --bos7-layer-01:       #F4F4F4;       /* tile bg, side-nav bg */
+  --bos7-layer-02:       #FFFFFF;
+  --bos7-field-01:       #F4F4F4;       /* default input bg in Carbon */
+  --bos7-field-soft-bg:  #FFFFFF;       /* the system overrides Carbon: white inputs */
+  --bos7-border-subtle:  #E0E0E0;
+  --bos7-border-strong:  #8D8D8D;
+  --bos7-border-input:   rgba(0,0,0,0.08); /* the soft 1px input border */
+  --bos7-border-focus:   rgba(15,98,254,0.4); /* soft focus ring */
+  --bos7-divider:        #E0E0E0;
+
+  --bos7-text-primary:   #000000;       /* enterprise spec: pure black */
+  --bos7-text-secondary: #525252;
+  --bos7-text-helper:    #6F6F6F;
+  --bos7-text-placeholder:#A8A8A8;
+  --bos7-text-disabled:  #A8A8A8;
+  --bos7-text-on-color:  #FFFFFF;       /* on primary/danger buttons */
+  --bos7-icon-primary:   #000000;
+  --bos7-icon-secondary: #525252;
+  --bos7-link:           #0F62FE;
+  --bos7-link-hover:     #002D9C;
+  --bos7-highlight:      #D0E2FF;       /* search match background */
+  --bos7-row-selected:   #EEF6FF;
+  --bos7-row-selected-hover:#DDEEFF;
+
+  /* ===========================================================
+     5.  SEMANTIC / STATUS  (Carbon support-* tokens)
+     =========================================================== */
+  --bos7-success: #24A148;
+  --bos7-success-bg: #DEFBE6;
+  --bos7-warning: #F1C21B;
+  --bos7-warning-bg: #FCF4D6;
+  --bos7-error:   #DA1E28;
+  --bos7-error-bg: #FFF1F1;
+  --bos7-info:    #0043CE;
+  --bos7-info-bg: #EDF5FF;
+
+  /* Financial direction (used for credit / debit cells in tables) */
+  --bos7-pos: var(--bos7-success);     /* credit, positive */
+  --bos7-neg: var(--bos7-error);       /* debit, negative */
+
+  /* ===========================================================
+     6.  SPACING — Carbon scale (dense overrides applied)
+     -----------------------------------------------------------
+     The mixin overrides spacing-03..07 inside themed roots so
+     forms feel about 25 % tighter than stock Carbon.
+     =========================================================== */
+  --bos7-s-01: 0.125rem;   /* 2 px */
+  --bos7-s-02: 0.25rem;    /* 4 px */
+  --bos7-s-03: 0.25rem;    /* 4 px — overridden from 0.5rem */
+  --bos7-s-04: 0.5rem;     /* 8 px — overridden from 0.75rem */
+  --bos7-s-05: 0.75rem;    /* 12 px — overridden from 1rem */
+  --bos7-s-06: 1rem;       /* 16 px — overridden from 1.5rem */
+  --bos7-s-07: 1.5rem;     /* 24 px */
+  --bos7-s-08: 2rem;       /* 32 px */
+  --bos7-s-09: 2.5rem;     /* 40 px */
+  --bos7-s-10: 3rem;       /* 48 px */
+
+  /* ===========================================================
+     7.  CONTROL HEIGHTS
+     =========================================================== */
+  --bos7-h-header:  2.5rem;   /* 40 px — compact, smaller than Carbon default 48 px */
+  --bos7-h-row-sm:  2rem;     /* 32 px — dense table row */
+  --bos7-h-row-xs:  1.5rem;   /* 24 px — extra-dense row */
+  --bos7-h-input:   2rem;     /* 32 px — text input / select / date */
+  --bos7-h-button-sm: 2rem;
+  --bos7-h-button-md: 2rem;   /* overridden from 2.5rem */
+  --bos7-h-button-lg: 2.5rem; /* overridden from 3rem */
+  --bos7-sidenav-w:  16rem;   /* 256 px */
+
+  /* ===========================================================
+     8.  RADII / BORDERS / SHADOWS
+     -----------------------------------------------------------
+     IBM Carbon is famously near-flat: 2 px is the maximum radius.
+     We use 0 for surfaces, 2 px for inputs/buttons, 50 % for avatars.
+     Shadows are reserved for floating layers (header panels,
+     menus, popovers).  Cards do NOT have shadow.
+     =========================================================== */
+  --bos7-radius-0: 0;
+  --bos7-radius-1: 2px;
+  --bos7-radius-pill: 999px;
+
+  --bos7-shadow-panel: 0 4px 16px rgba(0,0,0,0.20);     /* header dropdown panels */
+  --bos7-shadow-popover: 0 2px 6px rgba(0,0,0,0.18);    /* tooltip, menu */
+  --bos7-shadow-modal:   0 8px 24px rgba(0,0,0,0.25);   /* dialog */
+
+  /* Cards use a single hairline divider instead of a shadow */
+  --bos7-card-border: 1px solid var(--bos7-border-subtle);
+
+  /* ===========================================================
+     9.  MOTION
+     =========================================================== */
+  --bos7-dur-fast: 0.10s;     /* hover */
+  --bos7-dur-base: 0.15s;     /* most transitions */
+  --bos7-dur-slow: 0.20s;     /* sidebar slide */
+  --bos7-ease-out: cubic-bezier(0, 0, 0.38, 0.9);  /* Carbon expressive */
+  --bos7-ease-in:  cubic-bezier(0.4, 0.14, 1, 1);
+}
+
+/* =============================================================
+   Brand presets — apply by setting data-brand on a wrapper.
+   <div data-brand="bjb"> ... </div>
+   ============================================================= */
+
+[data-brand="ihsan"] {
+  --bos7-primary:        var(--bos7-ihsan-primary);
+  --bos7-primary-hover:  var(--bos7-ihsan-primary-hover);
+  --bos7-primary-active: var(--bos7-ihsan-primary-active);
+  --bos7-secondary:      var(--bos7-ihsan-secondary);
+  --bos7-accent:         var(--bos7-ihsan-accent);
+}
+[data-brand="bca"] {
+  --bos7-primary:        var(--bos7-bca-primary);
+  --bos7-primary-hover:  var(--bos7-bca-primary-hover);
+  --bos7-primary-active: var(--bos7-bca-primary-active);
+  --bos7-secondary:      var(--bos7-bca-secondary);
+  --bos7-accent:         var(--bos7-bca-accent);
+}
+[data-brand="bjb"] {
+  --bos7-primary:        var(--bos7-bjb-primary);
+  --bos7-primary-hover:  var(--bos7-bjb-primary-hover);
+  --bos7-primary-active: var(--bos7-bjb-primary-active);
+  --bos7-secondary:      var(--bos7-bjb-secondary);
+  --bos7-accent:         var(--bos7-bjb-accent);
+}
+[data-brand="mega"] {
+  --bos7-primary:        var(--bos7-mega-primary);
+  --bos7-primary-hover:  var(--bos7-mega-primary-hover);
+  --bos7-primary-active: var(--bos7-mega-primary-active);
+  --bos7-secondary:      var(--bos7-mega-secondary);
+  --bos7-accent:         var(--bos7-mega-accent);
+}
+[data-brand="pos"] {
+  --bos7-primary:        var(--bos7-pos-primary);
+  --bos7-primary-hover:  var(--bos7-pos-primary-hover);
+  --bos7-primary-active: var(--bos7-pos-primary-active);
+  --bos7-secondary:      var(--bos7-pos-secondary);
+  --bos7-accent:         var(--bos7-pos-accent);
+}
+
+/* =============================================================
+   Semantic element styles — reset/canonical look so any plain HTML
+   page that imports this file gets the right defaults.
+   ============================================================= */
+html, body { background: var(--bos7-bg); color: var(--bos7-text-primary); }
+body {
+  font-family: var(--bos7-font-sans);
+  font-size: var(--bos7-fs-base);
+  line-height: var(--bos7-lh-base);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 { font-family: var(--bos7-font-sans); font-weight: var(--bos7-fw-semibold); margin: 0; color: var(--bos7-text-primary); }
+h1 { font-size: var(--bos7-fs-32); line-height: 1.2; }
+h2 { font-size: var(--bos7-fs-24); line-height: 1.25; }
+h3 { font-size: var(--bos7-fs-20); line-height: 1.4; }
+h4 { font-size: var(--bos7-fs-18); line-height: 1.4; }
+h5 { font-size: var(--bos7-fs-14); line-height: 1.43; }
+h6 { font-size: var(--bos7-fs-12); line-height: 1.33; text-transform: uppercase; letter-spacing: var(--bos7-tracking-eyebrow); color: var(--bos7-text-secondary); }
+
+p { margin: 0; font-size: var(--bos7-fs-14); }
+small { font-size: var(--bos7-fs-12); color: var(--bos7-text-helper); }
+code, kbd, samp { font-family: var(--bos7-font-mono); font-size: 0.8125em; }
+a { color: var(--bos7-link); text-decoration: none; }
+a:hover { color: var(--bos7-link-hover); text-decoration: underline; }
+
+/* Numeric / monetary text — tabular figures so digits line up */
+.bos7-num { font-family: var(--bos7-font-mono); font-variant-numeric: tabular-nums; }

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infografis Fitur — Modul Financing</title>
+<link rel="stylesheet" href="_ds/bos7-design-system-fcac99fb-1c41-4f7a-aa14-4d70ae8cdc52/colors_and_type.css">
+<script src="assets/icons.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bos7-gray-20);
+    font-family: var(--bos7-font-sans);
+    color: var(--bos7-text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .poster {
+    width: 1360px;
+    margin: 32px auto;
+    background: var(--bos7-bg);
+    border: 1px solid var(--bos7-border-subtle);
+  }
+
+  /* ── Header ─────────────────────────────────────── */
+  .hd {
+    padding: 40px 48px 32px;
+    border-bottom: 3px solid var(--bos7-primary);
+  }
+  .hd__eyebrow {
+    font: var(--bos7-section-eyebrow);
+    letter-spacing: var(--bos7-tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--bos7-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hd__eyebrow .dot { width: 6px; height: 6px; background: var(--bos7-secondary); display: inline-block; }
+  .hd__title {
+    font-weight: 700;
+    font-size: 2.625rem;
+    line-height: 1.08;
+    margin: 14px 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .hd__sub {
+    font-size: var(--bos7-fs-16);
+    color: var(--bos7-text-secondary);
+    max-width: 720px;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* ── Stat band ──────────────────────────────────── */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    border-bottom: 1px solid var(--bos7-divider);
+  }
+  .stat {
+    padding: 22px 24px 20px;
+    background: var(--bos7-layer-01);
+    border-right: 1px solid var(--bos7-divider);
+  }
+  .stat:last-child { border-right: 0; }
+  .stat__num {
+    font-family: var(--bos7-font-mono);
+    font-feature-settings: "tnum" 1;
+    font-weight: 600;
+    font-size: 2.25rem;
+    line-height: 1;
+    color: var(--bos7-primary);
+  }
+  .stat__num span { font-size: 1.125rem; color: var(--bos7-text-helper); margin-left: 2px; }
+  .stat__lbl {
+    margin-top: 8px;
+    font-size: var(--bos7-fs-12);
+    text-transform: uppercase;
+    letter-spacing: var(--bos7-tracking-eyebrow);
+    font-weight: 600;
+    color: var(--bos7-text-secondary);
+  }
+
+  /* ── Module grid (masonry via columns) ──────────── */
+  .grid {
+    padding: 32px 48px 16px;
+    column-count: 3;
+    column-gap: 24px;
+  }
+  .mod {
+    break-inside: avoid;
+    margin-bottom: 24px;
+    border: 1px solid var(--bos7-border-subtle);
+  }
+  .mod__hd {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--bos7-layer-01);
+    border-bottom: 1px solid var(--bos7-divider);
+  }
+  .mod__icon {
+    flex: none;
+    width: 38px; height: 38px;
+    background: var(--bos7-primary);
+    color: #fff;
+    display: grid;
+    place-items: center;
+  }
+  .mod__icon svg { width: 22px; height: 22px; }
+  .mod__name {
+    flex: 1;
+    min-width: 0;
+    font-weight: 600;
+    font-size: var(--bos7-fs-16);
+    line-height: 1.2;
+  }
+  .mod__n {
+    display: block;
+    font-family: var(--bos7-font-mono);
+    font-size: var(--bos7-fs-12);
+    font-weight: 500;
+    color: var(--bos7-primary);
+    letter-spacing: 0.04em;
+    margin-bottom: 2px;
+  }
+  .mod__count {
+    flex: none;
+    font-family: var(--bos7-font-mono);
+    font-feature-settings: "tnum" 1;
+    font-weight: 600;
+    font-size: var(--bos7-fs-14);
+    color: var(--bos7-text-secondary);
+    background: var(--bos7-bg);
+    border: 1px solid var(--bos7-border-subtle);
+    padding: 3px 9px;
+    min-width: 34px;
+    text-align: center;
+  }
+  .mod__body { padding: 6px 16px 12px; }
+
+  .sub-eyebrow {
+    font-size: var(--bos7-fs-12);
+    text-transform: uppercase;
+    letter-spacing: var(--bos7-tracking-eyebrow);
+    font-weight: 600;
+    color: var(--bos7-text-helper);
+    margin: 12px 0 4px;
+  }
+  .sub-eyebrow:first-child { margin-top: 6px; }
+
+  .feat {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: var(--bos7-fs-14);
+    line-height: 1.3;
+    border-bottom: 1px solid var(--bos7-gray-10);
+  }
+  .feat:last-child { border-bottom: 0; }
+  .feat__mk {
+    flex: none;
+    width: 6px; height: 6px;
+    margin-top: 6px;
+    background: var(--bos7-secondary);
+  }
+
+  /* ── Footer ─────────────────────────────────────── */
+  .ft {
+    padding: 20px 48px 32px;
+    border-top: 1px solid var(--bos7-divider);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .ft__brand { display: flex; align-items: center; gap: 10px; }
+  .ft__mark {
+    width: 26px; height: 26px;
+    background: var(--bos7-primary);
+    color: #fff;
+    display: grid; place-items: center;
+    font-weight: 700; font-size: 13px;
+    font-family: var(--bos7-font-mono);
+  }
+  .ft__txt { font-size: var(--bos7-fs-12); color: var(--bos7-text-secondary); line-height: 1.4; }
+  .ft__txt strong { color: var(--bos7-text-primary); font-weight: 600; }
+  .ft__meta { font-size: var(--bos7-fs-12); color: var(--bos7-text-helper); font-family: var(--bos7-font-mono); }
+
+  /* ── Chips (reference sub-lists) ─────────────────── */
+  .chips-block { margin-top: 12px; }
+  .chips-block__h {
+    font-size: var(--bos7-fs-12);
+    text-transform: uppercase;
+    letter-spacing: var(--bos7-tracking-eyebrow);
+    font-weight: 600;
+    color: var(--bos7-text-helper);
+    margin-bottom: 8px;
+  }
+  .chips-block__n {
+    font-family: var(--bos7-font-mono);
+    color: var(--bos7-primary);
+    margin-left: 2px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font-size: var(--bos7-fs-12);
+    line-height: 1.25;
+    padding: 4px 8px;
+    background: var(--bos7-bg);
+    border: 1px solid var(--bos7-border-subtle);
+    color: var(--bos7-text-secondary);
+    font-weight: 500;
+  }
+
+  /* ── Akad reference section ──────────────────────── */
+  .refs { padding: 4px 48px 36px; }
+  .refs__hd {
+    font-size: var(--bos7-fs-12);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--bos7-tracking-eyebrow);
+    color: var(--bos7-primary);
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 16px;
+  }
+  .refs__hd .dot { width: 6px; height: 6px; background: var(--bos7-secondary); display: inline-block; }
+  .ref-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .ref-card { border: 1px solid var(--bos7-border-subtle); }
+  .ref-card__body { padding: 16px; }
+  .chips--lg { gap: 8px; }
+  .chip--akad {
+    font-size: var(--bos7-fs-14);
+    padding: 6px 12px;
+    background: var(--bos7-info-bg);
+    border-color: #D0E2FF;
+    color: var(--bos7-primary);
+    font-weight: 600;
+  }
+
+  @media print {
+    body { background: #fff; }
+    .poster { margin: 0; border: 0; width: 100%; }
+  }
+</style>
+</head>
+<body>
+  <div class="poster">
+    <header class="hd">
+      <div class="hd__eyebrow"><span class="dot"></span>Core7 · BOS7-Financing · Peta Fitur</div>
+      <h1 class="hd__title">Fitur Modul Financing</h1>
+      <p class="hd__sub">Ringkasan menyeluruh seluruh fitur modul pembiayaan (financing) BOS7 — dari simulasi akad, registrasi rekening &amp; fasilitas, edit rekening, transaksi, hingga jaminan, laporan, dan otorisasi.</p>
+    </header>
+
+    <section class="stats" id="stats"></section>
+
+    <main class="grid" id="grid"></main>
+
+    <section class="refs" id="refs"></section>
+
+    <footer class="ft">
+      <div class="ft__brand">
+        <div class="ft__mark">B7</div>
+        <div class="ft__txt"><strong>BOS7 Design System</strong><br>Backend Office System — Core7 Banking Platform</div>
+      </div>
+      <div class="ft__meta" id="ftmeta"></div>
+    </footer>
+  </div>
+
+<script>
+const MODULES = [
+  { n:'01', icon:'home', name:'Beranda',
+    items:['Dashboard'] },
+  { n:'02', icon:'calc', name:'Simulasi',
+    items:["Murabahah, Qardh & Istishna'", 'Ijarah', 'Mudharabah & Musyarakah', 'MMQ', 'PRKS', 'Gadai', "Denda Ta'zir & Ta'wid"] },
+  { n:'03', icon:'building', name:'Data Master',
+    items:['Data Agency','Group Nasabah','Data Pejabat','Data Vendor','Data Mitra Join Finance','Data Kode Bisnis','Data Jenis Aktiva','Data Biaya-Biaya'] },
+  { n:'04', icon:'scale', name:'Data Pihak Ke Tiga',
+    items:['Asuransi','Penjamin','List Pekerjaan Notaris'] },
+  { n:'05', icon:'sliders', name:'Produk Parameter',
+    items:['Produk Pembiayaan','Produk Fasilitas','Parameter Global','Parameter CKPN','Parameter Denda','Parameter Gadai'] },
+  { n:'06', icon:'folder', name:'Rekening & Fasilitas', groups:[
+    { h:'Registrasi', items:['Registrasi Fasilitas'] },
+    { h:'Registrasi Account', items:['Rekening Pembiayaan','Rekening Gadai','Rekening Qardh','Qardh bil Ujroh','Bank Garansi'] },
+    { h:'Daftar Account', items:['List Fasilitas','List Account Pembiayaan','List Account Gadai','List Account Qardh','List Bank Garansi'] },
+  ] },
+  { n:'07', icon:'edit', name:'Edit Rekening',
+    items:['Ubah Data Rekening','Kelengkapan Data Pembiayaan','Addendum Pembiayaan','Restruktur Pembiayaan','Ubah Jadwal Angsuran','Pengikatan dengan Agunan','Objek Pembiayaan'] },
+  { n:'08', icon:'swap', name:'Transaksi', groups:[
+    { h:'Pembayaran', items:['Pembayaran Manual','Pelunasan Dipercepat','Koreksi Pembayaran','Bayar Denda'] },
+    { h:'Biaya & Operasional', items:['Input Biaya-Biaya','Biaya Amortisasi','BDD Asuransi','Reposisi Cabang','Ganti Produk','Deklarasi Laporan Hasil Usaha'] },
+    { h:'Hapus Buku', items:['Registrasi Hapus Buku','Recovery Hapus Buku','Hapus Tagih'] },
+    { h:'AYDA', items:['Input AYDA','Penyelesaian AYDA','Pencairan AYDA','Happes AYDA'] },
+    { h:'Pembatalan Transaksi', items:['Pembatalan Registrasi','Pembatalan Addendum'] },
+  ] },
+  { n:'09', icon:'upload', name:'Transaksi Massal',
+    items:['Input Transaksi','History Transaksi'],
+    chips:[{ h:'Jenis Transaksi Massal', items:['Registrasi Account','Registrasi Fasilitas','Pembayaran Angsuran','Pelunasan Dipercepat','Reposisi Cabang'] }] },
+  { n:'10', icon:'shield', name:'Data Jaminan',
+    items:['Daftar Jaminan','Daftar Jaminan Siap Ambil','Entri Jaminan Individual','Entri Jaminan Kolektif','Daftar Management Dokumen'],
+    chips:[
+      { h:'Jenis Entri — Jaminan Individual', items:['Properti Individu','Kendaraan Individu','Logam Mulia / Emas','Cash / Tunai','Mesin / Alat Berat','Piutang Tagihan','Kapal','Bank Garansi','Personal / Corporate Guarantee','Persediaan Barang','Bank Notes','Surat Berharga','Surat Keputusan','Jaminan Lainnya'] },
+      { h:'Jenis Entri — Jaminan Kolektif', items:['Properti Kolektif','Kendaraan Kolektif'] },
+    ] },
+  { n:'11', icon:'finance', name:'Laporan', groups:[
+    { h:'Pembiayaan', items:['Nominatif Pembiayaan','Fasilitas Pembiayaan','Histori Transaksi Pembiayaan','Amortisasi Biaya Pembiayaan','Accrue Pembiayaan','Jadwal Tagihan Angsuran','Ledger Balance Verification (LBV)'] },
+    { h:'Jaminan', items:['Data Jaminan','Data Pengikatan Jaminan'] },
+  ] },
+  { n:'12', icon:'clipboard', name:'Otorisasi',
+    items:['Antrian Otorisasi'] },
+  { n:'13', icon:'refresh', name:'Batch Process End of Day (EOD)', groups:[
+    { h:'Amortisasi', items:['Amortisasi Fee Ujrah Non Gadai','Amortisasi BDD Pembiayaan Harian','Amortisasi Fee Ujroh Gadai','Amortisasi PMYD Attribusi'] },
+    { h:'Cleansing', items:['Cleansing Cancel Account','Proses Cleansing Used Fasilitas'] },
+    { h:'CKPN & PPAP', items:['Penambahan/Pengurangan CKPN','Penambahan/Pengurangan PPAP','Reverse PPAP Rekening Lunas','Perhitungan Nilai Jaminan Pengurang PPAP'] },
+    { h:'Angsuran, Pembayaran & Saldo', items:['Hitung DPD Angsuran','Debit Payment Kolektif','FIN Auto Payment ALL','Perhitungan Denda Tiering','PRK - Angsuran Baghas','PRK - Angsuran Pokok','Generate Daily Balance Financing'] },
+    { h:'Akrual & Akad — Ijarah', items:['Hitung Accrue Ijarah','Pembentukan Tunggakan Ijarah','Pembentukan Nilai Depresiasi Ijarah','Penentuan KOL Ijarah SOJK 2022'] },
+    { h:'Kafalah', items:['Pembentukan Berakhir Klaim Kafalah','Pembentukan Jatuh Tempo Kafalah'] },
+    { h:'Murabahah & MMQ', items:['Hitung Accrue MMQ','Hitung Accrue Murabahah','Pembentukan Tunggakan Murabahah','Penentuan KOL Murabahah SOJK 2022'] },
+    { h:'Musyarakah & Kolektibilitas', items:['Pembentukan Tunggakan Musyarakah','Penentuan KOL Musyarakah SOJK 2022','Penentuan KOL Keseluruhan SOJK 2022'] },
+    { h:'Jurnal & Sinkronisasi', items:['Proses Jurnal','Sync Nominative Atrib vs Jadwal'] },
+  ] },
+];
+
+const countMod = (m) => m.groups
+  ? m.groups.reduce((s, g) => s + g.items.length, 0)
+  : m.items.length;
+
+const totalFeatures = MODULES.reduce((s, m) => s + countMod(m), 0);
+
+const featRow = (label) =>
+  `<div class="feat"><span class="feat__mk"></span><span>${label}</span></div>`;
+
+// ── Module cards ──
+document.getElementById('grid').innerHTML = MODULES.map(m => {
+  const body = m.groups
+    ? m.groups.map(g =>
+        `<div class="sub-eyebrow">${g.h}</div>` + g.items.map(featRow).join('')
+      ).join('')
+    : m.items.map(featRow).join('');
+  const chips = (m.chips || []).map(c =>
+    `<div class="chips-block"><div class="chips-block__h">${c.h} <span class="chips-block__n">${c.items.length}</span></div>` +
+    `<div class="chips">${c.items.map(i => `<span class="chip">${i}</span>`).join('')}</div></div>`
+  ).join('');
+  return `
+    <article class="mod">
+      <div class="mod__hd">
+        <div class="mod__icon">${Icons[m.icon](22)}</div>
+        <div class="mod__name"><span class="mod__n">MODUL ${m.n}</span>${m.name}</div>
+        <div class="mod__count">${countMod(m)}</div>
+      </div>
+      <div class="mod__body">${body}${chips}</div>
+    </article>`;
+}).join('');
+
+// ── Akad reference section ──
+const AKAD = [
+  { icon:'money', name:'Daftar Akad Pembiayaan', items:['Murabahah','Mudharabah','Musyarakah','MMQ','Ijarah','Istishna','Qardh','PRKS','Gadai'] },
+  { icon:'briefcase', name:'Daftar Akad Fasilitas', items:['Umum','Musyarakah','Murabahah','Mudharabah','PRKS','Ijarah','MMQ'] },
+];
+document.getElementById('refs').innerHTML =
+  `<div class="refs__hd"><span class="dot"></span>Referensi Akad</div>` +
+  `<div class="ref-grid">` + AKAD.map(a => `
+    <article class="ref-card">
+      <div class="mod__hd">
+        <div class="mod__icon">${Icons[a.icon](22)}</div>
+        <div class="mod__name">${a.name}</div>
+        <div class="mod__count">${a.items.length}</div>
+      </div>
+      <div class="ref-card__body"><div class="chips chips--lg">${a.items.map(i => `<span class="chip chip--akad">${i}</span>`).join('')}</div></div>
+    </article>`).join('') + `</div>`;
+
+// ── Stat band ──
+const STATS = [
+  { num: MODULES.length, lbl: 'Modul Utama' },
+  { num: totalFeatures,  lbl: 'Total Fitur' },
+  { num: 32, lbl: 'Proses EOD' },
+  { num: 9,  lbl: 'Akad Pembiayaan' },
+  { num: 7,  lbl: 'Akad Fasilitas' },
+  { num: 16, lbl: 'Jenis Jaminan' },
+];
+document.getElementById('stats').innerHTML = STATS.map(s =>
+  `<div class="stat"><div class="stat__num">${s.num}</div><div class="stat__lbl">${s.lbl}</div></div>`
+).join('');
+
+document.getElementById('ftmeta').textContent =
+  MODULES.length + ' modul · ' + totalFeatures + ' fitur · ' + new Date().getFullYear();
+</script>
+</body>
+</html>

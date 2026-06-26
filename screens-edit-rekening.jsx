@@ -9,6 +9,7 @@ const EDIT_ACTIONS = {
   'restruktur':    { label: 'Restruktur Pembiayaan',                  formRoute: '/edit/restruktur/form' },
   'ulang-jadwal':  { label: 'Ubah Jadwal Angsuran',                   formRoute: '/edit/ulang-jadwal/form' },
   'agunan':        { label: 'Pengikatan Pembiayaan dengan Agunan',    formRoute: '/edit/agunan/form' },
+  'objek':         { label: 'Objek Pembiayaan',                       formRoute: '/edit/objek/form' },
 };
 
 /* ─────────── Landing: Cari Rekening untuk Diedit ─────────── */
@@ -910,6 +911,99 @@ function LinkAgunanFormModal({ initial, existingNoJaminan, onClose, onSave }) {
   );
 }
 
+/* ─────────── Objek Pembiayaan (Ubah Objek Pembiayaan) ─────────── */
+function ObjekPembiayaanScreen({ onNavigate, showToast }) {
+  const [form, setForm] = React.useState({
+    objekId: 'FO000000066337',
+    akadKode: 'G',
+    akadNama: 'Pembiayaan Rekening Koran',
+    namaObjek: 'TEST',
+    keterangan: '',
+    nomorIdentitas: '0111111181112325',
+    alamatObjek: '',
+    valutaKode: 'IDR',
+    valutaNama: 'RUPIAH',
+    tanggalPengadaan: '11-Mar-2026',
+    nilaiObjek: '180000000',
+    jumlah: '1',
+  });
+  const setField = (k, v) => setForm(s => ({ ...s, [k]: v }));
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
+
+  return (
+    <div className="card">
+      <h2 style={{ fontSize: 22, fontWeight: 600, margin: 0, paddingBottom: 16, borderBottom: '1px solid var(--c-border-soft)' }}>
+        Ubah Objek Pembiayaan
+      </h2>
+      <EditRekeningHero />
+
+      <h4 className="section-title">Data Objek Pembiayaan</h4>
+      <FormGrid>
+        <Field label="Objek ID">
+          <TextInput value={form.objekId} readOnly />
+        </Field>
+        <Field label="Akad">
+          <div className="row gap-12">
+            <div style={{ width: 80 }}>
+              <TextInput value={form.akadKode} readOnly />
+            </div>
+            <div style={{ flex: 1 }}>
+              <TextInput value={form.akadNama} readOnly />
+            </div>
+          </div>
+        </Field>
+
+        <Field label="Nama Objek" required>
+          <TextInput value={form.namaObjek} onChange={v => setField('namaObjek', v)} />
+        </Field>
+        <Field label="Nomor Identitas">
+          <TextInput value={form.nomorIdentitas} onChange={v => setField('nomorIdentitas', v)} placeholder="Nomor sertifikat / BPKB / identitas objek" />
+        </Field>
+
+        <Field label="Keterangan">
+          <TextInput value={form.keterangan} onChange={v => setField('keterangan', v)} placeholder="Keterangan tambahan objek" />
+        </Field>
+        <Field label="Kode Valuta">
+          <div className="row gap-12">
+            <div style={{ width: 80 }}>
+              <TextInput value={form.valutaKode} readOnly />
+            </div>
+            <div style={{ flex: 1 }}>
+              <TextInput value={form.valutaNama} readOnly />
+            </div>
+          </div>
+        </Field>
+
+        <Field label="Alamat Objek Proyek" span="full">
+          <textarea value={form.alamatObjek} onChange={e => setField('alamatObjek', e.target.value)} rows={2} placeholder="Alamat lengkap lokasi objek pembiayaan" />
+        </Field>
+
+        <Field label="Tanggal Pengadaan" required>
+          <DateInput value={form.tanggalPengadaan} onChange={v => setField('tanggalPengadaan', v)} />
+        </Field>
+        <Field label="Jumlah" required>
+          <NumberInput value={form.jumlah} onChange={v => setField('jumlah', v)} suffix="Unit" />
+        </Field>
+
+        <Field label="Nilai Objek Pembiayaan" required>
+          <CurrencyInput value={form.nilaiObjek} onChange={v => setField('nilaiObjek', v)} />
+        </Field>
+      </FormGrid>
+
+      <FormButtonsBar onCancel={() => onNavigate('/edit/objek')} onSave={() => setConfirmOpen(true)} saveLabel="Simpan" />
+
+      {confirmOpen && (
+        <ConfirmDialog
+          title="Simpan Objek Pembiayaan"
+          message="Perubahan data objek pembiayaan akan dicatat dan masuk antrian otorisasi. Lanjutkan?"
+          onClose={() => setConfirmOpen(false)}
+          onConfirm={() => { showToast({ type: 'success', title: 'Tersimpan', message: 'Menunggu otorisasi.' }); onNavigate('/edit/objek'); }}
+        />
+      )}
+    </div>
+  );
+}
+
 /* ─────────── Shared form button bar ─────────── */
 function FormButtonsBar({ onCancel, onSave, saveLabel = 'Simpan Perubahan' }) {
   return (
@@ -935,4 +1029,5 @@ Object.assign(window, {
   RestrukturFormScreen,
   UbahJadwalAngsuranFormScreen,
   PengikatanAgunanScreen,
+  ObjekPembiayaanScreen,
 });

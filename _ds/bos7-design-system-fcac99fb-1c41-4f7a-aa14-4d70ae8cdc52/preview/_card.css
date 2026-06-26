@@ -1,0 +1,41 @@
+/* Shared card chrome for Design System preview tiles.
+   Each preview is ~700×var px — no titles or framing (the asset name
+   renders OUTSIDE the card). Just the swatches/specimens, minimal
+   decoration. */
+
+/* Import the design tokens — font paths resolve relative to colors_and_type.css */
+@import url("../colors_and_type.css");
+
+/* Override font src paths for preview/ subfolder context */
+@font-face { font-family: "IBM Plex Sans"; font-weight: 300; font-style: normal; font-display: swap; src: url("../fonts/IBMPlexSans-Light.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-weight: 400; font-style: normal; font-display: swap; src: url("../fonts/IBMPlexSans-Regular.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-weight: 500; font-style: normal; font-display: swap; src: url("../fonts/IBMPlexSans-Medium.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-weight: 600; font-style: normal; font-display: swap; src: url("../fonts/IBMPlexSans-SemiBold.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-weight: 700; font-style: normal; font-display: swap; src: url("../fonts/IBMPlexSans-Bold.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 400; font-style: normal; font-display: swap; src: url("../fonts/IBMPlexMono-Regular.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: swap; src: url("../fonts/IBMPlexMono-Medium.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-style: normal; font-display: swap; src: url("../fonts/IBMPlexMono-SemiBold.woff2") format("woff2"); }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #fff; }
+body {
+  font-family: var(--bos7-font-sans);
+  font-size: var(--bos7-fs-base);
+  color: var(--bos7-text-primary);
+  padding: 20px 24px;
+  min-height: 100vh;
+}
+
+.card-body { display: flex; flex-direction: column; gap: 16px; }
+.eyebrow {
+  font-size: var(--bos7-fs-12);
+  font-weight: 600;
+  letter-spacing: var(--bos7-tracking-eyebrow);
+  color: var(--bos7-text-secondary);
+  text-transform: uppercase;
+}
+.row { display: flex; gap: 12px; align-items: center; }
+.col { display: flex; flex-direction: column; gap: 6px; }
+
+.token-label { font-size: 11px; color: var(--bos7-text-secondary); font-family: var(--bos7-font-mono); }
+.token-value { font-size: 11px; color: var(--bos7-text-helper); font-family: var(--bos7-font-mono); }

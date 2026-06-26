@@ -1,25 +1,12 @@
-/* Shell.jsx — Hi-Fi shell modeled on the Figma Financing module.
-   Layout:  [icon rail] [secondary nav panel] [main: header + page] */
+/* Shell.jsx — BOS7 UiShell: 40px dark header + 256px drilldown SideNav + content. */
 
 function Shell(props) {
   const { route, onNavigate, children, onLogout } = props;
   const [collapsed, setCollapsed] = React.useState(false);
 
-  const railId = window.routeToRail(route);
-  const items = window.NAV_TREE[railId] || [];
-  const railMeta = window.NAV_RAILS.find(r => r.id === railId) || window.NAV_RAILS[0];
-
   return (
     <div className="app">
-      <Rail railId={railId} onNavigate={onNavigate} collapsed={collapsed} />
-      {!collapsed && (
-        <Panel
-          title={railMeta.title}
-          items={items}
-          route={route}
-          onNavigate={onNavigate}
-        />
-      )}
+      <DrilldownNav route={route} onNavigate={onNavigate} collapsed={collapsed} />
       <div className="main">
         <Header route={route} onNavigate={onNavigate} onToggle={() => setCollapsed(c => !c)} onLogout={onLogout} />
         <div className="page">{children}</div>
@@ -28,120 +15,144 @@ function Shell(props) {
   );
 }
 
-function Rail({ railId, onNavigate, collapsed }) {
-  return (
-    <div className="rail">
-      <div className="rail__logo">
-        <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
-          <path d="M4 22 C 8 12, 14 14, 16 18 C 18 22, 24 22, 28 12" stroke="white" strokeWidth="3" strokeLinecap="round" />
-          <path d="M4 16 C 8 6, 14 8, 16 12" stroke="white" strokeWidth="2.5" strokeLinecap="round" opacity="0.6" />
-        </svg>
-      </div>
-      {window.NAV_RAILS.map((r, idx) => (
-        <React.Fragment key={r.id}>
-          {idx === 1 && <div className="rail__divider" />}
-          <button
-            className={'rail__btn' + (r.id === railId ? ' rail__btn--active' : '')}
-            title={r.label}
-            onClick={() => {
-              const first = (window.NAV_TREE[r.id] || [])[0];
-              const target = first?.route || (first?.children?.[0]?.route);
-              if (target) onNavigate(target);
-              else if (r.id === 'overview') onNavigate('/overview');
-            }}
-            dangerouslySetInnerHTML={{ __html: Icons[r.icon] ? Icons[r.icon](22) : Icons.list(22) }}
-          />
-        </React.Fragment>
-      ))}
-    </div>
-  );
+/* ── Drilldown SideNav ──────────────────────────────────────────────
+   Root level lists the module groups (from NAV_RAILS + NAV_TREE).
+   Items with children drill in one level at a time with a back row;
+   leaves navigate. Auto-opens to the level containing the active route. */
+
+function navRoot() {
+  return window.NAV_RAILS.map(r => ({
+    label: r.label,
+    icon: r.icon,
+    key: r.id,
+    children: window.NAV_TREE[r.id] || [],
+  }));
 }
 
-function Panel({ title, items, route, onNavigate }) {
+// Return the chain of ancestor nodes (groups to drill through) to reach `route`.
+function findChain(nodes, route, acc) {
+  for (const n of nodes) {
+    if (n.route && n.route === route) return acc;
+    if (n.children && n.children.length) {
+      const r = findChain(n.children, route, [...acc, n]);
+      if (r) return r;
+    }
+  }
+  return null;
+}
+
+function DrilldownNav({ route, onNavigate, collapsed }) {
+  const root = React.useMemo(navRoot, []);
+  const base = route.split('?')[0];
+
+  // Compute the drill path (ancestor chain) for the active route.
+  const computeChain = React.useCallback(() => {
+    let chain = findChain(root, route, []) || findChain(root, base, []);
+    if (!chain) {
+      const railId = window.routeToRail(route);
+      const g = root.find(n => n.key === railId);
+      chain = g ? [g] : [];
+    }
+    return chain;
+  }, [root, route, base]);
+
+  const [path, setPath] = React.useState(computeChain);
+  const [dir, setDir] = React.useState('fwd');
   const [search, setSearch] = React.useState('');
-  const [openGroups, setOpenGroups] = React.useState(() => {
-    // open any group containing the active route
-    const out = {};
-    items.forEach((it, i) => {
-      if (it.children?.some(c => c.route === route)) out[i] = true;
-    });
-    return out;
-  });
 
-  React.useEffect(() => {
-    // Re-sync open groups when navigation changes
-    setOpenGroups(prev => {
-      const out = { ...prev };
-      items.forEach((it, i) => {
-        if (it.children?.some(c => c.route === route)) out[i] = true;
-      });
-      return out;
-    });
-    // eslint-disable-next-line
-  }, [route]);
+  // Re-sync the drill path whenever the route changes.
+  React.useEffect(() => { setDir('fwd'); setPath(computeChain()); }, [route]);
 
+  const current = path.length ? path[path.length - 1] : null;
+  const items = current ? current.children : root;
+
+  const isActive = (it) => it.route && (base === it.route || base.startsWith(it.route + '/'));
+  const groupHasActive = (it) =>
+    it.children && it.children.some(c => isActive(c) || groupHasActive(c));
+
+  const drillIn = (node) => { setDir('fwd'); setPath(p => [...p, node]); setSearch(''); };
+  const drillBack = () => { setDir('back'); setPath(p => p.slice(0, -1)); };
+
+  // Search flattens every leaf across the whole tree.
   const q = search.trim().toLowerCase();
-  const filtered = q
-    ? items
-        .flatMap(it => it.children ? it.children : [it])
-        .filter(it => it.label.toLowerCase().includes(q))
-    : null;
+  const leaves = React.useMemo(() => {
+    const out = [];
+    const walk = (arr) => arr.forEach(n => n.children && n.children.length ? walk(n.children) : out.push(n));
+    walk(root);
+    return out;
+  }, [root]);
+  const filtered = q ? leaves.filter(l => l.label.toLowerCase().includes(q)) : null;
 
   return (
-    <div className="panel">
-      <div className="panel__title">{title}</div>
+    <div className={'panel' + (collapsed ? ' panel--collapsed' : '')}>
+      <div className="panel__brand">
+        <span className="panel__brand-mark" dangerouslySetInnerHTML={{ __html:
+          '<svg width="20" height="20" viewBox="0 0 32 32" fill="none">' +
+          '<path d="M4 22 C 8 12, 14 14, 16 18 C 18 22, 24 22, 28 12" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>' +
+          '<path d="M4 16 C 8 6, 14 8, 16 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/></svg>'
+        }} />
+        <span className="panel__brand-name">BOS7 <b>Financing</b></span>
+      </div>
+
       <div className="panel__search">
-        <span dangerouslySetInnerHTML={{ __html: Icons.search(14) }} />
+        <span dangerouslySetInnerHTML={{ __html: Icons.search(16) }} />
         <input
-          placeholder="Quick Action"
+          placeholder="Cari menu..."
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
       </div>
-      <div className="panel__list">
-        {filtered ? (
-          filtered.map(it => (
+
+      {filtered ? (
+        <div className="panel__list">
+          {filtered.length === 0 && <div className="panel__empty">Tidak ditemukan.</div>}
+          {filtered.map(it => (
             <button
               key={it.route}
-              className={'panel-item' + (it.route === route ? ' panel-item--active' : '')}
+              className={'panel-item' + (isActive(it) ? ' panel-item--active' : '')}
               onClick={() => { onNavigate(it.route); setSearch(''); }}
             >
-              {it.label}
+              <span>{it.label}</span>
             </button>
-          ))
-        ) : (
-          items.map((it, i) =>
-            it.expandable ? (
-              <React.Fragment key={i}>
+          ))}
+        </div>
+      ) : (
+        <>
+          {current ? (
+            <button className="panel__back" onClick={drillBack}>
+              <span className="panel__back-chev" dangerouslySetInnerHTML={{ __html: Icons.arrowL(16) }} />
+              <span className="panel__back-label">{current.label}</span>
+            </button>
+          ) : (
+            <div className="panel__title">Menu Navigasi</div>
+          )}
+
+          <div key={path.length + dir} className={'panel__list panel__level panel__level--' + dir}>
+            {items.map((it, i) =>
+              it.children && it.children.length ? (
                 <button
-                  className={'panel-item' + (openGroups[i] ? ' panel-item--open' : '')}
-                  onClick={() => setOpenGroups(g => ({ ...g, [i]: !g[i] }))}
+                  key={it.key || it.label}
+                  className={'panel-item panel-item--group' + (groupHasActive(it) ? ' panel-item--trail' : '')}
+                  onClick={() => drillIn(it)}
                 >
+                  {it.icon && <span className="panel-item__icon" dangerouslySetInnerHTML={{ __html: Icons[it.icon] ? Icons[it.icon](18) : '' }} />}
                   <span>{it.label}</span>
-                  <span className="panel-item__chev" dangerouslySetInnerHTML={{ __html: Icons.chevronR(14) }} />
+                  <span className="panel-item__chev" dangerouslySetInnerHTML={{ __html: Icons.chevronR(16) }} />
                 </button>
-                {openGroups[i] && it.children.map(ch => (
-                  <button
-                    key={ch.route}
-                    className={'panel-item panel-item--child' + (ch.route === route ? ' panel-item--active' : '')}
-                    onClick={() => onNavigate(ch.route)}
-                  >
-                    {ch.label}
-                  </button>
-                ))}
-              </React.Fragment>
-            ) : (
-              <button
-                key={it.route}
-                className={'panel-item' + (it.route === route ? ' panel-item--active' : '')}
-                onClick={() => onNavigate(it.route)}
-              >
-                {it.label}
-              </button>
-            )
-          )
-        )}
-      </div>
+              ) : (
+                <button
+                  key={it.route || it.label}
+                  className={'panel-item' + (isActive(it) ? ' panel-item--active' : '')}
+                  onClick={() => onNavigate(it.route)}
+                >
+                  {it.icon && <span className="panel-item__icon" dangerouslySetInnerHTML={{ __html: Icons[it.icon] ? Icons[it.icon](18) : '' }} />}
+                  <span>{it.label}</span>
+                </button>
+              )
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -190,7 +201,7 @@ function Header({ route, onNavigate, onToggle, onLogout }) {
           <b>Heri Tapiheru,</b>
           <span>ADM</span>
         </div>
-        <span style={{ display: 'flex', color: 'var(--c-text-muted)' }} dangerouslySetInnerHTML={{ __html: Icons.chevronD(14) }} />
+        <span style={{ display: 'flex', color: 'rgba(255,255,255,0.7)' }} dangerouslySetInnerHTML={{ __html: Icons.chevronD(14) }} />
         {menuOpen && (
           <>
             <div style={{ position: 'fixed', inset: 0, zIndex: 40 }} onClick={e => { e.stopPropagation(); setMenuOpen(false); }} />
@@ -251,6 +262,7 @@ window.buildBreadcrumb = function(route) {
     '/transaksi/koreksi-pembayaran/form':      { rail: 'transaksi', parent: 'Koreksi Pembayaran',      parentRoute: '/transaksi/koreksi-pembayaran',      leaf: 'Form Koreksi' },
     '/transaksi/input-biaya/form':             { rail: 'transaksi', parent: 'Input Biaya-Biaya',       parentRoute: '/transaksi/input-biaya',             leaf: 'Form Input Biaya' },
     '/transaksi/reposisi-cabang/form':         { rail: 'transaksi', parent: 'Reposisi Cabang',         parentRoute: '/transaksi/reposisi-cabang',         leaf: 'Form Reposisi' },
+    '/transaksi/ganti-produk/form':            { rail: 'transaksi', parent: 'Ganti Produk',            parentRoute: '/transaksi/ganti-produk',            leaf: 'Form Ganti Produk' },
     '/transaksi/hapus-buku/registrasi/form':   { rail: 'transaksi', parent: 'Registrasi Hapus Buku',   parentRoute: '/transaksi/hapus-buku/registrasi',   leaf: 'Form Hapus Buku' },
     '/transaksi/hapus-buku/recovery/form':     { rail: 'transaksi', parent: 'Recovery Hapus Buku',     parentRoute: '/transaksi/hapus-buku/recovery',     leaf: 'Form Recovery' },
     '/transaksi/hapus-buku/hapus-tagih/form':  { rail: 'transaksi', parent: 'Hapus Tagih',             parentRoute: '/transaksi/hapus-buku/hapus-tagih',  leaf: 'Form Hapus Tagih' },

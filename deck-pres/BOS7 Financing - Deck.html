@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BOS7 Financing — Deck Presentasi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  deck-stage:not(:defined) { visibility: hidden; }
+
+  :root {
+    --blue: #0F62FE;
+    --blue-d: #0043CE;
+    --blue-dd: #002D9C;
+    --ink: #161616;
+    --g100: #161616;
+    --g90: #262626;
+    --g80: #393939;
+    --g70: #525252;
+    --g60: #6F6F6F;
+    --g50: #8D8D8D;
+    --g40: #A8A8A8;
+    --g30: #C6C6C6;
+    --g20: #E0E0E0;
+    --g10: #F4F4F4;
+    --white: #FFFFFF;
+
+    --success: #24A148;
+    --success-bg: #DEFBE6;
+    --warn: #8A6D00;
+    --warn-bg: #FCF4D6;
+    --error: #DA1E28;
+    --error-bg: #FFF1F1;
+    --info-bg: #EDF5FF;
+    --info-bd: #D0E2FF;
+
+    --sans: "IBM Plex Sans", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+
+    --pad: 92px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; background: #0a0a0a; }
+
+  deck-stage { background: #0a0a0a; }
+
+  section {
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--white);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ───────── Shared chrome ───────── */
+  .slide {
+    width: 100%; height: 100%;
+    padding: var(--pad);
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .slide--dark { background: var(--ink); color: var(--white); }
+  .slide--gray { background: var(--g10); }
+
+  /* top hairline header */
+  .top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--g20);
+    margin-bottom: 44px;
+  }
+  .slide--dark .top { border-color: rgba(255,255,255,0.16); }
+  .kicker {
+    font-size: 17px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--blue);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .kicker .mark {
+    width: 26px; height: 26px; display: inline-flex;
+    color: var(--blue);
+  }
+  .slide--dark .kicker { color: #78A9FF; }
+  .slide--dark .kicker .mark { color: #78A9FF; }
+  .top__meta { font-family: var(--mono); font-size: 16px; color: var(--g50); letter-spacing: 0.04em; }
+  .slide--dark .top__meta { color: var(--g40); }
+
+  /* footer */
+  .foot {
+    position: absolute; left: var(--pad); right: var(--pad); bottom: 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 17px; color: var(--g50);
+    border-top: 1px solid var(--g20); padding-top: 16px;
+  }
+  .slide--dark .foot { border-color: rgba(255,255,255,0.14); color: var(--g40); }
+  .foot__brand { display: flex; align-items: center; gap: 11px; font-weight: 600; color: var(--g70); letter-spacing: 0.01em; }
+  .slide--dark .foot__brand { color: var(--g30); }
+  .foot__brand .mark { width: 19px; height: 19px; display: inline-flex; color: var(--blue); }
+  .foot__page { font-family: var(--mono); }
+
+  h1, h2, h3, p { margin: 0; }
+
+  .h-title { font-size: 60px; font-weight: 600; line-height: 1.04; letter-spacing: -0.02em; text-wrap: balance; }
+  .h-sub  { font-size: 25px; font-weight: 400; line-height: 1.42; color: var(--g70); max-width: 1180px; }
+  .slide--dark .h-sub { color: var(--g30); }
+
+  .lead-num { font-family: var(--mono); font-size: 19px; color: var(--blue); font-weight: 500; letter-spacing: 0.05em; }
+
+  /* ───────── Title slide ───────── */
+  .title-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 1320px; }
+  .title-logo { display: flex; align-items: center; gap: 18px; margin-bottom: 54px; }
+  .title-logo .lmark { width: 52px; height: 52px; color: var(--blue); }
+  .title-logo .ltext { font-size: 26px; font-weight: 600; letter-spacing: 0.02em; }
+  .title-logo .ltext b { color: #fff; } .title-logo .ltext span { color: var(--g40); }
+  .title-main { font-size: 92px; font-weight: 700; line-height: 1.0; letter-spacing: -0.03em; }
+  .title-main em { font-style: normal; color: #78A9FF; }
+  .title-desc { font-size: 26px; line-height: 1.5; color: var(--g30); max-width: 900px; margin-top: 34px; font-weight: 300; }
+  .title-tags { display: flex; gap: 12px; margin-top: 48px; flex-wrap: wrap; }
+  .title-tag {
+    font-size: 20px; font-family: var(--mono); letter-spacing: 0.02em;
+    border: 1px solid rgba(255,255,255,0.22); color: var(--g20);
+    padding: 10px 20px;
+  }
+  .title-tag.accent { border-color: var(--blue); color: #78A9FF; }
+  .title-meta {
+    position: absolute; left: var(--pad); right: var(--pad); bottom: 56px;
+    display: flex; justify-content: space-between; align-items: flex-end;
+    font-size: 19px; color: var(--g50); border-top: 1px solid rgba(255,255,255,0.14);
+    padding-top: 22px;
+  }
+  .title-meta b { color: var(--g20); font-weight: 500; }
+
+  /* ───────── Agenda ───────── */
+  .agenda { display: grid; grid-template-columns: 1fr 1fr; gap: 0 64px; flex: 1; align-content: center; }
+  .ag-item {
+    display: flex; gap: 26px; align-items: baseline;
+    padding: 26px 0; border-bottom: 1px solid var(--g20);
+  }
+  .ag-num { font-family: var(--mono); font-size: 21px; color: var(--blue); font-weight: 500; min-width: 42px; }
+  .ag-body h3 { font-size: 27px; font-weight: 600; letter-spacing: -0.01em; }
+  .ag-body p { font-size: 18px; color: var(--g60); margin-top: 5px; }
+
+  /* ───────── Generic content ───────── */
+  .body { flex: 1; min-height: 0; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; flex: 1; min-height: 0; }
+  .col-head { font-size: 40px; font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 26px; }
+
+  /* stat row */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--g20); }
+  .stat { padding: 32px 30px; border-right: 1px solid var(--g20); }
+  .stat:last-child { border-right: 0; }
+  .stat__v { font-size: 52px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
+  .stat__v.blue { color: var(--blue); } .stat__v.pos { color: var(--success); } .stat__v.neg { color: var(--error); }
+  .stat__l { font-size: 17px; color: var(--g60); margin-top: 14px; }
+  .stat__d { font-size: 15px; color: var(--g50); margin-top: 4px; }
+
+  /* bullets */
+  .blist { display: flex; flex-direction: column; gap: 22px; }
+  .bl { display: flex; gap: 18px; align-items: flex-start; }
+  .bl__i { width: 30px; height: 30px; flex-shrink: 0; margin-top: 2px; color: var(--blue);
+           display: inline-flex; align-items: center; justify-content: center;
+           border: 1px solid var(--info-bd); background: var(--info-bg); }
+  .bl__t { font-size: 21px; line-height: 1.45; color: var(--g80); }
+  .bl__t b { color: var(--ink); font-weight: 600; }
+
+  /* feature cards grid */
+  .fgrid { display: grid; gap: 18px; }
+  .fcard { border: 1px solid var(--g20); padding: 26px 26px 28px; background: var(--white); }
+  .slide--gray .fcard { background: var(--white); }
+  .fcard__top { display: flex; align-items: center; gap: 13px; margin-bottom: 14px; }
+  .fcard__i { width: 34px; height: 34px; color: var(--blue); display: inline-flex; }
+  .fcard__n { font-family: var(--mono); font-size: 14px; color: var(--g50); letter-spacing: 0.05em; }
+  .fcard h3 { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .fcard p { font-size: 16.5px; line-height: 1.45; color: var(--g60); margin-top: 8px; }
+
+  /* module architecture grid */
+  .modgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .modcard { border: 1px solid var(--g20); border-top: 3px solid var(--blue); padding: 22px 24px; }
+  .modcard__h { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .modcard__h h3 { font-size: 21px; font-weight: 600; }
+  .modcard__c { font-family: var(--mono); font-size: 14px; color: var(--g50); }
+  .modcard__items { display: flex; flex-wrap: wrap; gap: 7px; }
+  .chip { font-size: 14.5px; color: var(--g70); background: var(--g10); padding: 5px 11px; border: 1px solid var(--g20); }
+
+  /* flow strip */
+  .flow { display: flex; align-items: stretch; gap: 0; margin: 4px 0 8px; }
+  .fstep { flex: 1; display: flex; align-items: center; }
+  .fstep__box {
+    flex: 1; border: 1px solid var(--g20); background: var(--white);
+    padding: 22px 22px 24px; position: relative; min-height: 132px;
+    display: flex; flex-direction: column;
+  }
+  .fstep--start .fstep__box { border-left: 4px solid var(--blue); }
+  .fstep--end .fstep__box { border-left: 4px solid var(--success); }
+  .fstep__num { font-family: var(--mono); font-size: 14px; color: var(--blue); letter-spacing: 0.04em; font-weight: 500; }
+  .fstep__l { font-size: 21px; font-weight: 600; margin-top: 10px; letter-spacing: -0.01em; }
+  .fstep__d { font-size: 15.5px; color: var(--g60); margin-top: auto; padding-top: 12px; line-height: 1.35; }
+  .farrow { width: 56px; flex: 0 0 56px; display: flex; align-items: center; justify-content: center; color: var(--g40); }
+  .farrow svg { width: 26px; height: 26px; }
+
+  /* screenshot frame (browser-window style) */
+  .shot { border: 1px solid var(--g20); background: var(--white); box-shadow: 0 18px 48px rgba(22,22,22,0.13); display: flex; flex-direction: column; overflow: hidden; }
+  .shot__bar { height: 34px; background: var(--g10); border-bottom: 1px solid var(--g20); display: flex; align-items: center; padding: 0 14px; gap: 8px; flex-shrink: 0; }
+  .shot__dot { width: 11px; height: 11px; border-radius: 50%; background: var(--g30); }
+  .shot__url { margin-left: 14px; font-family: var(--mono); font-size: 13px; color: var(--g50); background: var(--white); border: 1px solid var(--g20); height: 20px; display: flex; align-items: center; padding: 0 12px; flex: 1; max-width: 460px; }
+  .shot__img { display: block; width: 100%; height: auto; }
+  .shot--fit { flex: 1; min-height: 0; }
+  .shot--fit .shot__img { flex: 1; min-height: 0; width: 100%; object-fit: cover; object-position: top left; }
+
+  .caption { font-size: 16px; color: var(--g50); margin-top: 14px; font-family: var(--mono); letter-spacing: 0.02em; }
+
+  /* section divider */
+  .divider { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .divider__num { font-family: var(--mono); font-size: 24px; color: #78A9FF; letter-spacing: 0.18em; margin-bottom: 28px; }
+  .divider__t { font-size: 82px; font-weight: 700; line-height: 1.02; letter-spacing: -0.03em; max-width: 1300px; }
+  .divider__t em { font-style: normal; color: #78A9FF; }
+  .divider__d { font-size: 24px; color: var(--g30); margin-top: 30px; max-width: 980px; font-weight: 300; line-height: 1.5; }
+  .divider__steps { display: flex; gap: 10px; margin-top: 50px; flex-wrap: wrap; }
+  .dstep { font-family: var(--mono); font-size: 16px; color: var(--g30); border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; }
+  .dstep b { color: #78A9FF; font-weight: 500; }
+
+  /* tag/pill */
+  .tag { font-size: 14px; font-weight: 600; padding: 4px 11px; display: inline-flex; align-items: center; }
+  .tag--s { background: var(--success-bg); color: var(--success); }
+  .tag--w { background: var(--warn-bg); color: var(--warn); }
+  .tag--i { background: var(--info-bg); color: var(--blue-d); }
+
+  /* value highlight strip */
+  .vstrip { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+  .vcard { background: var(--g10); border-left: 3px solid var(--blue); padding: 26px 28px; }
+  .vcard h3 { font-size: 23px; font-weight: 600; letter-spacing: -0.01em; }
+  .vcard p { font-size: 17px; color: var(--g60); margin-top: 9px; line-height: 1.45; }
+
+  /* akad table */
+  .akad { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 56px; }
+  .akad-row { display: flex; gap: 20px; align-items: baseline; padding: 17px 0; border-bottom: 1px solid var(--g20); }
+  .akad-row__code { font-family: var(--mono); font-size: 16px; color: var(--blue); min-width: 34px; font-weight: 500; }
+  .akad-row__n { font-size: 21px; font-weight: 600; }
+  .akad-row__d { font-size: 16px; color: var(--g60); margin-left: auto; text-align: right; }
+
+  /* `.anim` is a no-op hook (content always visible); kept so markup is stable. */
+  .anim { opacity: 1; }
+</style>
+</head>
+<body>
+<deck-stage width="1920" height="1080">
+
+  <!-- ═══════════ 1 · TITLE ═══════════ -->
+  <section data-label="Cover" class="slide slide--dark">
+    <div class="title-wrap">
+      <div class="title-logo">
+        <span class="lmark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M3 15 C 8 5, 14 7, 16 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/></svg></span>
+        <span class="ltext"><b>BOS7</b> <span>Bank Operating System</span></span>
+      </div>
+      <h1 class="title-main anim">Module <em>Financing</em><br/>Pembiayaan Syariah</h1>
+      <p class="title-desc anim">Platform back-office pembiayaan syariah end-to-end — dari originasi, servicing, hingga recovery — dalam satu sistem terpadu dengan kontrol maker-checker dan integrasi General Ledger.</p>
+      <div class="title-tags anim">
+        <span class="title-tag accent">9 Modul Utama</span>
+        <span class="title-tag">73 Menu Fungsional</span>
+        <span class="title-tag">7 Alur End-to-End</span>
+        <span class="title-tag">Multi-Akad Syariah</span>
+      </div>
+    </div>
+    <div class="title-meta">
+      <span>Proposal Solusi · <b>Ihsan Solusi Informatika</b></span>
+      <span>Demonstrasi Prototipe Hi-Fi · 2026</span>
+    </div>
+  </section>
+
+  <!-- ═══════════ 2 · AGENDA ═══════════ -->
+  <section data-label="Agenda" class="slide">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Agenda</div><div class="top__meta">01</div></div>
+    <h1 class="h-title anim" style="margin-bottom:8px;">Yang akan kita bahas</h1>
+    <div class="agenda">
+      <div class="ag-item anim"><div class="ag-num">01</div><div class="ag-body"><h3>Ringkasan & Nilai Bisnis</h3><p>Apa itu Module Financing dan masalah yang diselesaikan</p></div></div>
+      <div class="ag-item anim"><div class="ag-num">05</div><div class="ag-body"><h3>Modul Pendukung</h3><p>Transaksi Massal, Data Master, Pelaporan</p></div></div>
+      <div class="ag-item anim"><div class="ag-num">02</div><div class="ag-body"><h3>Arsitektur Modul</h3><p>9 grup fungsi, 73 menu, peta alur operasional</p></div></div>
+      <div class="ag-item anim"><div class="ag-num">06</div><div class="ag-body"><h3>Cakupan Akad Syariah</h3><p>Murabahah, Ijarah, MMQ, Mudharabah, Gadai, dll.</p></div></div>
+      <div class="ag-item anim"><div class="ag-num">03</div><div class="ag-body"><h3>Dashboard & Design System</h3><p>Pemantauan portofolio dan standar antarmuka BOS7</p></div></div>
+      <div class="ag-item anim"><div class="ag-num">07</div><div class="ag-body"><h3>Keamanan & Kontrol</h3><p>Maker-checker, otorisasi berjenjang, audit</p></div></div>
+      <div class="ag-item anim"><div class="ag-num">04</div><div class="ag-body"><h3>7 Skenario End-to-End</h3><p>Setup → Originasi → Servicing → Recovery</p></div></div>
+      <div class="ag-item anim"><div class="ag-num">08</div><div class="ag-body"><h3>Ringkasan & Langkah Berikutnya</h3><p>Nilai utama dan rencana implementasi</p></div></div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">02</span></div>
+  </section>
+
+  <!-- ═══════════ 3 · RINGKASAN EKSEKUTIF ═══════════ -->
+  <section data-label="Ringkasan" class="slide">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Ringkasan Eksekutif</div><div class="top__meta">02</div></div>
+    <div class="two-col">
+      <div class="anim">
+        <div class="col-head">Satu sistem untuk seluruh siklus hidup pembiayaan</div>
+        <p class="h-sub" style="margin-bottom:34px;">Module Financing BOS7 menangani pembiayaan syariah secara menyeluruh — mulai dari simulasi angsuran calon nasabah, pembukaan fasilitas &amp; rekening, pelayanan transaksi harian, hingga penanganan kredit bermasalah.</p>
+        <div class="blist">
+          <div class="bl"><span class="bl__i"><svg width="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="bl__t"><b>Terintegrasi GL</b> — setiap transaksi otomatis ter-posting ke jurnal melalui mapping GL Interface per produk.</div></div>
+          <div class="bl"><span class="bl__i"><svg width="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="bl__t"><b>Maker-checker</b> di setiap transaksi material untuk kepatuhan &amp; pemisahan tugas.</div></div>
+          <div class="bl"><span class="bl__i"><svg width="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="bl__t"><b>Multi-akad &amp; multi-tenant</b> — satu basis kode, tema per bank syariah.</div></div>
+        </div>
+      </div>
+      <div class="anim" style="display:flex;flex-direction:column;justify-content:center;">
+        <div class="stats" style="grid-template-columns:1fr 1fr;">
+          <div class="stat"><div class="stat__v blue">9</div><div class="stat__l">Modul fungsional utama</div><div class="stat__d">+ 7 sub-grup menu</div></div>
+          <div class="stat"><div class="stat__v">73</div><div class="stat__l">Menu &amp; layar fungsional</div><div class="stat__d">CRUD, form &amp; laporan</div></div>
+          <div class="stat" style="border-top:1px solid var(--g20);"><div class="stat__v">7</div><div class="stat__l">Alur kerja end-to-end</div><div class="stat__d">Originasi → Recovery</div></div>
+          <div class="stat" style="border-top:1px solid var(--g20);"><div class="stat__v pos">8+</div><div class="stat__l">Akad syariah didukung</div><div class="stat__d">Murabahah, Ijarah, dll.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">03</span></div>
+  </section>
+
+  <!-- ═══════════ 4 · TANTANGAN & SOLUSI ═══════════ -->
+  <section data-label="Nilai Bisnis" class="slide slide--gray">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Nilai Bisnis</div><div class="top__meta">03</div></div>
+    <h1 class="h-title anim" style="margin-bottom:10px;">Dari proses terfragmentasi ke alur tunggal</h1>
+    <p class="h-sub anim" style="margin-bottom:40px;">Operasional pembiayaan kerap tersebar di banyak aplikasi dan spreadsheet. Module Financing menyatukannya — mengurangi rekonsiliasi manual, mempercepat layanan, dan menutup celah kontrol.</p>
+    <div class="vstrip body" style="align-content:start;">
+      <div class="vcard anim"><h3>Percepat originasi</h3><p>Simulasi → registrasi fasilitas → rekening dalam satu alur berurutan, tanpa input ulang data nasabah.</p></div>
+      <div class="vcard anim"><h3>Kurangi risiko operasional</h3><p>Validasi sistemik, GL Interface otomatis, dan otorisasi berjenjang meminimalkan salah posting.</p></div>
+      <div class="vcard anim"><h3>Transparansi portofolio</h3><p>Dashboard real-time untuk outstanding, kolektibilitas, dan rasio NPF lintas cabang &amp; akad.</p></div>
+      <div class="vcard anim"><h3>Penanganan NPF terstruktur</h3><p>Alur hapus buku, recovery, hingga hapus tagih terdokumentasi dan dapat diaudit.</p></div>
+      <div class="vcard anim"><h3>Efisiensi massal</h3><p>Unggah batch transaksi (angsuran, pelunasan, registrasi) dengan validasi &amp; otorisasi terpusat.</p></div>
+      <div class="vcard anim"><h3>Kepatuhan syariah</h3><p>Parameter akad, denda ta'zir/ta'widh, dan pencadangan (CKPN/PPAP) sesuai ketentuan.</p></div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">04</span></div>
+  </section>
+
+  <!-- ═══════════ 5 · ARSITEKTUR MODUL ═══════════ -->
+  <section data-label="Arsitektur" class="slide">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Arsitektur Modul</div><div class="top__meta">04</div></div>
+    <h1 class="h-title anim" style="margin-bottom:8px;">9 grup fungsi, satu navigasi drilldown</h1>
+    <p class="h-sub anim" style="margin-bottom:34px;">Seluruh fungsi tersusun dalam SideNav berjenjang ala BOS7 — pengguna menelusuri grup → menu → sub-menu tanpa berpindah aplikasi.</p>
+    <div class="modgrid body anim" style="align-content:start;">
+      <div class="modcard"><div class="modcard__h"><h3>Simulasi</h3><span class="modcard__c">1 menu</span></div><div class="modcard__items"><span class="chip">Murabahah</span><span class="chip">Ijarah</span><span class="chip">MMQ</span><span class="chip">Mudharabah</span><span class="chip">Gadai</span></div></div>
+      <div class="modcard"><div class="modcard__h"><h3>Data Master</h3><span class="modcard__c">8 menu</span></div><div class="modcard__items"><span class="chip">Instansi</span><span class="chip">Vendor</span><span class="chip">Developer</span><span class="chip">Mitra JF</span><span class="chip">Kode Bisnis</span></div></div>
+      <div class="modcard"><div class="modcard__h"><h3>Produk Parameter</h3><span class="modcard__c">6 menu</span></div><div class="modcard__items"><span class="chip">Pembiayaan</span><span class="chip">Fasilitas</span><span class="chip">Global</span><span class="chip">CKPN</span><span class="chip">Denda</span></div></div>
+      <div class="modcard"><div class="modcard__h"><h3>Rekening &amp; Fasilitas</h3><span class="modcard__c">11 menu</span></div><div class="modcard__items"><span class="chip">Registrasi Fasilitas</span><span class="chip">Registrasi Account</span><span class="chip">List Fasilitas</span></div></div>
+      <div class="modcard"><div class="modcard__h"><h3>Edit Rekening</h3><span class="modcard__c">6 menu</span></div><div class="modcard__items"><span class="chip">Kelengkapan Data</span><span class="chip">Addendum</span><span class="chip">Restruktur</span><span class="chip">Ulang Jadwal</span></div></div>
+      <div class="modcard"><div class="modcard__h"><h3>Transaksi</h3><span class="modcard__c">14 menu</span></div><div class="modcard__items"><span class="chip">Pembayaran</span><span class="chip">Pelunasan</span><span class="chip">Hapus Buku</span><span class="chip">AYDA</span><span class="chip">Denda</span></div></div>
+      <div class="modcard"><div class="modcard__h"><h3>Transaksi Massal</h3><span class="modcard__c">2 menu</span></div><div class="modcard__items"><span class="chip">Input Transaksi</span><span class="chip">History Transaksi</span></div></div>
+      <div class="modcard"><div class="modcard__h"><h3>Data Jaminan</h3><span class="modcard__c">5 menu</span></div><div class="modcard__items"><span class="chip">Daftar Jaminan</span><span class="chip">Entri Individual</span><span class="chip">Dokumen</span></div></div>
+      <div class="modcard"><div class="modcard__h"><h3>Laporan &amp; Otorisasi</h3><span class="modcard__c">9 menu</span></div><div class="modcard__items"><span class="chip">Nominatif</span><span class="chip">LBV</span><span class="chip">Antrian Otorisasi</span></div></div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">05</span></div>
+  </section>
+
+  <!-- ═══════════ 6 · PETA ALUR ═══════════ -->
+  <section data-label="Siklus Hidup" class="slide slide--gray">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Siklus Hidup Pembiayaan</div><div class="top__meta">05</div></div>
+    <h1 class="h-title anim" style="margin-bottom:8px;">Tujuh alur yang saling terhubung</h1>
+    <p class="h-sub anim" style="margin-bottom:38px;">Dari penyiapan produk hingga penyelesaian kredit macet — setiap tahap memiliki layar khusus dan titik otorisasi.</p>
+    <div class="body anim" style="display:flex;flex-direction:column;gap:16px;justify-content:center;">
+      <div class="flow">
+        <div class="fstep fstep--start"><div class="fstep__box"><span class="fstep__num">SKENARIO 1</span><span class="fstep__l">Setup Awal</span><span class="fstep__d">Data master &amp; produk</span></div></div>
+        <div class="farrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="fstep"><div class="fstep__box"><span class="fstep__num">SKENARIO 2</span><span class="fstep__l">Originasi</span><span class="fstep__d">Simulasi → fasilitas → rekening</span></div></div>
+        <div class="farrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="fstep"><div class="fstep__box"><span class="fstep__num">SKENARIO 3</span><span class="fstep__l">Jaminan</span><span class="fstep__d">Pengelolaan agunan</span></div></div>
+        <div class="farrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="fstep"><div class="fstep__box"><span class="fstep__num">SKENARIO 4</span><span class="fstep__l">Servicing</span><span class="fstep__d">Detail &amp; addendum</span></div></div>
+      </div>
+      <div class="flow">
+        <div class="fstep"><div class="fstep__box"><span class="fstep__num">SKENARIO 5</span><span class="fstep__l">Account</span><span class="fstep__d">Edit rekening &amp; restruktur</span></div></div>
+        <div class="farrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="fstep"><div class="fstep__box"><span class="fstep__num">SKENARIO 6</span><span class="fstep__l">Pembayaran</span><span class="fstep__d">Manual &amp; pelunasan dipercepat</span></div></div>
+        <div class="farrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="fstep fstep--end"><div class="fstep__box"><span class="fstep__num">SKENARIO 7</span><span class="fstep__l">Recovery</span><span class="fstep__d">Hapus buku → recovery → hapus tagih</span></div></div>
+        <div class="farrow" style="opacity:0;"><svg viewBox="0 0 24 24"></svg></div>
+        <div class="fstep" style="flex:1;"><div class="fstep__box" style="border:1px dashed var(--g30);background:transparent;justify-content:center;align-items:center;text-align:center;"><span class="fstep__d" style="padding:0;color:var(--g60);">Otorisasi maker-checker<br/>menyertai setiap alur material</span></div></div>
+      </div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">06</span></div>
+  </section>
+
+  <!-- ═══════════ 7 · DESIGN SYSTEM ═══════════ -->
+  <section data-label="Design System" class="slide">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Design System</div><div class="top__meta">06</div></div>
+    <div class="two-col">
+      <div class="anim">
+        <div class="col-head">Antarmuka konsisten,<br/>siap multi-tenant</div>
+        <p class="h-sub" style="margin-bottom:30px;">Seluruh layar mengikuti BOS7 Design System berbasis Carbon: chrome gelap 40px, SideNav drilldown terang, permukaan datar tanpa gradien, dan tipografi IBM Plex.</p>
+        <div class="blist">
+          <div class="bl"><span class="bl__i"><svg width="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="bl__t"><b>Tema per bank</b> — palet brand (BCA, BJB, Mega, Pos) tinggal ditukar tanpa ubah tata letak.</div></div>
+          <div class="bl"><span class="bl__i"><svg width="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="bl__t"><b>Komponen baku</b> — tabel, form bertahap, tag status, modal lookup yang seragam.</div></div>
+          <div class="bl"><span class="bl__i"><svg width="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="bl__t"><b>Densitas tinggi</b> — kontrol 32px untuk produktivitas operator back-office.</div></div>
+        </div>
+      </div>
+      <div class="anim" style="display:flex;flex-direction:column;gap:18px;justify-content:center;">
+        <div class="fcard"><div class="fcard__top"><span class="fcard__n">WARNA BRAND</span></div>
+          <div style="display:flex;gap:10px;">
+            <div style="flex:1;height:64px;background:#0F62FE;"></div>
+            <div style="flex:1;height:64px;background:#0868B8;"></div>
+            <div style="flex:1;height:64px;background:#C8102E;"></div>
+            <div style="flex:1;height:64px;background:#B8388F;"></div>
+            <div style="flex:1;height:64px;background:#182858;"></div>
+          </div>
+          <p style="margin-top:12px;">Ihsan · BCA · BJB · Mega · Pos — satu basis kode, lima identitas.</p>
+        </div>
+        <div class="fcard"><div class="fcard__top"><span class="fcard__n">STATUS &amp; TIPOGRAFI</span></div>
+          <div style="display:flex;gap:8px;margin-bottom:14px;">
+            <span class="tag tag--s">Aktif</span><span class="tag tag--i">Submit</span><span class="tag tag--w">Pending</span><span class="tag" style="background:var(--error-bg);color:var(--error);">Tunggakan</span>
+          </div>
+          <p style="font-family:var(--mono);font-size:18px;color:var(--g80);">IBM Plex Sans · Plex Mono <span style="color:var(--g50);">— Rp 1.875.000.000</span></p>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">07</span></div>
+  </section>
+
+  <!-- ═══════════ 8 · DASHBOARD ═══════════ -->
+  <section data-label="Dashboard" class="slide slide--gray">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Dashboard Portofolio</div><div class="top__meta">07</div></div>
+    <div class="two-col" style="grid-template-columns:1.15fr 1fr;align-items:center;">
+      <div class="anim shot">
+        <div class="shot__bar"><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__url">bos7.financing / dashboard</span></div>
+        <img class="shot__img" src="../assets/deck/01-cap.png" alt="Financing Dashboard" />
+      </div>
+      <div class="anim">
+        <div class="col-head">Pantau kesehatan portofolio sekilas</div>
+        <p class="h-sub" style="margin-bottom:28px;">Ringkasan transaksi, rekening &amp; portofolio pembiayaan dengan filter periode dan distribusi per akad, cabang, dan kolektibilitas.</p>
+        <div class="stats" style="grid-template-columns:1fr 1fr;">
+          <div class="stat" style="padding:24px;"><div class="stat__v" style="font-size:38px;">Rp 1,02 T</div><div class="stat__l">Total plafond</div></div>
+          <div class="stat" style="padding:24px;"><div class="stat__v neg" style="font-size:38px;">3,21%</div><div class="stat__l">Rasio NPF</div></div>
+          <div class="stat" style="padding:24px;border-top:1px solid var(--g20);"><div class="stat__v" style="font-size:38px;">1.247</div><div class="stat__l">Rekening aktif</div></div>
+          <div class="stat" style="padding:24px;border-top:1px solid var(--g20);"><div class="stat__v pos" style="font-size:38px;">342</div><div class="stat__l">Fasilitas aktif</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">08</span></div>
+  </section>
+
+  <!-- ═══════════ 9 · SECTION DIVIDER ═══════════ -->
+  <section data-label="Bagian: Skenario" class="slide slide--dark">
+    <div class="divider">
+      <div class="divider__num anim">BAGIAN 01 — DEMONSTRASI</div>
+      <h1 class="divider__t anim">Tujuh skenario <em>end-to-end</em></h1>
+      <p class="divider__d anim">Menelusuri perjalanan lengkap sebuah pembiayaan melalui sistem — setiap skenario menggabungkan beberapa modul menjadi alur kerja nyata yang dijalankan operator bank.</p>
+      <div class="divider__steps anim">
+        <span class="dstep"><b>1</b> Setup</span>
+        <span class="dstep"><b>2</b> Originasi</span>
+        <span class="dstep"><b>3</b> Jaminan</span>
+        <span class="dstep"><b>4</b> Servicing</span>
+        <span class="dstep"><b>5</b> Account</span>
+        <span class="dstep"><b>6</b> Pembayaran</span>
+        <span class="dstep"><b>7</b> Recovery</span>
+      </div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">09</span></div>
+  </section>
+
+  <!-- ═══════════ 10 · SKENARIO 1 ═══════════ -->
+  <section data-label="Skenario 1 · Setup" class="slide">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Skenario 1 · Setup Awal</div><div class="top__meta">08</div></div>
+    <h1 class="h-title anim" style="margin-bottom:8px;">Menyiapkan data master &amp; produk</h1>
+    <p class="h-sub anim" style="margin-bottom:36px;">Sebelum operasional dimulai, admin menyiapkan referensi master dan mendefinisikan produk pembiayaan beserta parameternya.</p>
+    <div class="flow anim">
+      <div class="fstep fstep--start"><div class="fstep__box"><span class="fstep__num">2.x</span><span class="fstep__l">Data Master</span><span class="fstep__d">Instansi, Vendor, Developer, Mitra JF</span></div></div>
+      <div class="farrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="fstep"><div class="fstep__box"><span class="fstep__num">3.1</span><span class="fstep__l">Produk Pembiayaan</span><span class="fstep__d">Data produk, biaya, denda, GL Interface</span></div></div>
+      <div class="farrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="fstep fstep--end"><div class="fstep__box"><span class="fstep__num">3.3</span><span class="fstep__l">Parameter Global</span><span class="fstep__d">Konfigurasi sistem &amp; limit</span></div></div>
+    </div>
+    <div class="fgrid anim" style="grid-template-columns:repeat(3,1fr);margin-top:34px;">
+      <div class="fcard"><div class="fcard__top"><span class="fcard__i"><svg width="30" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="1.8"/></svg></span><h3>Form bertahap</h3></div><p>Wizard 4 bagian: Data Produk · Parameter Biaya · Parameter Denda · GL Interface, dengan indikator langkah.</p></div>
+      <div class="fcard"><div class="fcard__top"><span class="fcard__i"><svg width="30" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4z" stroke="currentColor" stroke-width="1.8"/><path d="M4 9h16M9 9v11" stroke="currentColor" stroke-width="1.8"/></svg></span><h3>GL Interface</h3></div><p>Mapping setiap <span style="font-family:var(--mono);font-size:14px;">kode_tx_class</span> ke rekening GL — acuan posting jurnal otomatis tiap transaksi.</p></div>
+      <div class="fcard"><div class="fcard__top"><span class="fcard__i"><svg width="30" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>Lookup tervalidasi</h3></div><p>Kode konfidensial, COA, &amp; produk dipilih lewat modal lookup — bukan ketik bebas, mengurangi salah input.</p></div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">10</span></div>
+  </section>
+
+  <!-- ═══════════ 11 · SKENARIO 1 SCREENSHOT ═══════════ -->
+  <section data-label="Skenario 1 · Produk" class="slide slide--gray">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Skenario 1 · Definisi Produk</div><div class="top__meta">08</div></div>
+    <div class="two-col" style="grid-template-columns:1.25fr 1fr;align-items:center;">
+      <div class="anim shot">
+        <div class="shot__bar"><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__url">produk / pembiayaan / new</span></div>
+        <img class="shot__img" src="../assets/deck/12-cap.png" alt="New Produk Pembiayaan" />
+      </div>
+      <div class="anim">
+        <div class="col-head">Wizard produk 4 bagian</div>
+        <p class="h-sub" style="margin-bottom:26px;">Operator mendefinisikan kode &amp; nama produk, akad, pool of fund, hingga skema pencadangan — lalu lanjut ke biaya, denda, dan pemetaan GL.</p>
+        <div class="blist">
+          <div class="bl"><span class="bl__i" style="font-family:var(--mono);font-size:14px;font-weight:600;">1</span><div class="bl__t"><b>Data Produk</b> — akad, valuta, kode konfidensial (lookup), produk mitra.</div></div>
+          <div class="bl"><span class="bl__i" style="font-family:var(--mono);font-size:14px;font-weight:600;">2</span><div class="bl__t"><b>Parameter Biaya</b> — elemen biaya, GL, batas amortisasi, pajak.</div></div>
+          <div class="bl"><span class="bl__i" style="font-family:var(--mono);font-size:14px;font-weight:600;">3</span><div class="bl__t"><b>Parameter Denda</b> — metode, grace day, ta'zir/ta'widh.</div></div>
+          <div class="bl"><span class="bl__i" style="font-family:var(--mono);font-size:14px;font-weight:600;">4</span><div class="bl__t"><b>GL Interface</b> — mapping akun jurnal per transaksi.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">11</span></div>
+  </section>
+
+  <!-- ═══════════ 12 · SKENARIO 2 ═══════════ -->
+  <section data-label="Skenario 2 · Originasi" class="slide">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Skenario 2 · Originasi</div><div class="top__meta">08</div></div>
+    <h1 class="h-title anim" style="margin-bottom:8px;">Dari simulasi ke rekening aktif</h1>
+    <p class="h-sub anim" style="margin-bottom:36px;">Calon nasabah mensimulasikan angsuran; officer membuka fasilitas, lalu membuka rekening pembiayaan terhadap fasilitas tersebut — diakhiri otorisasi.</p>
+    <div class="flow anim">
+      <div class="fstep fstep--start"><div class="fstep__box"><span class="fstep__num">1.0</span><span class="fstep__l">Simulasi Angsuran</span><span class="fstep__d">Hitung skenario akad</span></div></div>
+      <div class="farrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="fstep"><div class="fstep__box"><span class="fstep__num">4.1</span><span class="fstep__l">Registrasi Fasilitas</span><span class="fstep__d">Buka fasilitas baru</span></div></div>
+      <div class="farrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="fstep"><div class="fstep__box"><span class="fstep__num">4.2.1</span><span class="fstep__l">Registrasi Pembiayaan</span><span class="fstep__d">Buka rekening</span></div></div>
+      <div class="farrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="fstep fstep--end"><div class="fstep__box"><span class="fstep__num">9.x</span><span class="fstep__l">Otorisasi</span><span class="fstep__d">Approval maker-checker</span></div></div>
+    </div>
+    <div class="vstrip anim" style="margin-top:34px;">
+      <div class="vcard"><h3>Data mengalir otomatis</h3><p>Hasil simulasi &amp; data nasabah terbawa ke registrasi tanpa input ulang.</p></div>
+      <div class="vcard"><h3>Validasi plafond &amp; tenor</h3><p>Sistem menjaga rekening tetap dalam batas parameter produk &amp; fasilitas.</p></div>
+      <div class="vcard"><h3>Jejak persetujuan</h3><p>Setiap registrasi masuk antrian otorisasi sebelum aktif.</p></div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">12</span></div>
+  </section>
+
+  <!-- ═══════════ 13 · SKENARIO 2 SCREENSHOT ═══════════ -->
+  <section data-label="Skenario 2 · Simulasi" class="slide slide--gray">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Skenario 2 · Simulasi Angsuran</div><div class="top__meta">08</div></div>
+    <div class="two-col" style="grid-template-columns:1.25fr 1fr;align-items:center;">
+      <div class="anim shot">
+        <div class="shot__bar"><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__url">simulasi · murabahah</span></div>
+        <img class="shot__img" src="../assets/deck/03-cap.png" alt="Simulasi Angsuran" />
+      </div>
+      <div class="anim">
+        <div class="col-head">Simulasi multi-akad</div>
+        <p class="h-sub" style="margin-bottom:26px;">Satu layar untuk menghitung skema angsuran berbagai akad — operator memilih nasabah, memasukkan harga barang, uang muka, tenor, dan EFR.</p>
+        <div class="blist">
+          <div class="bl"><span class="bl__i"><svg width="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="bl__t">Akad terpisah: Murabahah/Qardh/Istishna', Ijarah, Mudharabah/Musyarakah, MMQ, PRKS, Gadai.</div></div>
+          <div class="bl"><span class="bl__i"><svg width="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="bl__t">Perhitungan besar pembiayaan &amp; uang muka secara langsung.</div></div>
+          <div class="bl"><span class="bl__i"><svg width="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="bl__t">Hasil simulasi menjadi dasar registrasi fasilitas.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">13</span></div>
+  </section>
+
+  <!-- ═══════════ 14 · SKENARIO 3 ═══════════ -->
+  <section data-label="Skenario 3 · Jaminan" class="slide">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Skenario 3 · Jaminan</div><div class="top__meta">08</div></div>
+    <div class="two-col" style="align-items:center;">
+      <div class="anim">
+        <div class="col-head">Pengelolaan agunan terikat</div>
+        <p class="h-sub" style="margin-bottom:28px;">Catat agunan terhadap fasilitas — daftar inventaris, koreksi nilai appraisal, hingga pelepasan (release) saat pembiayaan lunas.</p>
+        <div class="flow" style="flex-direction:column;gap:0;">
+          <div class="fstep" style="width:100%;"><div class="fstep__box fstep--start" style="border-left:4px solid var(--blue);min-height:auto;padding:18px 22px;"><span class="fstep__num">7.0</span><span class="fstep__l" style="margin-top:4px;">Daftar Jaminan</span></div></div>
+          <div class="farrow" style="width:100%;height:30px;transform:rotate(90deg);"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="fstep" style="width:100%;"><div class="fstep__box" style="min-height:auto;padding:18px 22px;"><span class="fstep__num">7.1</span><span class="fstep__l" style="margin-top:4px;">Detail Agunan</span></div></div>
+          <div class="farrow" style="width:100%;height:30px;transform:rotate(90deg);"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="fstep" style="width:100%;"><div class="fstep__box" style="border-left:4px solid var(--success);min-height:auto;padding:18px 22px;"><span class="fstep__num">7.2</span><span class="fstep__l" style="margin-top:4px;">Koreksi / Release</span></div></div>
+        </div>
+      </div>
+      <div class="anim shot">
+        <div class="shot__bar"><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__url">jaminan / daftar</span></div>
+        <img class="shot__img" src="../assets/deck/07-cap.png" alt="Daftar Jaminan" />
+        <div style="display:flex;gap:0;border-top:1px solid var(--g20);">
+          <div style="flex:1;padding:16px 20px;border-right:1px solid var(--g20);"><div style="font-size:28px;font-weight:600;">9</div><div style="font-size:14px;color:var(--g60);">Total jaminan</div></div>
+          <div style="flex:1;padding:16px 20px;border-right:1px solid var(--g20);"><div style="font-size:28px;font-weight:600;">Rp 7,97 M</div><div style="font-size:14px;color:var(--g60);">Nilai jaminan</div></div>
+          <div style="flex:1;padding:16px 20px;"><div style="font-size:28px;font-weight:600;color:var(--success);">6</div><div style="font-size:14px;color:var(--g60);">Status diikat</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">14</span></div>
+  </section>
+
+  <!-- ═══════════ 15 · SKENARIO 4 ═══════════ -->
+  <section data-label="Skenario 4 · Servicing" class="slide slide--gray">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Skenario 4 · Servicing</div><div class="top__meta">08</div></div>
+    <div class="two-col" style="grid-template-columns:1.25fr 1fr;align-items:center;">
+      <div class="anim shot">
+        <div class="shot__bar"><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__url">list-fasilitas</span></div>
+        <img class="shot__img" src="../assets/deck/05-cap.png" alt="List Fasilitas" />
+      </div>
+      <div class="anim">
+        <div class="col-head">Cari, telaah, ubah</div>
+        <p class="h-sub" style="margin-bottom:24px;">Officer mencari fasilitas existing dengan filter cabang/jenis/status, melihat detail (biaya &amp; transaksi), lalu melakukan addendum perubahan akad/plafond/tenor.</p>
+        <div class="flow" style="flex-direction:column;gap:10px;">
+          <div class="fstep" style="width:100%;"><div class="fstep__box fstep--start" style="border-left:4px solid var(--blue);min-height:auto;padding:14px 20px;"><span class="fstep__num">4.3 · List Fasilitas</span></div></div>
+          <div class="fstep" style="width:100%;"><div class="fstep__box" style="min-height:auto;padding:14px 20px;"><span class="fstep__num">4.3.1 · Lihat Detail</span></div></div>
+          <div class="fstep" style="width:100%;"><div class="fstep__box" style="min-height:auto;padding:14px 20px;"><span class="fstep__num">4.3.2 · Addendum Fasilitas</span></div></div>
+          <div class="fstep" style="width:100%;"><div class="fstep__box" style="border-left:4px solid var(--success);min-height:auto;padding:14px 20px;"><span class="fstep__num">9.x · Otorisasi</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">15</span></div>
+  </section>
+
+  <!-- ═══════════ 16 · SKENARIO 5 ═══════════ -->
+  <section data-label="Skenario 5 · Account" class="slide">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Skenario 5 · Account</div><div class="top__meta">08</div></div>
+    <div class="two-col" style="grid-template-columns:1fr 1.25fr;align-items:center;">
+      <div class="anim">
+        <div class="col-head">Kelola rekening sepanjang masa aktif</div>
+        <p class="h-sub" style="margin-bottom:24px;">Dari daftar rekening pembiayaan, operator melengkapi data, lalu merestruktur ketika nasabah mengalami kesulitan bayar — jadwal ulang &amp; relaksasi.</p>
+        <div class="flow" style="flex-direction:column;gap:10px;">
+          <div class="fstep" style="width:100%;"><div class="fstep__box fstep--start" style="border-left:4px solid var(--blue);min-height:auto;padding:14px 20px;"><span class="fstep__num">4.4 · List Account Pembiayaan</span></div></div>
+          <div class="fstep" style="width:100%;"><div class="fstep__box" style="min-height:auto;padding:14px 20px;"><span class="fstep__num">4.4.2 · Edit Rekening</span></div></div>
+          <div class="fstep" style="width:100%;"><div class="fstep__box" style="border-left:4px solid var(--success);min-height:auto;padding:14px 20px;"><span class="fstep__num">5.3 · Restruktur Pembiayaan</span></div></div>
+        </div>
+      </div>
+      <div class="anim shot">
+        <div class="shot__bar"><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__url">list-pembiayaan</span></div>
+        <img class="shot__img" src="../assets/deck/06-cap.png" alt="List Account Pembiayaan" />
+      </div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">16</span></div>
+  </section>
+
+  <!-- ═══════════ 17 · SKENARIO 6 ═══════════ -->
+  <section data-label="Skenario 6 · Pembayaran" class="slide slide--gray">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Skenario 6 · Pelayanan Pembayaran</div><div class="top__meta">08</div></div>
+    <div class="two-col" style="grid-template-columns:1.25fr 1fr;align-items:center;">
+      <div class="anim shot">
+        <div class="shot__bar"><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__url">transaksi / pembayaran-manual</span></div>
+        <img class="shot__img" src="../assets/deck/08-cap.png" alt="Pembayaran Manual" />
+      </div>
+      <div class="anim">
+        <div class="col-head">Setoran &amp; pelunasan</div>
+        <p class="h-sub" style="margin-bottom:26px;">Teller menerima setoran angsuran manual; atau nasabah meminta pelunasan dipercepat dengan perhitungan muqasah (potongan margin).</p>
+        <div class="blist">
+          <div class="bl"><span class="bl__i"><svg width="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="bl__t"><b>Pembayaran Manual</b> — setor angsuran dengan alokasi pokok/margin otomatis.</div></div>
+          <div class="bl"><span class="bl__i"><svg width="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="bl__t"><b>Pelunasan Dipercepat</b> — hitung muqasah &amp; lunasi sisa kewajiban.</div></div>
+          <div class="bl"><span class="bl__i"><svg width="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="bl__t">Posting GL otomatis &amp; koreksi pembayaran bila diperlukan.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">17</span></div>
+  </section>
+
+  <!-- ═══════════ 18 · SKENARIO 7 ═══════════ -->
+  <section data-label="Skenario 7 · Recovery" class="slide">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Skenario 7 · Recovery</div><div class="top__meta">08</div></div>
+    <h1 class="h-title anim" style="margin-bottom:8px;">Penanganan kredit bermasalah</h1>
+    <p class="h-sub anim" style="margin-bottom:36px;">Alur terstruktur untuk NPF — keluarkan dari neraca, kelola penagihan, hingga hapus tagih bila tidak tertagih. Setiap langkah terdokumentasi.</p>
+    <div class="flow anim">
+      <div class="fstep fstep--start"><div class="fstep__box"><span class="fstep__num">6.9.1</span><span class="fstep__l">Registrasi Hapus Buku</span><span class="fstep__d">Keluarkan dari neraca (off-balance)</span></div></div>
+      <div class="farrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="fstep"><div class="fstep__box"><span class="fstep__num">6.9.2</span><span class="fstep__l">Recovery Hapus Buku</span><span class="fstep__d">Catat hasil penagihan</span></div></div>
+      <div class="farrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="fstep fstep--end"><div class="fstep__box"><span class="fstep__num">6.9.3</span><span class="fstep__l">Hapus Tagih</span><span class="fstep__d">Penghapusan permanen</span></div></div>
+    </div>
+    <div class="vstrip anim" style="margin-top:34px;">
+      <div class="vcard"><h3>AYDA terpadu</h3><p>Agunan Yang Diambil Alih: input, penyelesaian, pencairan, hingga happes dalam satu sub-grup.</p></div>
+      <div class="vcard"><h3>Dampak GL akurat</h3><p>Hapus buku &amp; recovery memicu posting CKPN/PPAP &amp; pendapatan sesuai tx_class.</p></div>
+      <div class="vcard"><h3>Jejak audit penuh</h3><p>Riwayat keputusan recovery siap untuk pemeriksaan internal &amp; regulator.</p></div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">18</span></div>
+  </section>
+
+  <!-- ═══════════ 19 · SECTION DIVIDER 2 ═══════════ -->
+  <section data-label="Bagian: Pendukung" class="slide slide--dark">
+    <div class="divider">
+      <div class="divider__num anim">BAGIAN 02 — KAPABILITAS</div>
+      <h1 class="divider__t anim">Modul pendukung &amp; <em>kontrol</em></h1>
+      <p class="divider__d anim">Di balik tujuh alur utama, sederet kapabilitas membuat operasi berjalan efisien dan patuh — transaksi massal, data master, pelaporan, dan kontrol keamanan.</p>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">19</span></div>
+  </section>
+
+  <!-- ═══════════ 20 · TRANSAKSI MASSAL ═══════════ -->
+  <section data-label="Transaksi Massal" class="slide slide--gray">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Transaksi Massal</div><div class="top__meta">09</div></div>
+    <div class="two-col" style="grid-template-columns:1.25fr 1fr;align-items:center;">
+      <div class="anim shot">
+        <div class="shot__bar"><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__url">massal / history</span></div>
+        <img class="shot__img" src="../assets/deck/11-cap.png" alt="History Transaksi Massal" />
+      </div>
+      <div class="anim">
+        <div class="col-head">Proses ribuan baris sekaligus</div>
+        <p class="h-sub" style="margin-bottom:26px;">Unggah batch transaksi via berkas — angsuran, pelunasan, registrasi — dengan validasi baris, ringkasan data valid/tidak valid, dan otorisasi terpusat.</p>
+        <div class="blist">
+          <div class="bl"><span class="bl__i"><svg width="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="bl__t"><b>Input Transaksi</b> — pilih jenis, unggah berkas, sistem memvalidasi.</div></div>
+          <div class="bl"><span class="bl__i"><svg width="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="bl__t"><b>History Transaksi</b> — pantau batch, status otorisasi, &amp; lihat detail per baris.</div></div>
+          <div class="bl"><span class="bl__i"><svg width="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="bl__t">Status: <span class="tag tag--s" style="font-size:12px;">Approve</span> <span class="tag tag--i" style="font-size:12px;">Submit</span> <span class="tag" style="font-size:12px;background:var(--g20);color:var(--g70);">Canceled</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">20</span></div>
+  </section>
+
+  <!-- ═══════════ 21 · DATA MASTER ═══════════ -->
+  <section data-label="Data Master" class="slide">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Data Master &amp; CRUD</div><div class="top__meta">10</div></div>
+    <h1 class="h-title anim" style="margin-bottom:8px;">Referensi terpusat, konsisten di semua alur</h1>
+    <p class="h-sub anim" style="margin-bottom:34px;">Delapan menu master dengan pola CRUD seragam — daftar berfilter, popup aksi (view/update/hapus), dan form dengan lookup tervalidasi.</p>
+    <div class="modgrid body anim" style="grid-template-columns:repeat(4,1fr);align-content:start;">
+      <div class="modcard" style="border-top-color:var(--blue);"><div class="modcard__h"><h3>Data Vendor</h3></div><p style="font-size:16px;color:var(--g60);margin:0;">Notaris, Asuransi, Appraisal — filter jenis &amp; keyword.</p></div>
+      <div class="modcard" style="border-top-color:var(--blue);"><div class="modcard__h"><h3>Mitra Join Finance</h3></div><p style="font-size:16px;color:var(--g60);margin:0;">Porsi modal, eqv. rate, GL titipan margin/pokok.</p></div>
+      <div class="modcard" style="border-top-color:var(--blue);"><div class="modcard__h"><h3>Data Instansi</h3></div><p style="font-size:16px;color:var(--g60);margin:0;">Kementerian, korporasi, &amp; PIC terkait.</p></div>
+      <div class="modcard" style="border-top-color:var(--blue);"><div class="modcard__h"><h3>Data Developer</h3></div><p style="font-size:16px;color:var(--g60);margin:0;">Pengembang properti rekanan KPR.</p></div>
+      <div class="modcard" style="border-top-color:var(--blue);"><div class="modcard__h"><h3>Data Pejabat</h3></div><p style="font-size:16px;color:var(--g60);margin:0;">Pejabat penandatangan akad &amp; persetujuan.</p></div>
+      <div class="modcard" style="border-top-color:var(--blue);"><div class="modcard__h"><h3>Kode Bisnis</h3></div><p style="font-size:16px;color:var(--g60);margin:0;">Segmentasi sektor ekonomi pembiayaan.</p></div>
+      <div class="modcard" style="border-top-color:var(--blue);"><div class="modcard__h"><h3>Jenis Aktiva</h3></div><p style="font-size:16px;color:var(--g60);margin:0;">Klasifikasi objek pembiayaan &amp; agunan.</p></div>
+      <div class="modcard" style="border-top-color:var(--blue);"><div class="modcard__h"><h3>Data Biaya-Biaya</h3></div><p style="font-size:16px;color:var(--g60);margin:0;">Katalog biaya yang dapat dibebankan.</p></div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">21</span></div>
+  </section>
+
+  <!-- ═══════════ 22 · PELAPORAN & OTORISASI ═══════════ -->
+  <section data-label="Pelaporan & Otorisasi" class="slide slide--gray">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Pelaporan &amp; Otorisasi</div><div class="top__meta">11</div></div>
+    <div class="two-col" style="grid-template-columns:1fr 1.25fr;align-items:center;">
+      <div class="anim">
+        <div class="col-head">Laporan lengkap &amp; antrian persetujuan</div>
+        <p class="h-sub" style="margin-bottom:26px;">Sembilan jenis laporan operasional &amp; pengawasan, ditambah satu antrian otorisasi terpusat untuk seluruh transaksi material.</p>
+        <div class="fgrid" style="grid-template-columns:1fr 1fr;gap:14px;">
+          <div class="fcard" style="padding:18px 20px;"><h3 style="font-size:19px;">Nominatif</h3><p style="margin-top:5px;font-size:15px;">Pembiayaan &amp; fasilitas</p></div>
+          <div class="fcard" style="padding:18px 20px;"><h3 style="font-size:19px;">Histori Transaksi</h3><p style="margin-top:5px;font-size:15px;">Per rekening</p></div>
+          <div class="fcard" style="padding:18px 20px;"><h3 style="font-size:19px;">Amortisasi &amp; Accrue</h3><p style="margin-top:5px;font-size:15px;">Biaya &amp; pendapatan</p></div>
+          <div class="fcard" style="padding:18px 20px;"><h3 style="font-size:19px;">LBV</h3><p style="margin-top:5px;font-size:15px;">Ledger Balance Verification</p></div>
+        </div>
+      </div>
+      <div class="anim shot">
+        <div class="shot__bar"><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__url">otorisasi</span></div>
+        <img class="shot__img" src="../assets/deck/10-cap.png" alt="Antrian Otorisasi" />
+      </div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">22</span></div>
+  </section>
+
+  <!-- ═══════════ 23 · AKAD SYARIAH ═══════════ -->
+  <section data-label="Akad Syariah" class="slide">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Cakupan Akad Syariah</div><div class="top__meta">12</div></div>
+    <h1 class="h-title anim" style="margin-bottom:8px;">Beragam akad dalam satu mesin</h1>
+    <p class="h-sub anim" style="margin-bottom:34px;">Parameter produk, simulasi, dan posting GL menyesuaikan karakteristik tiap akad — jual beli, sewa, bagi hasil, hingga gadai.</p>
+    <div class="akad body anim" style="align-content:start;">
+      <div class="akad-row"><span class="akad-row__code">M</span><span class="akad-row__n">Murabahah</span><span class="akad-row__d">Jual beli dengan margin</span></div>
+      <div class="akad-row"><span class="akad-row__code">I</span><span class="akad-row__n">Ijarah</span><span class="akad-row__d">Sewa / sewa-beli (IMBT)</span></div>
+      <div class="akad-row"><span class="akad-row__code">C</span><span class="akad-row__n">Mudharabah</span><span class="akad-row__d">Bagi hasil — modal penuh</span></div>
+      <div class="akad-row"><span class="akad-row__code">S</span><span class="akad-row__n">Musyarakah</span><span class="akad-row__d">Bagi hasil — kongsi modal</span></div>
+      <div class="akad-row"><span class="akad-row__code">Q</span><span class="akad-row__n">MMQ</span><span class="akad-row__d">Musyarakah Mutanaqishah</span></div>
+      <div class="akad-row"><span class="akad-row__code">N</span><span class="akad-row__n">Istishna'</span><span class="akad-row__d">Pesanan / konstruksi bertahap</span></div>
+      <div class="akad-row"><span class="akad-row__code">Q</span><span class="akad-row__n">Qardh &amp; Qardh bil Ujroh</span><span class="akad-row__d">Pinjaman kebajikan</span></div>
+      <div class="akad-row"><span class="akad-row__code">G</span><span class="akad-row__n">Gadai (Rahn)</span><span class="akad-row__d">Pembiayaan beragun emas</span></div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">23</span></div>
+  </section>
+
+  <!-- ═══════════ 24 · KEAMANAN & KONTROL ═══════════ -->
+  <section data-label="Keamanan & Kontrol" class="slide slide--gray">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Keamanan &amp; Kontrol</div><div class="top__meta">13</div></div>
+    <h1 class="h-title anim" style="margin-bottom:8px;">Maker-checker di jantung operasi</h1>
+    <p class="h-sub anim" style="margin-bottom:38px;">Pemisahan tugas antara pembuat (maker) dan pemeriksa (checker) memastikan tidak ada transaksi material yang aktif tanpa persetujuan.</p>
+    <div class="body anim" style="display:flex;flex-direction:column;justify-content:center;gap:30px;">
+      <div class="flow">
+        <div class="fstep fstep--start"><div class="fstep__box"><span class="fstep__num">MAKER</span><span class="fstep__l">Input Transaksi</span><span class="fstep__d">Registrasi, addendum, pembayaran, batch</span></div></div>
+        <div class="farrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="fstep"><div class="fstep__box"><span class="fstep__num">ANTRIAN</span><span class="fstep__l">Status Submit</span><span class="fstep__d">Menunggu otorisasi di antrian terpusat</span></div></div>
+        <div class="farrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="fstep fstep--end"><div class="fstep__box"><span class="fstep__num">CHECKER</span><span class="fstep__l">Approve / Tolak</span><span class="fstep__d">Transaksi aktif &amp; ter-posting ke GL</span></div></div>
+      </div>
+      <div class="vstrip">
+        <div class="vcard"><h3>Pemisahan tugas</h3><p>Maker tak dapat menyetujui transaksinya sendiri — kontrol anti-fraud bawaan.</p></div>
+        <div class="vcard"><h3>Limit &amp; eskalasi</h3><p>Auto-otorisasi di bawah limit, eskalasi berjenjang di atasnya.</p></div>
+        <div class="vcard"><h3>Audit trail</h3><p>Setiap aksi tercatat — siap untuk pemeriksaan internal &amp; regulator.</p></div>
+      </div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">24</span></div>
+  </section>
+
+  <!-- ═══════════ 25 · RINGKASAN NILAI ═══════════ -->
+  <section data-label="Ringkasan Nilai" class="slide">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Mengapa BOS7 Financing</div><div class="top__meta">14</div></div>
+    <h1 class="h-title anim" style="margin-bottom:34px;">Lima alasan utama</h1>
+    <div class="body anim" style="display:flex;flex-direction:column;gap:0;">
+      <div class="ag-item" style="border-top:1px solid var(--g20);"><div class="ag-num" style="color:var(--blue);">01</div><div class="ag-body"><h3>End-to-end dalam satu sistem</h3><p style="font-size:18px;">Originasi, servicing, hingga recovery tanpa berpindah aplikasi atau input ulang.</p></div></div>
+      <div class="ag-item"><div class="ag-num" style="color:var(--blue);">02</div><div class="ag-body"><h3>Kepatuhan &amp; kontrol melekat</h3><p style="font-size:18px;">Maker-checker, GL Interface otomatis, dan parameter syariah sesuai ketentuan.</p></div></div>
+      <div class="ag-item"><div class="ag-num" style="color:var(--blue);">03</div><div class="ag-body"><h3>Multi-akad &amp; multi-tenant</h3><p style="font-size:18px;">Satu basis kode melayani beragam akad dan beberapa identitas bank syariah.</p></div></div>
+      <div class="ag-item"><div class="ag-num" style="color:var(--blue);">04</div><div class="ag-body"><h3>Efisiensi operator</h3><p style="font-size:18px;">UI densitas tinggi, transaksi massal, dan lookup tervalidasi mempercepat kerja.</p></div></div>
+      <div class="ag-item"><div class="ag-num" style="color:var(--blue);">05</div><div class="ag-body"><h3>Transparansi portofolio</h3><p style="font-size:18px;">Dashboard real-time untuk outstanding, kolektibilitas, dan NPF.</p></div></div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">25</span></div>
+  </section>
+
+  <!-- ═══════════ 26 · LANGKAH BERIKUTNYA ═══════════ -->
+  <section data-label="Langkah Berikutnya" class="slide slide--gray">
+    <div class="top"><div class="kicker"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>Langkah Berikutnya</div><div class="top__meta">15</div></div>
+    <h1 class="h-title anim" style="margin-bottom:38px;">Dari prototipe ke implementasi</h1>
+    <div class="flow anim body" style="align-items:stretch;">
+      <div class="fstep fstep--start"><div class="fstep__box"><span class="fstep__num">TAHAP 1</span><span class="fstep__l">Discovery</span><span class="fstep__d">Pemetaan proses &amp; parameter spesifik bank</span></div></div>
+      <div class="farrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="fstep"><div class="fstep__box"><span class="fstep__num">TAHAP 2</span><span class="fstep__l">Konfigurasi</span><span class="fstep__d">Produk, GL Interface, tema &amp; peran</span></div></div>
+      <div class="farrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="fstep"><div class="fstep__box"><span class="fstep__num">TAHAP 3</span><span class="fstep__l">UAT &amp; Integrasi</span><span class="fstep__d">Uji alur &amp; sambungan core/GL</span></div></div>
+      <div class="farrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="fstep fstep--end"><div class="fstep__box"><span class="fstep__num">TAHAP 4</span><span class="fstep__l">Go-Live</span><span class="fstep__d">Pelatihan operator &amp; pendampingan</span></div></div>
+    </div>
+    <div class="foot"><span class="foot__brand"><span class="mark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>BOS7 Financing</span><span class="foot__page">26</span></div>
+  </section>
+
+  <!-- ═══════════ 27 · CLOSING ═══════════ -->
+  <section data-label="Penutup" class="slide slide--dark">
+    <div class="title-wrap">
+      <div class="title-logo">
+        <span class="lmark"><svg viewBox="0 0 32 32" fill="none"><path d="M3 22 C 8 11, 14 13, 16 18 C 18 23, 24 23, 29 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M3 15 C 8 5, 14 7, 16 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/></svg></span>
+        <span class="ltext"><b>BOS7</b> <span>Bank Operating System</span></span>
+      </div>
+      <h1 class="title-main anim" style="font-size:80px;">Mari wujudkan<br/>pembiayaan syariah <em>modern</em></h1>
+      <p class="title-desc anim">Terima kasih. Kami siap mendemonstrasikan setiap alur secara langsung dan membahas penyesuaian untuk kebutuhan bank Anda.</p>
+    </div>
+    <div class="title-meta">
+      <span>Ihsan Solusi Informatika · <b>Module Financing</b></span>
+      <span>Demonstrasi Prototipe Hi-Fi · 2026</span>
+    </div>
+  </section>
+
+</deck-stage>
+
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <rect width="120" height="120" fill="#161616"/>
+    <path d="M22 76 C 40 40, 60 48, 68 64 C 76 80, 96 80, 104 40" stroke="#0F62FE" stroke-width="7" stroke-linecap="round" fill="none"/>
+  </svg>
+</template>
+
+<script src="deck-stage.js"></script>
+</body>
+</html>

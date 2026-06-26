@@ -157,20 +157,28 @@ function StatusTag({ status }) {
   return <span className={`tag ${map[status] || 'tag--neutral'}`}>{status}</span>;
 }
 
-// Section tabs (Section 1, Section 2 …)
+// Section tabs — numbered multi-section wizard indicator
 function SectionTabs({ tabs, value, onChange }) {
+  const activeIndex = tabs.findIndex(t => t.id === value);
   return (
     <div className="section-tabs">
-      {tabs.map((t, i) => (
-        <button
-          key={t.id}
-          className={'section-tab' + (value === t.id ? ' section-tab--active' : '')}
-          onClick={() => onChange?.(t.id)}
-        >
-          <div className="section-tab__eyebrow">Section {i + 1}</div>
-          <div className="section-tab__label">{t.label}</div>
-        </button>
-      ))}
+      {tabs.map((t, i) => {
+        const state = t.id === value ? 'active' : (activeIndex > -1 && i < activeIndex ? 'done' : 'todo');
+        return (
+          <button
+            key={t.id}
+            className={'section-tab section-tab--' + state}
+            onClick={() => onChange?.(t.id)}
+          >
+            <span className="section-tab__num">
+              {state === 'done'
+                ? <span dangerouslySetInnerHTML={{ __html: Icons.checkmark(14) }} />
+                : (i + 1)}
+            </span>
+            <span className="section-tab__label">{t.label}</span>
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -397,7 +405,7 @@ function DataTable(props) {
 function Modal({ title, subtitle, children, onClose, footer, size }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className={'modal' + (size === 'lg' ? ' modal--lg' : '')} onClick={e => e.stopPropagation()}>
+      <div className={'modal' + (size === 'lg' ? ' modal--lg' : '') + (size === 'xl' ? ' modal--xl' : '')} onClick={e => e.stopPropagation()}>
         <div className="modal__header">
           <div>
             <h3 className="modal__title">{title}</h3>

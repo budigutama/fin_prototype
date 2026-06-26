@@ -8,6 +8,7 @@ const TRANSAKSI_ACTIONS = {
   'koreksi-pembayaran':    { label: 'Koreksi Angsuran',           formRoute: '/transaksi/koreksi-pembayaran/form' },
   'input-biaya':           { label: 'Input Biaya-Biaya',          formRoute: '/transaksi/input-biaya/form' },
   'reposisi-cabang':       { label: 'Reposisi Cabang',            formRoute: '/transaksi/reposisi-cabang/form' },
+  'ganti-produk':          { label: 'Ganti Produk',               formRoute: '/transaksi/ganti-produk/form' },
   'hapus-buku-registrasi': { label: 'Registrasi Hapus Buku',      formRoute: '/transaksi/hapus-buku/registrasi/form' },
   'hapus-buku-recovery':   { label: 'Recovery Hapus Buku',        formRoute: '/transaksi/hapus-buku/recovery/form' },
   'hapus-tagih':           { label: 'Hapus Tagih',                formRoute: '/transaksi/hapus-buku/hapus-tagih/form' },

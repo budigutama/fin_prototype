@@ -6,7 +6,7 @@ function OverviewScreen({ onNavigate }) {
       num: 1, title: 'Setup Awal: Data Master & Produk Parameter',
       desc: 'Sebelum operasional dimulai — admin menyiapkan data master (instansi, vendor, dll) dan mendefinisikan produk pembiayaan beserta parameternya.',
       flow: [
-        { num: '2.x', label: 'Data Master',         desc: 'Instansi, Vendor, Developer', route: '/master/instansi', start: true },
+        { num: '2.x', label: 'Data Master',         desc: 'Agency, Vendor, Mitra', route: '/master/agency', start: true },
         { num: '3.1', label: 'Produk Pembiayaan',   desc: 'Definisikan produk',          route: '/produk/pembiayaan' },
         { num: '3.3', label: 'Parameter Global',    desc: 'Konfigurasi sistem',          route: '/produk/parameter-global', end: true },
       ]
@@ -76,10 +76,9 @@ function OverviewScreen({ onNavigate }) {
     {
       title: 'Data Master', desc: 'Referensi master data',
       items: [
-        { num: '2.1', label: 'Data Instansi',           route: '/master/instansi' },
+        { num: '2.1', label: 'Data Agency',             route: '/master/agency' },
         { num: '2.2', label: 'Data Pejabat',            route: '/master/pejabat' },
         { num: '2.3', label: 'Data Vendor',             route: '/master/vendor' },
-        { num: '2.4', label: 'Data Developer',          route: '/master/developer' },
         { num: '2.5', label: 'Data Mitra Join Finance', route: '/master/mitra' },
         { num: '2.6', label: 'Data Kode Bisnis',        route: '/master/kode-bisnis' },
         { num: '2.7', label: 'Data Jenis Aktiva',       route: '/master/jenis-aktiva' },
@@ -193,7 +192,7 @@ function OverviewScreen({ onNavigate }) {
           <span style={{ color: 'var(--c-primary)', flexShrink: 0, marginTop: 2 }}
             dangerouslySetInnerHTML={{ __html: Icons.info(20) }} />
           <div style={{ fontSize: 13.5, lineHeight: 1.55, color: 'var(--c-text)' }}>
-            <strong>Cara navigasi:</strong> Gunakan rail ikon di kiri untuk berpindah modul, atau klik kartu skenario di bawah untuk menjalankan alur end-to-end.
+            <strong>Cara navigasi:</strong> Gunakan SideNav drilldown di kiri untuk menelusuri modul dan menu, atau klik kartu skenario di bawah untuk menjalankan alur end-to-end.
             Tombol <code style={{ background: 'rgba(255,255,255,0.6)', padding: '1px 6px', borderRadius: 3, fontSize: 12 }}>⋯</code> pada setiap baris tabel berisi <strong>popup menu [P]</strong> sesuai dokumen menu.
             Buka panel <em>Tweaks</em> di pojok kanan-bawah untuk mengganti tenant, density, atau gaya popup.
           </div>

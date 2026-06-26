@@ -607,6 +607,96 @@ function ReposisiCabangTransaksiScreen({ onNavigate, showToast, rek }) {
   );
 }
 
+/* ─────────── Ganti Produk (model: Reposisi Cabang) ─────────── */
+function GantiProdukScreen({ onNavigate, showToast, rek }) {
+  const rekening = window.useRekeningFromQuery(rek);
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
+
+  const [form, setForm] = React.useState({
+    tanggalGanti:  '24-May-2026',
+    produkLama:    rekening.produk || 'Mudharabah',
+    produkBaru:    '',
+    nomorSurat:    '',
+    alasan:        '',
+  });
+  const setField = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  const produkOptions = [
+    'Murabahah',
+    'Mudharabah',
+    'Musyarakah',
+    'MMQ',
+    'Ijarah Multijasa',
+    'Istishna',
+    'Qardh',
+  ];
+
+  return (
+    <div className="card">
+      <h2 style={{ fontSize: 22, fontWeight: 600, margin: 0, paddingBottom: 16, borderBottom: '1px solid var(--c-border-soft)' }}>
+        Ganti Produk
+      </h2>
+
+      <RekeningHeroCard rekening={rekening} onNavigate={onNavigate} />
+
+      <FormGrid>
+        <Field label="Tanggal Ganti Produk" required>
+          <DateInput value={form.tanggalGanti} onChange={v => setField('tanggalGanti', v)} />
+        </Field>
+        <Field label="Nomor Surat" required>
+          <TextInput value={form.nomorSurat} onChange={v => setField('nomorSurat', v)} placeholder="cth: SR/2026/05/0023" />
+        </Field>
+
+        <Field label="Produk Lama" required>
+          <Select value={form.produkLama} onChange={v => setField('produkLama', v)} options={produkOptions} disabled />
+        </Field>
+        <Field label="Produk Baru" required>
+          <Select value={form.produkBaru} onChange={v => setField('produkBaru', v)} options={produkOptions} placeholder="-- Pilih produk baru --" />
+        </Field>
+      </FormGrid>
+
+      <div style={{ marginTop: 16 }}>
+        <Field label="Alasan Ganti Produk" required>
+          <textarea value={form.alasan} onChange={e => setField('alasan', e.target.value)}
+            rows={3} placeholder="cth: Penyesuaian akad pembiayaan, dll." />
+        </Field>
+      </div>
+
+      <div className="approval-banner" style={{ marginTop: 16, background: 'var(--c-info-bg)', borderLeftColor: 'var(--c-info)' }}>
+        <span style={{ color: 'var(--c-info)', flexShrink: 0 }} dangerouslySetInnerHTML={{ __html: Icons.info(20) }} />
+        <div className="approval-banner__body">
+          Penggantian produk akan mengubah parameter akad rekening dan akan masuk antrian otorisasi.
+        </div>
+      </div>
+
+      <div className="btn-bar btn-bar--between" style={{ marginTop: 32, paddingTop: 16, borderTop: '1px solid var(--c-border-soft)' }}>
+        <button className="btn btn--neutral" onClick={() => onNavigate('/transaksi/ganti-produk')}>
+          <span dangerouslySetInnerHTML={{ __html: Icons.arrowL(14) }} />
+          Kembali
+        </button>
+        <div className="row gap-12">
+          <button className="btn" style={{ background: 'transparent', color: 'var(--c-error)', border: '1px solid var(--c-error)' }}
+            onClick={() => onNavigate('/transaksi/ganti-produk')}>Batal</button>
+          <button className="btn btn--primary" onClick={() => setConfirmOpen(true)}>Simpan Ganti Produk</button>
+        </div>
+      </div>
+
+      {confirmOpen && (
+        <ConfirmDialog
+          title="Konfirmasi Ganti Produk"
+          message={`Produk rekening ${rekening.noRek} akan diubah dari ${form.produkLama} ke ${form.produkBaru || '—'}. Lanjutkan?`}
+          confirmLabel="Ya, Ganti Produk"
+          onClose={() => setConfirmOpen(false)}
+          onConfirm={() => {
+            showToast({ type: 'success', title: 'Ganti produk diajukan', message: `Rekening ${rekening.noRek}` });
+            onNavigate('/transaksi/ganti-produk');
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
 /* ─────────── Registrasi Hapus Buku (Figma 2.2.1.q) ─────────── */
 function RegistrasiHapusBukuScreen({ onNavigate, showToast, rek }) {
   const rekening = window.useRekeningFromQuery(rek);
@@ -938,6 +1028,7 @@ Object.assign(window, {
   KoreksiPembayaranScreen,
   InputBiayaScreen,
   ReposisiCabangTransaksiScreen,
+  GantiProdukScreen,
   RegistrasiHapusBukuScreen,
   RecoveryHapusBukuScreen,
   HapusTagihScreen,

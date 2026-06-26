@@ -74,7 +74,7 @@ function NewProdukFasilitasScreen({ onNavigate, showToast, mode, kode }) {
       sifatFasilitas: row.sifat || 'Committed',
       tipeFasilitas:  row.tipe  || 'Bank',
       status:        row.status,
-      glInterface:   window.buildGlInterfaceRows(row.akad),
+      glInterface:   window.buildGlInterfaceFasilitasRows(),
     };
   }, [isEdit, kode]);
 
@@ -91,12 +91,12 @@ function NewProdukFasilitasScreen({ onNavigate, showToast, mode, kode }) {
 
     // Parameter Biaya (identik dengan Produk Pembiayaan)
     biaya: [
-      { jenis: 'Biaya Administrasi', metode: 'Fixed',      nominal: '500000', persen: '0', flag: 'Debet', rekening: 'Sumber Biaya' },
-      { jenis: 'Biaya Provisi',      metode: 'Persentase', nominal: '0',      persen: '1', flag: 'Debet', rekening: 'Sumber Biaya' },
+      { element: 'Biaya Administrasi', glKode: '41010', glNama: 'Pendapatan Administrasi', jenisElement: 'Pendapatan', batasAmortisasi: '0',       glPajakKode: '', glPajakNama: '', tarifPajak: '0' },
+      { element: 'Biaya Provisi',      glKode: '41020', glNama: 'Pendapatan Provisi',      jenisElement: 'Pendapatan', batasAmortisasi: '2500000', glPajakKode: '', glPajakNama: '', tarifPajak: '0' },
     ],
 
     // GL Interface
-    glInterface: window.buildGlInterfaceRows('Umum'),
+    glInterface: window.buildGlInterfaceFasilitasRows(),
   });
 
   React.useEffect(() => {
@@ -105,15 +105,10 @@ function NewProdukFasilitasScreen({ onNavigate, showToast, mode, kode }) {
 
   const setField = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
-  // Refresh GL defaults when akad changes
-  const akadRef = React.useRef(form.akad);
-  React.useEffect(() => {
-    if (akadRef.current !== form.akad) {
-      akadRef.current = form.akad;
-      setForm(f => ({ ...f, glInterface: window.buildGlInterfaceRows(form.akad) }));
-    }
-  }, [form.akad]);
+  // Add/Edit Biaya modal state (Section 2)
+  const [biayaModal, setBiayaModal] = React.useState(null); // { mode:'add'|'edit', index } | null
 
+  // GL Interface for Fasilitas is a fixed tx_class set (komitmen & PPAP), not akad-driven.
   const [glLookup, setGlLookup] = React.useState(null);
 
   const sectionOrder = ['s1', 's2', 's3'];
@@ -204,7 +199,7 @@ function NewProdukFasilitasScreen({ onNavigate, showToast, mode, kode }) {
           <div className="row row--between mb-16">
             <h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>Daftar Biaya Default Produk</h3>
             <button className="btn btn--secondary btn--sm"
-              onClick={() => setForm(f => ({ ...f, biaya: [...f.biaya, { jenis: '', metode: 'Fixed', nominal: '0', persen: '0', flag: 'Debet', rekening: 'Sumber Biaya' }] }))}>
+              onClick={() => setBiayaModal({ mode: 'add' })}>
               <span dangerouslySetInnerHTML={{ __html: Icons.add(14) }} />
               Tambah Biaya
             </button>
@@ -213,58 +208,69 @@ function NewProdukFasilitasScreen({ onNavigate, showToast, mode, kode }) {
           <table className="tbl">
             <thead>
               <tr>
-                <th style={{ width: 50 }}>No</th>
-                <th>Jenis Biaya</th>
-                <th>Metode</th>
-                <th>Nominal</th>
-                <th>Persen (%)</th>
-                <th>Flag</th>
-                <th>Rekening Pembebanan</th>
-                <th style={{ width: 60 }}></th>
+                <th style={{ width: 44 }}>No</th>
+                <th>Element Biaya</th>
+                <th>GL Account</th>
+                <th>Jenis Element Biaya</th>
+                <th style={{ width: 120 }}>Batas Amortisasi</th>
+                <th>GL Account Pajak</th>
+                <th style={{ width: 100 }}>Tarif Pajak</th>
+                <th style={{ width: 84 }}>Aksi</th>
               </tr>
             </thead>
             <tbody>
-              {form.biaya.map((b, i) => (
+              {form.biaya.length === 0 ? (
+                <tr><td colSpan={8} className="tbl-empty">Belum ada biaya. Klik "Tambah Biaya".</td></tr>
+              ) : form.biaya.map((b, i) => (
                 <tr key={i}>
                   <td className="mono">{i + 1}</td>
+                  <td>{b.element}</td>
                   <td>
-                    <Select value={b.jenis}
-                      onChange={v => setForm(f => { const a = [...f.biaya]; a[i] = { ...a[i], jenis: v }; return { ...f, biaya: a }; })}
-                      options={['Biaya Administrasi', 'Biaya Provisi', 'Biaya Notaris', 'Biaya Asuransi', 'Biaya Materai', 'Biaya Appraisal']} />
+                    {b.glKode
+                      ? <span><span className="mono">{b.glKode}</span> — {b.glNama}</span>
+                      : <span className="text-muted">—</span>}
                   </td>
+                  <td>{b.jenisElement || <span className="text-muted">—</span>}</td>
+                  <td className="mono">{b.batasAmortisasi && b.batasAmortisasi !== '0' ? window.fmtRp(b.batasAmortisasi) : '—'}</td>
                   <td>
-                    <Select value={b.metode}
-                      onChange={v => setForm(f => { const a = [...f.biaya]; a[i] = { ...a[i], metode: v }; return { ...f, biaya: a }; })}
-                      options={['Fixed', 'Persentase']} />
+                    {b.glPajakKode
+                      ? <span><span className="mono">{b.glPajakKode}</span> — {b.glPajakNama}</span>
+                      : <span className="text-muted">—</span>}
                   </td>
+                  <td className="mono">{b.tarifPajak && b.tarifPajak !== '0' ? `${b.tarifPajak} %` : '—'}</td>
                   <td>
-                    <CurrencyInput value={b.nominal}
-                      onChange={v => setForm(f => { const a = [...f.biaya]; a[i] = { ...a[i], nominal: v }; return { ...f, biaya: a }; })} />
-                  </td>
-                  <td>
-                    <NumberInput value={b.persen}
-                      onChange={v => setForm(f => { const a = [...f.biaya]; a[i] = { ...a[i], persen: v }; return { ...f, biaya: a }; })}
-                      suffix="%" />
-                  </td>
-                  <td>
-                    <Select value={b.flag}
-                      onChange={v => setForm(f => { const a = [...f.biaya]; a[i] = { ...a[i], flag: v }; return { ...f, biaya: a }; })}
-                      options={['Debet', 'Kredit']} />
-                  </td>
-                  <td>
-                    <Select value={b.rekening}
-                      onChange={v => setForm(f => { const a = [...f.biaya]; a[i] = { ...a[i], rekening: v }; return { ...f, biaya: a }; })}
-                      options={['Sumber Biaya', 'Cash', 'Tabungan Nasabah', 'GL Biaya Provisi', 'GL Biaya Admin']} />
-                  </td>
-                  <td>
-                    <button className="icon-btn"
-                      onClick={() => setForm(f => ({ ...f, biaya: f.biaya.filter((_, idx) => idx !== i) }))}
-                      dangerouslySetInnerHTML={{ __html: Icons.trash(16) }} />
+                    <div className="row gap-4">
+                      <button className="icon-btn" title="Ubah"
+                        onClick={() => setBiayaModal({ mode: 'edit', index: i })}
+                        dangerouslySetInnerHTML={{ __html: Icons.edit(16) }} />
+                      <button className="icon-btn" title="Hapus"
+                        onClick={() => setForm(f => ({ ...f, biaya: f.biaya.filter((_, idx) => idx !== i) }))}
+                        dangerouslySetInnerHTML={{ __html: Icons.trash(16) }} />
+                    </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+
+          {biayaModal && (
+            <BiayaFormModal
+              mode={biayaModal.mode}
+              initial={biayaModal.mode === 'edit'
+                ? form.biaya[biayaModal.index]
+                : { element: '', glKode: '', glNama: '', jenisElement: '', batasAmortisasi: '0', glPajakKode: '', glPajakNama: '', tarifPajak: '0' }}
+              onClose={() => setBiayaModal(null)}
+              onSave={(draft) => {
+                setForm(f => {
+                  const a = [...f.biaya];
+                  if (biayaModal.mode === 'edit') a[biayaModal.index] = draft;
+                  else a.push(draft);
+                  return { ...f, biaya: a };
+                });
+                setBiayaModal(null);
+              }}
+            />
+          )}
 
           <div className="approval-banner" style={{ marginTop: 16, background: 'var(--c-info-bg)', borderLeftColor: 'var(--c-info)' }}>
             <span style={{ color: 'var(--c-info)', flexShrink: 0 }} dangerouslySetInnerHTML={{ __html: Icons.info(20) }} />
@@ -289,14 +295,14 @@ function NewProdukFasilitasScreen({ onNavigate, showToast, mode, kode }) {
         <>
           <div className="row row--between mb-16">
             <div>
-              <h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>GL Interface — Mapping Akad {form.akad}</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>GL Interface — Produk Fasilitas</h3>
               <p className="text-muted text-sm" style={{ margin: '4px 0 0' }}>
                 Tentukan rekening GL untuk setiap <span className="mono">kode_tx_class</span>. Mapping ini menjadi acuan posting jurnal pada seluruh transaksi fasilitas produk ini.
               </p>
             </div>
             <button className="btn btn--neutral btn--sm"
-              onClick={() => setForm(f => ({ ...f, glInterface: window.buildGlInterfaceRows(f.akad) }))}
-              title="Reset ke mapping default akad">
+              onClick={() => setForm(f => ({ ...f, glInterface: window.buildGlInterfaceFasilitasRows() }))}
+              title="Reset ke mapping default">
               <span dangerouslySetInnerHTML={{ __html: Icons.refresh(14) }} />
               Reset ke Default
             </button>
@@ -420,7 +426,7 @@ function NewProdukFasilitasScreen({ onNavigate, showToast, mode, kode }) {
 function DetailProdukFasilitasScreen({ onNavigate, kode }) {
   const row = window.MOCK_PRODUK_FASILITAS.find(p => p.kode === kode) || window.MOCK_PRODUK_FASILITAS[0];
   const [tab, setTab] = React.useState('info');
-  const glRows = window.buildGlInterfaceRows(row.akad);
+  const glRows = window.buildGlInterfaceFasilitasRows();
 
   return (
     <div className="card">
@@ -465,7 +471,7 @@ function DetailProdukFasilitasScreen({ onNavigate, kode }) {
 
       {tab === 'gl' && (
         <>
-          <h4 className="section-title" style={{ marginTop: 0 }}>Mapping GL Interface — {row.akad}</h4>
+          <h4 className="section-title" style={{ marginTop: 0 }}>Mapping GL Interface — Produk Fasilitas</h4>
           <p className="text-muted text-sm" style={{ margin: '0 0 16px' }}>
             Pemetaan <span className="mono">kode_tx_class</span> ke rekening GL yang akan di-posting saat transaksi fasilitas berjalan.
           </p>
